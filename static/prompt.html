@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saisie</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-family, sans-serif);
+      user-select: none;
+    }
+    .modal-card {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+      border-radius: 8px;
+    }
+    .modal-titlebar {
+      -webkit-app-region: drag;
+      cursor: default;
+    }
+    .modal-close-x-btn, .modal-actions button, input {
+      -webkit-app-region: no-drag;
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-card standard-modal-card">
+    <div class="modal-titlebar">
+      <div class="modal-title-wrap">
+        <span class="modal-title-text" id="modalTitle">Titre</span>
+      </div>
+      <button class="modal-close-x-btn" id="modalCloseXBtn" title="Fermer">✕</button>
+    </div>
+    <div class="modal-content-pad" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+      <input type="text" class="modal-input" id="modalInput" spellcheck="false" style="margin-top: 6px;">
+      <div class="modal-actions" style="margin-top: 14px;">
+        <button class="btn" id="modalCancelBtn">Annuler</button>
+        <button class="btn primary" id="modalConfirmBtn">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get('title') || 'Saisie';
+    const defaultValue = params.get('defaultValue') || '';
+    const confirmLabel = params.get('confirmLabel') || 'Confirmer';
+    const theme = 'windows98';
+
+    document.documentElement.setAttribute('data-theme', theme);
+
+    document.getElementById('modalTitle').textContent = title;
+    document.title = title;
+    document.getElementById('modalConfirmBtn').textContent = confirmLabel;
+    const input = document.getElementById('modalInput');
+    input.value = defaultValue;
+
+    function submit(val) {
+      if (window.electronAPI?.sendPromptResult) {
+        window.electronAPI.sendPromptResult(val);
+      } else {
+        window.close();
+      }
+    }
+
+    function cancel() {
+      if (window.electronAPI?.sendPromptResult) {
+        window.electronAPI.sendPromptResult(null);
+      } else {
+        window.close();
+      }
+    }
+
+    document.getElementById('modalConfirmBtn').onclick = () => submit(input.value.trim());
+    document.getElementById('modalCancelBtn').onclick = () => cancel();
+    document.getElementById('modalCloseXBtn').onclick = () => cancel();
+
+    input.onkeydown = (e) => {
+      if (e.key === 'Enter') submit(input.value.trim());
+      else if (e.key === 'Escape') cancel();
+    };
+
+    window.onload = () => {
+      input.focus();
+      input.select();
+    };
+  </script>
+</body>
+</html>

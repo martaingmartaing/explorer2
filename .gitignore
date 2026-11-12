@@ -1,0 +1,21 @@
+# Dépendances et environnements
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Sorties de compilation (le .dmg est publié dans les Releases GitHub)
+dist/
+build/
+backend-bin/
+bin/mac-clipboard
+
+# Fichiers locaux / personnels
+.DS_Store
+favorites.json
+test1.txt
+SingletonCookie
+SingletonLock
+SingletonSocket
+.cloud-attachments/
+.freebuff/

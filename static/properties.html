@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="windows98">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propriétés</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif;
+      user-select: none;
+      font-size: 11px;
+    }
+
+    .modal-card {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      background: #c0c0c0 !important;
+      border-top: 2px solid #ffffff !important;
+      border-left: 2px solid #ffffff !important;
+      border-right: 2px solid #808080 !important;
+      border-bottom: 2px solid #808080 !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+    }
+
+    .modal-titlebar {
+      -webkit-app-region: drag;
+      cursor: default;
+      background: #000080;
+      color: #ffffff;
+      padding: 3px 4px 3px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 22px;
+      box-sizing: border-box;
+      font-weight: bold;
+      font-size: 11px;
+    }
+
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .modal-close-x-btn {
+      -webkit-app-region: no-drag;
+      width: 16px;
+      height: 14px;
+      background: #c0c0c0;
+      color: #000000;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #404040;
+      border-bottom: 1px solid #404040;
+      box-shadow: 1px 1px 0 #000000;
+      font-size: 10px;
+      line-height: 12px;
+      text-align: center;
+      padding: 0;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    }
+
+    .modal-close-x-btn:active {
+      border-top: 1px solid #404040;
+      border-left: 1px solid #404040;
+      border-right: 1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+      box-shadow: inset 1px 1px 0 #000000;
+    }
+
+    .props-body {
+      flex: 1;
+      padding: 10px 14px 10px 14px;
+      overflow-y: auto;
+      font-size: 11px;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+
+    .props-divider {
+      height: 0;
+      border-top: 1px solid #808080;
+      border-bottom: 1px solid #ffffff;
+      margin: 8px 0;
+    }
+
+    .props-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .props-table td {
+      padding: 2.5px 0;
+      vertical-align: top;
+    }
+
+    .props-label {
+      width: 125px;
+      color: #000000;
+      white-space: nowrap;
+    }
+
+    .props-val {
+      color: #000000;
+      word-break: break-all;
+    }
+
+    .props-name-box {
+      background: #ffffff;
+      border-top: 1px solid #808080;
+      border-left: 1px solid #808080;
+      border-right: 1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+      box-shadow: inset 1px 1px 0 #000000;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif;
+      color: #000000;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="modal-card">
+    <div class="modal-titlebar">
+      <div class="modal-title-wrap">
+        <img id="propTitleIcon" src="icons/win98/file.png" width="16" height="16" style="image-rendering:pixelated;" alt="">
+        <span class="modal-title-text" id="propTitle">Propriétés</span>
+      </div>
+      <button class="modal-close-x-btn" id="propCloseXBtn" title="Fermer">✕</button>
+    </div>
+
+    <div class="props-body">
+      <div>
+        <!-- En-tête : Icône Windows 98 pixel-art + Nom -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <div id="propIconWrap" style="flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">
+            <img id="propIcon" src="icons/win98/file.png" width="32" height="32" style="image-rendering:pixelated;" alt="">
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="props-name-box" id="propName" title="">Chargement...</div>
+          </div>
+        </div>
+
+        <div class="props-divider"></div>
+
+        <div id="propLoading" style="display:flex;align-items:center;gap:8px;padding:12px 0;">
+          <div class="spinner" style="width:14px;height:14px;border:2px solid #808080;border-top-color:#000080;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <span style="color:#444;">Calcul des informations...</span>
+        </div>
+
+        <div id="propDetails" style="display:none;flex-direction:column;">
+          <table class="props-table">
+            <tbody>
+              <tr id="propTypeRow">
+                <td class="props-label">Type de fichier :</td>
+                <td class="props-val" id="propType">--</td>
+              </tr>
+              <tr id="propLocationRow">
+                <td class="props-label">Emplacement :</td>
+                <td class="props-val" id="propLocation">--</td>
+              </tr>
+              <tr>
+                <td class="props-label">Taille :</td>
+                <td class="props-val">
+                  <strong id="propFormattedSize">--</strong>
+                  <span id="propBytesSize" style="color:#555;margin-left:4px;"></span>
+                </td>
+              </tr>
+              <tr id="propCountsRow">
+                <td class="props-label">Contenu :</td>
+                <td class="props-val" id="propCounts">--</td>
+              </tr>
+              <tr id="propSkippedRow" style="display:none;">
+                <td class="props-label">Ignorés :</td>
+                <td class="props-val" id="propSkipped" style="color:#c00000;">0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="props-divider"></div>
+
+          <!-- Section Dates (Création / Modification) -->
+          <table class="props-table">
+            <tbody>
+              <tr id="propCreatedRow">
+                <td class="props-label">Créé le :</td>
+                <td class="props-val" id="propCreated">--</td>
+              </tr>
+              <tr id="propModifiedRow">
+                <td class="props-label">Modifié le :</td>
+                <td class="props-val"><strong id="propModified">--</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
+        <button class="btn primary" id="propCloseBtn" style="padding:3px 20px;min-width:75px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+    const params = new URLSearchParams(window.location.search);
+    const pathStr = params.get('path') || '';
+    const pathsStr = params.get('paths') || '';
+    const name = params.get('name') || 'Élément';
+    const isDirParam = params.get('is_dir') === '1';
+    const iconParam = params.get('icon') || '';
+    const modifiedParam = params.get('modified') || '';
+
+    let paths = [];
+    if (pathsStr) {
+      try { paths = JSON.parse(pathsStr); } catch(e) { paths = [pathsStr]; }
+    } else if (pathStr) {
+      paths = [pathStr];
+    }
+
+    function getWin98IconSrc(fileName, isDir) {
+      if (isDir) return 'icons/win98/folder.png';
+      const lower = (fileName || '').toLowerCase();
+      if (lower.endsWith('.app')) return 'icons/win98/file_app.png';
+      if (['.txt', '.log', '.ini', '.cfg', '.md', '.rtf'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_text.png';
+      if (lower.endsWith('.pdf')) return 'icons/win98/file_pdf.png';
+      if (['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.ico', '.bmp', '.tiff'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_image.png';
+      if (['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma', '.aiff', '.alac'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_audio.png';
+      if (['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v', '.mpg', '.mpeg'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_video.png';
+      if (lower.endsWith('.dmg')) return 'icons/win98/file_dmg.png';
+      if (['.zip', '.rar', '.7z', '.tar', '.gz', '.tgz', '.bz2', '.xz', '.tar.gz', '.tar.xz', '.tar.bz2', '.zst'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_zip.png';
+      if (lower.endsWith('.iso')) return 'icons/win98/file_iso.png';
+      if (lower.endsWith('.img')) return 'icons/win98/file_img.png';
+      if (['.exe', '.msi', '.dll', '.ps1'].some(ext => lower.endsWith(ext))) return 'icons/win98/file_exe.png';
+      return 'icons/win98/file.png';
+    }
+
+    const titleEl = document.getElementById('propTitle');
+    const titleIcon = document.getElementById('propTitleIcon');
+    const iconEl = document.getElementById('propIcon');
+    const nameEl = document.getElementById('propName');
+    const loadingEl = document.getElementById('propLoading');
+    const detailsEl = document.getElementById('propDetails');
+    const typeEl = document.getElementById('propType');
+    const locationEl = document.getElementById('propLocation');
+    const formattedEl = document.getElementById('propFormattedSize');
+    const bytesEl = document.getElementById('propBytesSize');
+    const countsRow = document.getElementById('propCountsRow');
+    const countsEl = document.getElementById('propCounts');
+    const skippedRow = document.getElementById('propSkippedRow');
+    const skippedEl = document.getElementById('propSkipped');
+    const modifiedEl = document.getElementById('propModified');
+    const createdEl = document.getElementById('propCreated');
+
+    // Sécurité anti-image brisée
+    iconEl.onerror = () => { iconEl.src = 'icons/win98/file.png'; };
+    titleIcon.onerror = () => { titleIcon.src = 'icons/win98/file.png'; };
+
+    // Détermination de l'icône initiale
+    let initialIcon = '';
+    if (iconParam) {
+      initialIcon = iconParam.replace(/^static\//, '');
+    } else {
+      initialIcon = getWin98IconSrc(name, paths.length > 1 ? true : isDirParam);
+    }
+    iconEl.src = initialIcon;
+    titleIcon.src = initialIcon;
+
+    if (paths.length > 1) {
+      titleEl.textContent = `Propriétés (${paths.length} éléments)`;
+      nameEl.textContent = `${paths.length} éléments sélectionnés`;
+      nameEl.title = paths.join('\n');
+    } else {
+      titleEl.textContent = `Propriétés de ${name}`;
+      nameEl.textContent = name;
+      nameEl.title = paths[0] || name;
+    }
+    document.title = titleEl.textContent;
+
+    if (modifiedParam) {
+      modifiedEl.textContent = modifiedParam;
+    }
+
+    function closeWin() {
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    }
+
+    document.getElementById('propCloseBtn').onclick = closeWin;
+    document.getElementById('propCloseXBtn').onclick = closeWin;
+
+    async function calculate() {
+      if (!paths || paths.length === 0) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/fs/calculate-size`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paths })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Erreur lors du calcul');
+
+        // Mettre à jour l'icône si nécessaire
+        if (!iconParam) {
+          const updatedIcon = getWin98IconSrc(data.name || name, paths.length > 1 ? true : data.is_dir);
+          iconEl.src = updatedIcon;
+          titleIcon.src = updatedIcon;
+        }
+
+        if (data.type_desc) {
+          typeEl.textContent = data.type_desc;
+        } else {
+          typeEl.textContent = data.is_dir ? 'Dossier de fichiers' : 'Fichier';
+        }
+
+        if (data.location) {
+          locationEl.textContent = data.location;
+          locationEl.title = data.location;
+        } else if (paths[0]) {
+          const loc = paths[0].substring(0, paths[0].lastIndexOf('/')) || '/';
+          locationEl.textContent = loc;
+          locationEl.title = loc;
+        }
+
+        formattedEl.textContent = data.size_formatted;
+        bytesEl.textContent = `(${data.size_bytes_formatted || data.size_bytes} octets)`;
+
+        if (data.is_dir || paths.length > 1) {
+          countsRow.style.display = 'table-row';
+          countsEl.textContent = `${data.file_count.toLocaleString('fr-FR')} fichier(s), ${data.dir_count.toLocaleString('fr-FR')} dossier(s)`;
+        } else {
+          countsRow.style.display = 'none';
+        }
+
+        if (data.skipped_count > 0) {
+          skippedEl.textContent = `${data.skipped_count} élément(s)`;
+          skippedRow.style.display = 'table-row';
+        }
+
+        if (data.modified_formatted) {
+          modifiedEl.textContent = data.modified_formatted;
+        } else if (!modifiedParam) {
+          modifiedEl.textContent = 'Non disponible';
+        }
+
+        if (data.created_formatted) {
+          createdEl.textContent = data.created_formatted;
+        } else {
+          createdEl.textContent = 'Non disponible';
+        }
+
+        loadingEl.style.display = 'none';
+        detailsEl.style.display = 'flex';
+      } catch (err) {
+        loadingEl.innerHTML = `<span style="color:#c00000;">${escapeHtml(err.message)}</span>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    calculate();
+  </script>
+</body>
+</html>

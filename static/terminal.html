@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal</title>
+  <script>
+    (function() {
+      document.documentElement.setAttribute('data-theme', 'windows98');
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vendor/xterm/xterm.css">
+  <script src="vendor/xterm/xterm.js"></script>
+  <script src="vendor/xterm/xterm-addon-fit.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+      user-select: none;
+    }
+
+    .term-window-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      background: #181a1f;
+      color: #ffffff;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      cursor: text;
+    }
+
+    /* ==============================================================================
+       1. THÈME WINDOWS 98 (INVITE MS-DOS AUTHENTIQUE)
+    ============================================================================== */
+    [data-theme="windows98"] .term-window-frame {
+      background: #c0c0c0 !important;
+      border-top: 2px solid #ffffff !important;
+      border-left: 2px solid #ffffff !important;
+      border-right: 2px solid #808080 !important;
+      border-bottom: 2px solid #808080 !important;
+      border-radius: 0 !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      color: #000000 !important;
+    }
+
+    [data-theme="windows98"] .term-titlebar {
+      background: linear-gradient(90deg, #000080, #1084d0) !important;
+      color: #ffffff !important;
+      height: 22px !important;
+      padding: 0 3px !important;
+      border-bottom: none !important;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+      font-weight: bold !important;
+      font-size: 11px !important;
+    }
+
+    [data-theme="windows98"] .term-title-wrap {
+      gap: 5px !important;
+    }
+
+    [data-theme="windows98"] .dos-badge {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      color: #ffff00;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 9px;
+      padding: 0 3px;
+      height: 14px;
+      border: 1px solid #ffffff;
+      border-radius: 1px;
+      letter-spacing: -0.5px;
+    }
+    [data-theme="windows98"] #genericTermIcon {
+      display: none !important;
+    }
+
+    [data-theme="windows98"] .term-win-btn {
+      width: 16px !important;
+      height: 14px !important;
+      background: #c0c0c0 !important;
+      border-top: 1px solid #ffffff !important;
+      border-left: 1px solid #ffffff !important;
+      border-right: 1px solid #404040 !important;
+      border-bottom: 1px solid #404040 !important;
+      color: #000000 !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      margin-left: 2px !important;
+    }
+
+    [data-theme="windows98"] .term-win-btn:active {
+      border-top: 1px solid #404040 !important;
+      border-left: 1px solid #404040 !important;
+      border-right: 1px solid #ffffff !important;
+      border-bottom: 1px solid #ffffff !important;
+    }
+
+    [data-theme="windows98"] #btnMin {
+      display: flex !important;
+      align-items: flex-end !important;
+      justify-content: center !important;
+      padding-bottom: 2px !important;
+    }
+
+    [data-theme="windows98"] #btnMin svg {
+      width: 7px !important;
+      height: 2px !important;
+      display: block !important;
+    }
+
+    [data-theme="windows98"] #btnMax svg,
+    [data-theme="windows98"] #btnClose svg {
+      width: 8px !important;
+      height: 8px !important;
+      display: block !important;
+    }
+
+    [data-theme="windows98"] .term-toolbar {
+      background: #c0c0c0 !important;
+      border-bottom: 2px solid #808080 !important;
+      padding: 2px 6px !important;
+      height: 26px !important;
+    }
+
+    [data-theme="windows98"] .term-cwd-display {
+      color: #000000 !important;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+      font-size: 11px !important;
+    }
+
+    [data-theme="windows98"] .term-tool-btn {
+      background: #c0c0c0 !important;
+      color: #000000 !important;
+      border-top: 1px solid #ffffff !important;
+      border-left: 1px solid #ffffff !important;
+      border-right: 1px solid #404040 !important;
+      border-bottom: 1px solid #404040 !important;
+      border-radius: 0 !important;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+      font-size: 11px !important;
+      padding: 1px 6px !important;
+    }
+
+    [data-theme="windows98"] .term-tool-btn:active {
+      border-top: 1px solid #404040 !important;
+      border-left: 1px solid #404040 !important;
+      border-right: 1px solid #ffffff !important;
+      border-bottom: 1px solid #ffffff !important;
+    }
+
+    [data-theme="windows98"] .term-main {
+      background: #000000 !important;
+      color: #ffffff !important;
+      font-family: 'Courier New', Courier, monospace !important;
+      border-top: 2px solid #808080 !important;
+      border-left: 2px solid #808080 !important;
+      border-right: 2px solid #ffffff !important;
+      border-bottom: 2px solid #ffffff !important;
+      margin: 4px !important;
+      padding: 6px 8px !important;
+    }
+
+    [data-theme="windows98"] .term-line.welcome {
+      color: #00ff00 !important;
+    }
+
+    [data-theme="windows98"] .term-line.prompt-cmd {
+      color: #ffffff !important;
+    }
+
+    [data-theme="windows98"] .term-prompt-label {
+      color: #ffffff !important;
+      font-weight: normal !important;
+    }
+
+    [data-theme="windows98"] .term-input-field {
+      caret-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+
+    .term-titlebar {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #121418;
+      border-bottom: 1px solid #282a30;
+      -webkit-app-region: drag;
+      cursor: default;
+      flex-shrink: 0;
+    }
+
+    .term-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .term-title-controls {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      -webkit-app-region: no-drag;
+    }
+
+    .term-win-btn {
+      width: 28px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.1s;
+    }
+
+    .term-win-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .term-win-btn.close:hover {
+      background: #dc2626;
+      color: #ffffff;
+    }
+
+    .term-toolbar {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #1f232b;
+      border-bottom: 1px solid #2a2f3a;
+      flex-shrink: 0;
+      gap: 10px;
+      cursor: default;
+    }
+
+    .term-cwd-display {
+      font-size: 11px;
+      color: #9da5b4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .term-tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e0e0e0;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .term-tool-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .term-main {
+      flex: 1;
+      min-height: 0;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      padding: 0;
+      overflow: hidden;
+      display: block;
+      position: relative;
+      cursor: text;
+    }
+
+    .term-main .xterm-host {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      bottom: 8px;
+      left: 10px;
+      overflow: hidden;
+    }
+
+    .term-main .xterm {
+      height: 100%;
+    }
+
+    .term-main .xterm-viewport {
+      background-color: transparent !important;
+    }
+
+    .term-main .xterm-viewport::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .term-main .xterm-viewport::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 5px;
+    }
+
+    .term-output {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .term-line {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .term-line.welcome {
+      color: #58a6ff;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .term-line.prompt-cmd {
+      color: #7ee787;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .term-line.stdin-echo {
+      color: #a5d6ff;
+      opacity: 0.9;
+    }
+
+    .term-line.stderr {
+      color: #ff7b72;
+    }
+
+    .term-input-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      padding-bottom: 4px;
+    }
+
+    .term-prompt-label {
+      color: #58a6ff;
+      font-weight: bold;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .term-input-field {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      caret-color: #58a6ff;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="term-window-frame" id="termWindowFrame">
+    <!-- Barre de titre -->
+    <div class="term-titlebar" id="termTitlebar">
+      <div class="term-title-wrap">
+        <span class="dos-badge">C:\_</span>
+        <span id="genericTermIcon">⌨️</span>
+        <span id="winTitleText">Terminal</span>
+      </div>
+      <div class="term-title-controls">
+        <button class="term-win-btn" id="btnMin" title="Réduire">
+          <svg width="8" height="2" viewBox="0 0 8 2"><rect width="8" height="2" fill="currentColor"/></svg>
+        </button>
+        <button class="term-win-btn" id="btnMax" title="Agrandir / Restaurer">
+          <svg width="8" height="8" viewBox="0 0 8 8"><rect x="0.5" y="0.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="term-win-btn close" id="btnClose" title="Fermer">
+          <svg width="8" height="8" viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="1" x2="1" y2="7" stroke="currentColor" stroke-width="1.3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Barre d'outils secondaire -->
+    <div class="term-toolbar" id="termToolbar">
+      <span class="term-cwd-display" id="termCwdText">Emplacement : ~</span>
+      <div style="display: flex; gap: 6px; -webkit-app-region: no-drag;">
+        <button class="term-tool-btn" id="btnKill" title="Interrompre la commande en cours (Ctrl+C)">Arrêter (^C)</button>
+        <button class="term-tool-btn" id="btnOpenFinder" title="Ouvrir ce dossier dans le Finder">Finder</button>
+        <button class="term-tool-btn" id="btnClear" title="Effacer le contenu de l'écran">Effacer</button>
+      </div>
+    </div>
+
+    <!-- Corps du terminal : émulateur xterm.js relié à un PTY macOS réel -->
+    <div class="term-main" id="termMain">
+      <div class="xterm-host" id="termXterm"></div>
+    </div>
+  </div>
+
+  <script>
+    // Terminal détaché : xterm.js + PTY macOS réel (comme Terminal.app)
+    const urlParams = new URLSearchParams(window.location.search);
+    let theme = 'windows98';
+    let currentCwd = urlParams.get('cwd') || '/';
+
+    const termCwdText = document.getElementById('termCwdText');
+    const winTitleText = document.getElementById('winTitleText');
+    const termXterm = document.getElementById('termXterm');
+
+    let term = null;
+    let fitAddon = null;
+    let socket = null;
+    let exited = false;
+    let pendingFit = null;
+
+    function getXtermTheme(th) {
+      return {
+        background: '#000000', foreground: '#c0c0c0', cursor: '#c0c0c0',
+        cursorAccent: '#000000', selectionBackground: '#000080',
+        black: '#000000', red: '#aa0000', green: '#00aa00', yellow: '#aa5500',
+        blue: '#0000aa', magenta: '#aa00aa', cyan: '#00aaaa', white: '#aaaaaa',
+        brightBlack: '#555555', brightRed: '#ff5555', brightGreen: '#55ff55',
+        brightYellow: '#ffff55', brightBlue: '#5555ff', brightMagenta: '#ff55ff',
+        brightCyan: '#55ffff', brightWhite: '#ffffff'
+      };
+      return {
+        background: '#0c0c0c', foreground: '#cccccc', cursor: '#ffffff',
+        cursorAccent: '#0c0c0c', selectionBackground: '#264f78',
+        black: '#1e1e1e', red: '#f14c4c', green: '#23d18b', yellow: '#f5f543',
+        blue: '#3b8eea', magenta: '#d670d6', cyan: '#29b8db', white: '#e5e5e5',
+        brightBlack: '#666666', brightRed: '#f14c4c', brightGreen: '#23d18b',
+        brightYellow: '#f5f543', brightBlue: '#3b8eea', brightMagenta: '#d670d6',
+        brightCyan: '#29b8db', brightWhite: '#ffffff'
+      };
+    }
+
+    function getTerminalFont(th) {
+      return "'Courier New', 'Consolas', monospace";
+      return "'MesloLGS NF', 'SF Mono', Menlo, Monaco, 'Cascadia Code', 'Fira Code', 'Courier New', monospace";
+    }
+
+    function getWsUrl(cols, rows, cwd) {
+      const isHttp = location.protocol === 'http:' || location.protocol === 'https:';
+      const host = isHttp ? location.host : '127.0.0.1:8000';
+      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const params = new URLSearchParams({
+        cols: String(cols || 80),
+        rows: String(rows || 24),
+        cwd: cwd || ''
+      });
+      return `${proto}//${host}/api/terminal/ws?${params.toString()}`;
+    }
+
+    function updateCwdLabel() {
+      const folder = currentCwd.split(/[\\/]/).filter(Boolean).pop() || '/';
+      winTitleText.textContent = `Invite MS-DOS — ${folder.toUpperCase()}`;
+      document.title = `Invite MS-DOS — ${folder.toUpperCase()}`;
+      termCwdText.textContent = `Emplacement : ${currentCwd}`;
+    }
+
+    function fitTerminal() {
+      if (!fitAddon) return;
+      if (pendingFit) cancelAnimationFrame(pendingFit);
+      pendingFit = requestAnimationFrame(() => {
+        pendingFit = null;
+        try { fitAddon.fit(); } catch (e) {}
+      });
+    }
+
+    function applyTheme(th) {
+      theme = 'windows98';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+      if (term) {
+        term.options.theme = getXtermTheme(theme);
+        term.options.fontFamily = getTerminalFont(theme);
+      }
+      updateCwdLabel();
+      fitTerminal();
+    }
+
+    function send(data) {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(data));
+      }
+    }
+
+    function createTerminal() {
+      term = new Terminal({
+        cursorBlink: true,
+        cursorStyle: 'block',
+        fontFamily: getTerminalFont(theme),
+        fontSize: 12.5,
+        fontWeight: '400',
+        fontWeightBold: '700',
+        lineHeight: 1.15,
+        scrollback: 10000,
+        theme: getXtermTheme(theme),
+        macOptionIsMeta: false,
+        convertEol: false
+      });
+      fitAddon = (typeof FitAddon !== 'undefined' && FitAddon.FitAddon)
+        ? new FitAddon.FitAddon()
+        : null;
+      if (fitAddon) term.loadAddon(fitAddon);
+      term.open(termXterm);
+
+      term.onData((data) => send({ type: 'input', data }));
+      term.onResize(({ cols, rows }) => send({ type: 'resize', cols, rows }));
+
+      term.attachCustomKeyEventHandler((event) => {
+        if (event.type !== 'keydown') return true;
+        if (event.metaKey && !event.ctrlKey && !event.altKey && (event.key === 'c' || event.key === 'C')) {
+          if (term.hasSelection()) {
+            const text = term.getSelection();
+            if (navigator.clipboard?.writeText) {
+              navigator.clipboard.writeText(text).catch(() => {});
+            } else {
+              try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+              } catch (e) {}
+            }
+            term.clearSelection();
+            return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    function connect() {
+      if (!term) return;
+      try { fitAddon?.fit(); } catch (e) {}
+      if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+        send({ type: 'resize', cols: term.cols, rows: term.rows });
+        return;
+      }
+      if (exited) {
+        try { term.reset(); } catch (e) {}
+        exited = false;
+      }
+      socket = new WebSocket(getWsUrl(term.cols, term.rows, currentCwd));
+      socket.binaryType = 'arraybuffer';
+      socket.onopen = () => {
+        send({ type: 'resize', cols: term.cols, rows: term.rows });
+      };
+      socket.onmessage = (event) => {
+        if (typeof event.data === 'string') {
+          try {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'exit') exited = true;
+          } catch (e) {}
+          return;
+        }
+        term.write(new Uint8Array(event.data));
+      };
+      socket.onclose = () => {
+        socket = null;
+        exited = true;
+        term.write('\r\n\x1b[90m[Session terminée — fermez puis rouvrez le terminal]\x1b[0m\r\n');
+      };
+      socket.onerror = () => {};
+    }
+
+    applyTheme(theme);
+    createTerminal();
+    fitTerminal();
+    connect();
+    setTimeout(() => {
+      fitTerminal();
+      term?.focus();
+    }, 80);
+
+    if (window.electronAPI?.getInitData) {
+      window.electronAPI.getInitData().then((initData) => {
+        if (initData) {
+          if (initData.theme) applyTheme(initData.theme);
+          if (initData.cwd && initData.cwd !== currentCwd) {
+            currentCwd = initData.cwd;
+            updateCwdLabel();
+          }
+        }
+      }).catch(() => {});
+    }
+
+    if (window.electronAPI?.onSettingsChanged) {
+      window.electronAPI.onSettingsChanged((data) => {
+        if (data && data.theme) applyTheme(data.theme);
+      });
+    }
+
+    // Boutons de la barre de titre
+    document.getElementById('btnClose').onclick = () => {
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    };
+    document.getElementById('btnMin').onclick = () => {
+      if (window.electronAPI?.minimize) window.electronAPI.minimize();
+    };
+    document.getElementById('btnMax').onclick = () => {
+      if (window.electronAPI?.maximize) window.electronAPI.maximize();
+    };
+    document.getElementById('btnOpenFinder').onclick = () => {
+      if (window.electronAPI?.openPath) window.electronAPI.openPath(currentCwd);
+    };
+    document.getElementById('btnClear').onclick = () => {
+      if (term) {
+        term.clear();
+        term.focus();
+      }
+    };
+    document.getElementById('btnKill').onclick = () => {
+      send({ type: 'input', data: '\x03' });
+      term?.focus();
+    };
+
+    window.addEventListener('resize', () => fitTerminal());
+    if (typeof ResizeObserver !== 'undefined' && termXterm) {
+      new ResizeObserver(() => fitTerminal()).observe(termXterm);
+    }
+    window.addEventListener('focus', () => term?.focus());
+
+    document.getElementById('termWindowFrame').addEventListener('click', (e) => {
+      if (e.target.closest('.term-title-controls') || e.target.closest('.term-tool-btn')) return;
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      term?.focus();
+    });
+
+    // Échap est envoyé au shell (utile dans vim/nano) : ne ferme pas la fenêtre.
+  </script>
+</body>
+</html>

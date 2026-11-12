@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="windows98">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorer 2</title>
+  <link rel="icon" type="image/png" href="static/icon.png">
+  <link rel="stylesheet" href="static/style.css">
+  <!-- Émulateur de terminal xterm.js (PTY réel côté backend) -->
+  <link rel="stylesheet" href="static/vendor/xterm/xterm.css">
+  <!-- Three.js pour la modélisation 3D temps réel des disques NVMe, HDD, SSD SATA et RAID -->
+  <script src="static/vendor/xterm/xterm.js"></script>
+  <script src="static/vendor/xterm/xterm-addon-fit.js"></script>
+</head>
+<body>
+  <!-- Barre de titre intégrée sans bordure Windows (style Windows 98) -->
+  <header class="app-titlebar" id="appTitlebar">
+    <div class="titlebar-drag-region">
+      <div class="titlebar-brand">
+        <button class="titlebar-toggle-rail-btn" id="btnToggleGlobalRail" title="Afficher ou masquer la barre latérale (3 onglets)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <img class="titlebar-logo" src="static/icon.png" width="16" height="16" alt="Icone Dossier Win98" style="image-rendering:pixelated;">
+        <span class="titlebar-title" id="titlebarTitle">Explorer 2</span>
+      </div>
+    </div>
+    <div class="titlebar-controls" id="titlebarControls">
+      <button class="titlebar-btn" id="winBtnMinimize" title="Réduire">
+        <svg width="10" height="1" viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg>
+      </button>
+      <button class="titlebar-btn" id="winBtnMaximize" title="Agrandir / Restaurer">
+        <svg id="svgMaximize" width="10" height="10" viewBox="0 0 10 10"><rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+      <button class="titlebar-btn close-btn" id="winBtnClose" title="Fermer">
+        <svg width="10" height="10" viewBox="0 0 10 10"><line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.2"/><line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- 1. Rail de Navigation Global à l'extrême gauche (sans logo Windows ni onglet réseau) -->
+    <nav class="global-rail">
+      <button class="rail-btn active" id="railBtnExplorer" title="Explorateur de fichiers">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span class="rail-btn-label">Fichiers</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnSmart" title="État de santé des disques">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <span class="rail-btn-label">Disques</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnTaskmgr" title="Gestionnaire des tâches">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+          <path d="M6 10l3-3 3 6 3-4 3 3"></path>
+        </svg>
+        <span class="rail-btn-label">Tâches</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnSpace" title="Analyseur d'espace disque (MacDirStat)">
+        <img src="static/icons/win98/space.png" class="win98-custom-icon" style="width:28px;height:28px;image-rendering:pixelated;" alt="Espace">
+        <span class="rail-btn-label">Espace</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnClone" title="Clonage et Image disque">
+        <img src="static/icons/win98/clone.png" class="win98-custom-icon" style="width:28px;height:28px;image-rendering:pixelated;" alt="Cloner">
+        <span class="rail-btn-label">Cloner</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnFlash" title="Flasheur de clé USB Bootable (UEFI)">
+        <img src="static/icons/win98/usb_key_detail.png" class="win98-custom-icon" style="width:28px;height:28px;image-rendering:pixelated;" alt="Flash">
+        <span class="rail-btn-label">Flash</span>
+      </button>
+
+      <button class="rail-btn" id="railBtnNetwork" title="Connexions Réseau (TCP/IP)">
+        <img src="static/icons/win98/network.png" class="win98-custom-icon" style="width:28px;height:28px;image-rendering:pixelated;" alt="Réseau">
+        <span class="rail-btn-label">Réseau</span>
+      </button>
+
+      <div class="rail-spacer"></div>
+
+      <button class="rail-btn" id="railBtnSettings" title="Paramètres">
+        <img src="static/icons/win98/settings.png" class="win98-custom-icon" style="width:28px;height:28px;image-rendering:pixelated;" alt="Paramètres">
+      </button>
+    </nav>
+
+    <!-- 2. Zone Principale des Vues -->
+    <div class="main-viewport">
+      
+      <!-- VUE 1 : EXPLORATEUR DE FICHIERS AVEC ONGLETS -->
+      <section class="view-section active" id="viewExplorer">
+        <!-- Barre d'onglets -->
+        <div class="tabs-bar" id="tabsBar">
+          <div id="tabsContainer" style="display:flex;align-items:center;gap:4px;"></div>
+          <button class="new-tab-btn" id="btnNewTab" title="Nouvel onglet (Ctrl+T)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+
+        <!-- En-tête : Navigation, Breadcrumb & Recherche -->
+        <header class="w11-header">
+          <div class="w11-nav-row">
+            <div class="nav-buttons">
+              <button class="icon-btn" id="btnBack" title="Précédent (Alt + Gauche)" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              </button>
+              <button class="icon-btn" id="btnForward" title="Suivant (Alt + Droite)" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+              <button class="icon-btn" id="btnUp" title="Dossier parent (Alt + Haut)" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+              </button>
+              <button class="icon-btn" id="btnRefresh" title="Actualiser (F5)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              </button>
+            </div>
+
+            <!-- Barre d'adresse Breadcrumb -->
+            <div class="address-bar-wrapper">
+              <div class="breadcrumb-container" id="breadcrumbContainer"></div>
+              <input type="text" class="path-input" id="pathInput" placeholder="Saisir ou coller un chemin d'accès (ex: /Users ou smb://serveur/partage)..." spellcheck="false">
+            </div>
+
+            <!-- Recherche locale -->
+            <div class="search-wrapper">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6e6e6e" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" class="search-input" id="searchInput" placeholder="Rechercher...">
+            </div>
+          </div>
+
+          <!-- Barre d'outils -->
+          <div class="w11-toolbar">
+            <button class="toolbar-btn primary" id="tbNewFolder" title="Nouveau dossier">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Nouveau dossier</span>
+            </button>
+            <button class="toolbar-btn" id="tbNewFile" title="Nouveau fichier texte">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Nouveau fichier</span>
+            </button>
+
+            <div class="toolbar-separator"></div>
+
+            <button class="toolbar-btn" id="tbCut" title="Couper (Ctrl+X)" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
+              <span>Couper</span>
+            </button>
+            <button class="toolbar-btn" id="tbCopy" title="Copier (Ctrl+C)" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copier</span>
+            </button>
+            <button class="toolbar-btn" id="tbPaste" title="Coller (Ctrl+V)" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              <span>Coller</span>
+            </button>
+            <button class="toolbar-btn" id="tbRename" title="Renommer (F2)" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>Renommer</span>
+            </button>
+            <button class="toolbar-btn" id="tbDelete" title="Supprimer (Suppr)" disabled style="color: #c42b1c;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c42b1c" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Supprimer</span>
+            </button>
+
+            <div class="toolbar-separator"></div>
+
+            <!-- Option Éléments masqués -->
+            <button class="toolbar-btn" id="tbToggleHidden" title="Afficher ou masquer les fichiers et dossiers cachés">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span id="tbToggleHiddenLabel">Éléments masqués : Non</span>
+            </button>
+
+            <!-- Option Volet de navigation (Réduire/Masquer) -->
+            <button class="toolbar-btn active" id="tbToggleSidebar" title="Afficher ou masquer le volet de navigation (Ctrl+B)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+              <span id="tbToggleSidebarLabel">Volet</span>
+            </button>
+
+            <!-- Option Volet de visualisation -->
+            <button class="toolbar-btn" id="tbTogglePreview" title="Activer ou désactiver le volet d'aperçu (Images, PDFs, Office)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="14" y1="3" x2="14" y2="21"></line></svg>
+              <span id="tbTogglePreviewLabel">Volet d'aperçu</span>
+            </button>
+
+            <!-- Option Terminal intégré -->
+            <button class="toolbar-btn" id="tbToggleTerminal" title="Ouvrir ou masquer le terminal intégré dans le dossier courant (Ctrl+` ou Cmd+`)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+              <span id="tbToggleTerminalLabel">Terminal</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Body : Sidebar + Workspace -->
+        <div class="w11-body">
+          <aside class="w11-sidebar">
+            <div class="sidebar-item active" id="btnHome">
+              <span class="item-icon">
+                <img src="static/icons/win98/home.png" class="win98-custom-icon" width="20" height="20" style="width:20px;height:20px;image-rendering:pixelated;" alt="Accueil">
+              </span>
+              <span class="item-text" style="font-weight: 500;">Accueil</span>
+            </div>
+
+            <div class="sidebar-section-title">Favoris (Épinglés)</div>
+            <div id="favoritesList"></div>
+
+            <div class="sidebar-section-title" style="margin-top: 10px;">Ce Mac</div>
+            <div id="drivesSidebarList"></div>
+
+            <div class="sidebar-section-title" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+              <span>Réseau SMB</span>
+              <button id="btnSidebarSmbAdd" class="btn" style="padding: 1px 6px; font-size: 11px;" title="Connecter un partage réseau">+</button>
+            </div>
+            <div id="smbSidebarList"></div>
+          </aside>
+
+          <!-- Séparateur redimensionnable pour le volet de navigation -->
+          <div class="resizer-v sidebar-resizer" id="sidebarResizer" title="Glisser pour redimensionner le volet de navigation"></div>
+
+          <main class="w11-content" id="contentArea">
+            <div class="file-view-workspace" id="fileViewWorkspace"></div>
+            <div class="resizer-h terminal-resizer" id="terminalResizer" style="display:none;" title="Glisser pour redimensionner le terminal"></div>
+            <div class="embedded-terminal-pane" id="embeddedTerminalPane" style="display:none;">
+              <div class="terminal-header">
+                <div class="terminal-title">
+                  <span class="terminal-icon">⌨</span>
+                  <span class="terminal-cwd" id="terminalCwdText">Terminal — Macintosh HD</span>
+                </div>
+                <div class="terminal-actions">
+                  <button class="terminal-hdr-btn" id="btnTerminalExternal" title="Détacher le terminal dans une fenêtre dédiée">Détacher</button>
+                  <button class="terminal-hdr-btn" id="btnTerminalClear" title="Effacer l'historique de l'écran">Effacer</button>
+                  <button class="terminal-hdr-btn close" id="btnTerminalClose" title="Fermer le terminal (Ctrl+`)">✕</button>
+                </div>
+              </div>
+              <div class="terminal-body" id="terminalBody">
+                <div class="xterm-host" id="terminalXterm"></div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Séparateur redimensionnable pour le volet d'aperçu -->
+          <div class="resizer-v" id="previewResizer" style="display:none;" title="Glisser pour redimensionner le volet d'aperçu"></div>
+
+          <!-- Volet de visualisation (Preview Pane) -->
+          <aside class="preview-pane" id="previewPane" style="display:none;">
+            <div class="preview-header">
+              <span id="previewTitle" class="preview-title">Aperçu</span>
+              <button class="preview-close-btn" id="btnPreviewClose" title="Fermer le volet d'aperçu">✕</button>
+            </div>
+            <div class="preview-body" id="previewBody">
+              <div class="preview-placeholder">Sélectionnez un fichier pour afficher son aperçu</div>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="w11-footer">
+          <div id="statusText">0 élément(s)</div>
+          <div id="selectedStatusText"></div>
+        </footer>
+      </section>
+
+
+      <!-- VUE 2 : ÉTAT S.M.A.R.T. DES DISQUES (CRYSTALDISKINFO AVEC MODÈLES 3D) -->
+      <section class="view-section" id="viewSmart">
+        <div class="smart-view">
+          <div class="smart-header">
+            <div class="smart-title">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0078d4" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>État de santé des disques</span>
+            </div>
+            <button class="btn" id="btnRefreshSmart">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              <span>Actualiser les sondes</span>
+            </button>
+          </div>
+
+          <div class="smart-grid" id="smartGrid">
+            <div class="state-container">Chargement des données de diagnostic S.M.A.R.T...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VUE 3 : GESTIONNAIRE DES TÂCHES COMPLET (PROCESSUS & PERFORMANCES) -->
+      <section class="view-section" id="viewTaskmgr">
+        <div class="taskmgr-view">
+          <!-- Barre d'onglets du Gestionnaire des tâches -->
+          <div class="taskmgr-tabs-header">
+            <div class="taskmgr-subtabs">
+              <button class="taskmgr-tab-btn active" id="taskmgrTabProcesses">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                <span>Processus</span>
+              </button>
+              <button class="taskmgr-tab-btn" id="taskmgrTabPerformance">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <span>Performances</span>
+              </button>
+            </div>
+
+            <div class="taskmgr-actions-header">
+              <button class="btn danger" id="taskmgrBtnKill" disabled title="Arrêter le processus sélectionné">
+                <span>Fin de tâche</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- CONTENU 1 : LISTE DES PROCESSUS -->
+          <div class="taskmgr-page active" id="taskmgrPageProcesses">
+            <!-- Barre de recherche et métriques globales -->
+            <div class="taskmgr-proc-toolbar">
+              <div class="taskmgr-search-box">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="taskmgrSearchInput" placeholder="Rechercher par nom ou par PID..." spellcheck="false">
+              </div>
+              <div class="taskmgr-summary-badges">
+                <div class="summary-badge" id="tmBadgeCpu">CPU: <strong>0%</strong></div>
+                <div class="summary-badge" id="tmBadgeMem">Mémoire: <strong>0%</strong></div>
+                <div class="summary-badge" id="tmBadgeDisk">Disque: <strong>0 Mo/s</strong></div>
+                <div class="summary-badge" id="tmBadgeNet">Réseau: <strong>0 Ko/s</strong></div>
+                <div class="summary-badge" id="tmBadgeGpu">GPU: <strong>0%</strong></div>
+              </div>
+            </div>
+
+            <!-- Table des processus -->
+            <div class="taskmgr-table-container">
+              <table class="taskmgr-table" id="taskmgrProcessTable">
+                <thead>
+                  <tr>
+                    <th data-sort="name" class="sortable">Nom de l'application / processus <span class="sort-indicator"></span></th>
+                    <th data-sort="pid" class="sortable" style="width: 80px;">PID <span class="sort-indicator"></span></th>
+                    <th data-sort="status" class="sortable" style="width: 100px;">Statut <span class="sort-indicator"></span></th>
+                    <th data-sort="cpu" class="sortable" style="width: 130px;">Processeur <span class="sort-indicator"></span></th>
+                    <th data-sort="memory" class="sortable" style="width: 120px;">Mémoire <span class="sort-indicator"></span></th>
+                    <th data-sort="memory_percent" class="sortable" style="width: 90px;">Mémoire % <span class="sort-indicator"></span></th>
+                    <th data-sort="user" class="sortable" style="width: 110px;">Utilisateur <span class="sort-indicator"></span></th>
+                  </tr>
+                </thead>
+                <tbody id="taskmgrProcessTableBody">
+                  <tr><td colspan="7" class="state-container">Chargement de la liste des processus...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CONTENU 2 : PERFORMANCES COMPLÈTES (CPU, GPU, RAM, DISQUES, RÉSEAU, TEMPÉRATURES) -->
+          <div class="taskmgr-page" id="taskmgrPagePerformance">
+            <div class="taskmgr-perf-layout">
+              <!-- Liste latérale des composants monitorés -->
+              <div class="taskmgr-perf-sidebar">
+                <div class="perf-nav-card active" id="tmNavCpu" data-comp="cpu">
+                  <div class="perf-nav-card-top">
+                    <div class="perf-nav-title-group">
+                      <span class="perf-nav-icon" id="tmNavIcon_cpu"></span>
+                      <span class="perf-nav-title">Processeur (CPU)</span>
+                    </div>
+                    <span class="perf-nav-pct" id="tmSideCpuPct">0%</span>
+                  </div>
+                  <canvas class="perf-mini-canvas" id="tmMiniCpuCanvas"></canvas>
+                  <div class="perf-nav-card-bottom" id="tmSideCpuSub">0.0 GHz</div>
+                </div>
+
+                <div class="perf-nav-card" id="tmNavMem" data-comp="memory">
+                  <div class="perf-nav-card-top">
+                    <div class="perf-nav-title-group">
+                      <span class="perf-nav-icon" id="tmNavIcon_memory"></span>
+                      <span class="perf-nav-title">Mémoire</span>
+                    </div>
+                    <span class="perf-nav-pct" id="tmSideMemPct">0%</span>
+                  </div>
+                  <canvas class="perf-mini-canvas" id="tmMiniMemCanvas"></canvas>
+                  <div class="perf-nav-card-bottom" id="tmSideMemSub">0 / 0 Go (0%)</div>
+                </div>
+
+                <!-- Conteneur dynamique des disques individuels (C:, D:, J:, etc.) -->
+                <div id="tmNavDisksContainer" class="perf-nav-disks-container"></div>
+
+                <div class="perf-nav-card" id="tmNavNet" data-comp="network">
+                  <div class="perf-nav-card-top">
+                    <div class="perf-nav-title-group">
+                      <span class="perf-nav-icon" id="tmNavIcon_network"></span>
+                      <span class="perf-nav-title">Réseau</span>
+                    </div>
+                    <span class="perf-nav-pct" id="tmSideNetPct">0.00 Mo/s</span>
+                  </div>
+                  <canvas class="perf-mini-canvas" id="tmMiniNetCanvas"></canvas>
+                  <div class="perf-nav-card-bottom" id="tmSideNetSub">R: 0.00 / E: 0.00 Mo/s</div>
+                </div>
+
+                <div class="perf-nav-card" id="tmNavGpu" data-comp="gpu">
+                  <div class="perf-nav-card-top">
+                    <div class="perf-nav-title-group">
+                      <span class="perf-nav-icon" id="tmNavIcon_gpu"></span>
+                      <span class="perf-nav-title">GPU</span>
+                    </div>
+                    <span class="perf-nav-pct" id="tmSideGpuPct">0%</span>
+                  </div>
+                  <canvas class="perf-mini-canvas" id="tmMiniGpuCanvas"></canvas>
+                  <div class="perf-nav-card-bottom" id="tmSideGpuSub">VRAM / 0°C</div>
+                </div>
+              </div>
+
+              <!-- Zone de détail droite -->
+              <div class="taskmgr-perf-detail" id="taskmgrPerfDetail">
+                <div class="perf-detail-header">
+                  <div class="perf-detail-title-group">
+                    <span class="perf-detail-icon" id="tmDetailIcon"></span>
+                    <div>
+                      <h2 class="perf-detail-name" id="tmDetailName">Processeur (CPU)</h2>
+                      <div class="perf-detail-subname" id="tmDetailSubname">Intel / AMD x64</div>
+                    </div>
+                  </div>
+                  <div class="perf-header-actions">
+                    <!-- Sélecteur de vue CPU : Vue globale vs Processeurs logiques -->
+                    <div class="perf-view-switch" id="tmCpuViewSwitch" style="display:none;">
+                      <button class="perf-switch-btn active" id="tmCpuViewOverall" title="Afficher l'utilisation globale">Vue d'ensemble</button>
+                      <button class="perf-switch-btn" id="tmCpuViewLogical" title="Afficher tous les cœurs logiques">Processeurs logiques</button>
+                    </div>
+                    <div class="perf-detail-temps" id="tmDetailTempBadges">
+                      <div class="perf-temp-pill" id="tmCpuTempPill">🌡️ CPU: <strong>42°C</strong></div>
+                      <div class="perf-temp-pill" id="tmGpuTempPill">🌡️ GPU: <strong>50°C</strong></div>
+                      <div class="perf-temp-pill" id="tmDiskTempPill">🌡️ Disque: <strong>36°C</strong></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Grand graphique Canvas en temps réel -->
+                <div class="perf-main-canvas-wrap" id="tmMainPerfCanvasWrap">
+                  <div class="perf-canvas-legend">
+                    <span id="tmCanvasYMax">100%</span>
+                    <span id="tmCanvasTitle">Utilisation % sur 60 secondes</span>
+                    <span id="tmCanvasYMin">0%</span>
+                  </div>
+                  <canvas class="perf-main-canvas" id="tmMainPerfCanvas"></canvas>
+                </div>
+
+                <!-- Deuxième graphique dédié à la VRAM GPU (visible uniquement en vue GPU) -->
+                <div class="perf-main-canvas-wrap perf-vram-canvas-wrap" id="tmGpuVramCanvasWrap" style="display:none;">
+                  <div class="perf-canvas-legend">
+                    <span id="tmGpuVramYMax">0 Go</span>
+                    <span id="tmGpuVramCanvasTitle">Utilisation de la mémoire GPU dédiée (VRAM) : 0 / 0 Go (0%)</span>
+                    <span id="tmGpuVramYMin">0 Go</span>
+                  </div>
+                  <canvas class="perf-main-canvas" id="tmGpuVramCanvas"></canvas>
+                </div>
+
+                <!-- Grille des processeurs logiques (par cœur) -->
+                <div class="perf-logical-cores-grid" id="tmLogicalCoresGrid" style="display:none;"></div>
+
+                <!-- Grille d'informations matérielles détaillées -->
+                <div class="perf-metrics-grid" id="tmPerfMetricsGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VUE 4 : ANALYSEUR D'ESPACE DISQUE (MACDIRSTAT) -->
+      <section class="view-section" id="viewSpace">
+        <div class="wds-view">
+          <!-- Barre d'outils MacDirStat -->
+          <div class="wds-toolbar">
+            <div class="wds-toolbar-left">
+              <img src="static/icons/win98/space.png" width="22" height="22" style="image-rendering:pixelated;" alt="Espace">
+              <span class="wds-title">MacDirStat — Analyseur d'espace</span>
+              <div class="toolbar-separator"></div>
+              <label for="wdsDriveSelect" class="wds-label">Disque :</label>
+              <select id="wdsDriveSelect" class="wds-select" title="Choisir un disque entier"></select>
+              <button class="btn" id="wdsBtnScanDrive" title="Analyser le disque sélectionné">
+                <img src="static/icons/win98/space.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                <span>Analyser le disque</span>
+              </button>
+              <button class="btn" id="wdsBtnPickFolder" title="Choisir un disque ou un dossier dans l'arborescence">
+                <img src="static/icons/win98/folder.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                <span>Choisir dans l'arborescence...</span>
+              </button>
+            </div>
+            <div class="wds-toolbar-right">
+              <button class="btn" id="wdsBtnOpenExplorer" disabled title="Ouvrir l'emplacement dans l'Explorateur">
+                <img src="static/icons/win98/folder.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                <span>Ouvrir dans l'Explorateur</span>
+              </button>
+              <button class="btn" id="wdsBtnRefresh" title="Relancer l'analyse de la cible actuelle">
+                <img src="static/icons/win98/drive.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                <span>Actualiser</span>
+              </button>
+              <button class="btn danger" id="wdsBtnCancel" style="display:none;" title="Arrêter l'analyse en cours">
+                <span>Arrêter</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bandeau d'état d'analyse en cours -->
+          <div class="wds-scan-banner" id="wdsScanBanner" style="display:none;">
+            <div class="wds-scan-info">
+              <span class="wds-scan-spinner">⏳</span>
+              <span id="wdsScanStatusText">Analyse en cours...</span>
+            </div>
+            <div class="wds-scan-dir" id="wdsScanCurrentDir"></div>
+          </div>
+
+          <!-- Zone supérieure : Arborescence des dossiers (gauche) + Liste des extensions (droite) -->
+          <div class="wds-top-split" id="wdsTopSplit">
+            <!-- Volet Arborescence des dossiers (TreeTable) -->
+            <div class="wds-tree-pane" id="wdsTreePane">
+              <table class="wds-table" id="wdsTreeTable">
+                <thead>
+                  <tr>
+                    <th style="width: 38%;">Nom</th>
+                    <th style="width: 18%;">Sous-arbre %</th>
+                    <th style="width: 14%; text-align: right;">Taille</th>
+                    <th style="width: 10%; text-align: right;">%</th>
+                    <th style="width: 10%; text-align: right;">Fichiers</th>
+                    <th style="width: 10%; text-align: right;">Dossiers</th>
+                  </tr>
+                </thead>
+                <tbody id="wdsTreeBody"></tbody>
+              </table>
+            </div>
+
+            <div class="resizer-v" id="wdsTopResizer" title="Redimensionner"></div>
+
+            <!-- Volet Liste des extensions & couleurs -->
+            <div class="wds-ext-pane" id="wdsExtPane">
+              <table class="wds-table" id="wdsExtTable">
+                <thead>
+                  <tr>
+                    <th style="width: 24%;">Extension</th>
+                    <th style="width: 14%;">Couleur</th>
+                    <th style="width: 28%;">Description</th>
+                    <th style="width: 16%; text-align: right;">Octets</th>
+                    <th style="width: 8%; text-align: right;">%</th>
+                    <th style="width: 10%; text-align: right;">Fichiers</th>
+                  </tr>
+                </thead>
+                <tbody id="wdsExtBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="resizer-h" id="wdsMainResizer" title="Redimensionner la Treemap"></div>
+
+          <!-- Zone inférieure : Cushion Treemap MacDirStat -->
+          <div class="wds-treemap-pane" id="wdsTreemapPane">
+            <canvas id="wdsTreemapCanvas" class="wds-treemap-canvas"></canvas>
+          </div>
+
+          <!-- Barre d'état inférieure MacDirStat -->
+          <div class="wds-statusbar">
+            <span id="wdsStatusSelected">Prêt — Choisissez un disque ou un dossier à analyser.</span>
+            <span id="wdsStatusSummary"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- VUE 5 : CLONAGE ET IMAGE DISQUE -->
+      <section class="view-section" id="viewClone">
+        <div class="clone-view">
+          <div class="clone-header">
+            <div class="clone-title-wrap">
+              <img src="static/icons/win98/clone.png" width="32" height="32" style="image-rendering:pixelated;" alt="Cloner">
+              <div>
+                <div style="font-weight:bold;font-size:14px;color:#000080;">Clonage & Sauvegarde d'image disque</div>
+                <div style="font-size:11px;color:#555;">Copie physique des partitions ou création d'une image disque complète (.dmg)</div>
+              </div>
+            </div>
+            <button class="btn" id="btnOpenFdaSettings" style="display:flex;align-items:center;padding:4px 10px;font-size:11.5px;font-weight:bold;" title="Ouvrir Réglages Système > Confidentialité et sécurité > Accès complet au disque">
+              <span>Autoriser Explorer 2 (Accès complet au disque)</span>
+            </button>
+          </div>
+
+          <div class="clone-fda-banner" id="cloneFdaBanner" style="background:#c0c0c0;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #ffffff;border-bottom:2px solid #ffffff;box-shadow:inset 1px 1px 0 #000000;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;font-size:11.5px;color:#000000;line-height:1.4;">
+              <strong>Autorisations macOS requises pour le clonage de disque physique :</strong>
+              Par sécurité, macOS bloque l'accès bloc à bloc aux disques bruts. Cliquez sur <strong>« Autoriser Explorer 2 »</strong> pour ouvrir les Réglages macOS et cochez <em>Explorer 2</em> dans <em>Accès complet au disque</em>.
+            </div>
+            <button class="btn primary" id="btnOpenFdaBannerBtn" style="white-space:nowrap;padding:4px 12px;font-weight:bold;">
+              <span>Ouvrir les Réglages macOS...</span>
+            </button>
+          </div>
+
+          <div class="clone-cards-grid">
+            <!-- CARTE 1 : CLONER UN DISQUE VERS UN AUTRE DISQUE -->
+            <div class="clone-card">
+              <div class="clone-card-titlebar">
+                <img src="static/icons/win98/clone.png" width="18" height="18" style="image-rendering:pixelated;" alt="">
+                <span>Cloner un disque vers un autre (Copie exacte des partitions)</span>
+              </div>
+              <div class="clone-card-body">
+                <p style="font-size:11px;color:#333;margin:0 0 10px 0;">
+                  Clone l'intégralité du disque source (table de partitions GPT/MBR et tous les volumes) directement sur le disque de destination.
+                </p>
+
+                <div class="modal-field">
+                  <label class="modal-label">Disque source à cloner :</label>
+                  <select id="cloneDiskSourceSelect" class="wds-select" style="width:100%;"></select>
+                </div>
+
+                <div class="modal-field">
+                  <label class="modal-label">Disque destination qui recevra les partitions :</label>
+                  <select id="cloneDiskTargetSelect" class="wds-select" style="width:100%;"></select>
+                </div>
+
+                <div class="clone-warning-box" id="cloneDiskWarningBox">
+                  ⚠️ <strong>Attention :</strong> Toutes les données existantes sur le disque de destination seront définitivement écrasées et remplacées par les partitions du disque source.
+                </div>
+
+                <div style="margin-top:auto;display:flex;justify-content:flex-end;">
+                  <button class="btn primary" id="btnStartDiskClone" style="padding:5px 14px;">
+                    <img src="static/icons/win98/clone.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                    <span>Lancer le clonage de disque</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- CARTE 2 : CRÉER UNE IMAGE DISQUE (.DMG) -->
+            <div class="clone-card">
+              <div class="clone-card-titlebar">
+                <img src="static/icons/win98/file_dmg.png" width="18" height="18" style="image-rendering:pixelated;" alt="">
+                <span>Créer une image disque (.dmg / .img)</span>
+              </div>
+              <div class="clone-card-body">
+                <p style="font-size:11px;color:#333;margin:0 0 10px 0;">
+                  Génère une image disque compressée bit à bit contenant toutes les partitions et données du disque sélectionné.
+                </p>
+
+                <div class="modal-field">
+                  <label class="modal-label">Disque physique source :</label>
+                  <select id="cloneImageSourceSelect" class="wds-select" style="width:100%;"></select>
+                </div>
+
+                <div class="modal-field">
+                  <label class="modal-label">Dossier / Emplacement de sauvegarde du fichier image :</label>
+                  <div style="display:flex;gap:6px;">
+                    <input type="text" id="cloneImagePathInput" class="modal-input" placeholder="/Volumes/.../backup.dmg" style="flex:1;" spellcheck="false">
+                    <button class="btn" id="btnBrowseImageDest">
+                      <img src="static/icons/win98/folder.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                      <span>Parcourir...</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="clone-info-box">
+                  ℹ️ L'image disque (.dmg) pourra être ouverte, restaurée ou archivée sur n'importe quel ordinateur.
+                </div>
+
+                <div style="margin-top:auto;display:flex;justify-content:flex-end;">
+                  <button class="btn primary" id="btnStartDiskImage" style="padding:5px 14px;">
+                    <img src="static/icons/win98/file_dmg.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+                    <span>Créer l'image disque</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone de suivi de tâche de clonage / image -->
+          <div class="clone-progress-pane" id="cloneProgressPane" style="display:none;">
+            <div class="clone-progress-title" id="cloneProgressTitle">Clonage en cours...</div>
+            <div class="clone-progress-desc" id="cloneProgressDesc">Initialisation...</div>
+            <div class="transfer-progress-bar" style="height:18px;">
+              <div class="transfer-progress-fill" id="cloneProgressFill" style="width:0%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11.5px;">
+              <span id="cloneProgressDetails">0 Mo écrits</span>
+              <button class="btn danger" id="btnCancelClone">Annuler</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VUE 6 : FLASHEUR D'IMAGE ISO POUR CLÉ USB BOOTABLE (UEFI) -->
+      <section class="view-section" id="viewFlash">
+        <div class="clone-view">
+          <div class="clone-header">
+            <div class="clone-title-wrap">
+              <img src="static/icons/win98/usb_key_detail.png" width="32" height="32" style="image-rendering:pixelated;" alt="Flash">
+              <div>
+                <div style="font-weight:bold;font-size:14px;color:#000080;">Flasheur de Clé USB Bootable (UEFI)</div>
+                <div style="font-size:11px;color:#555;">Création directe de support amovible amorçable UEFI à partir d'une image ISO</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="background:#c0c0c0;color:#000080;border-top:2px solid #ffffff;border-left:2px solid #ffffff;border-right:2px solid #808080;border-bottom:2px solid #808080;box-shadow:inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #000000;font-weight:bold;font-size:11px;padding:3px 10px;">
+                Mode UEFI exclusif (GPT / ESP)
+              </span>
+            </div>
+          </div>
+
+          <div class="flash-cards-grid">
+            <!-- COLONNE GAUCHE : CONFIGURATION DU FLASH -->
+            <div class="clone-card">
+              <div class="clone-card-titlebar">
+                <img src="static/icons/win98/usb_key_detail.png" width="18" height="18" style="image-rendering:pixelated;" alt="">
+                <span>Configuration du Flash ISO vers USB (Amorçage UEFI)</span>
+              </div>
+              <div class="clone-card-body">
+                <p style="font-size:11px;color:#333;margin:0 0 10px 0;">
+                  Sélectionnez l'image ISO de votre système d'exploitation ou utilitaire et la clé USB cible. Le flash s'exécute en mode UEFI pur avec streaming bit-à-bit.
+                </p>
+
+                <!-- 1. Sélection Image ISO -->
+                <div class="modal-field" style="margin-bottom:10px;">
+                  <label class="modal-label" style="font-weight:bold;color:#000080;">1. Image ISO source :</label>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input type="text" id="flashIsoPathInput" class="wds-input" style="flex:1;" placeholder="Cliquez sur Parcourir pour choisir une image ISO..." readonly>
+                    <button class="btn" id="btnBrowseIso" style="white-space:nowrap;padding:4px 12px;font-weight:bold;display:flex;align-items:center;gap:5px;">
+                      <img src="static/icons/win98/folder.png" width="16" height="16" style="image-rendering:pixelated;" alt="">
+                      <span>Parcourir...</span>
+                    </button>
+                  </div>
+                  <!-- Détails ISO détectée (Style Windows 98) -->
+                  <div id="flashIsoDetailsBox" style="display:none;margin-top:6px;padding:6px 10px;background:#c0c0c0;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #ffffff;border-bottom:1px solid #ffffff;box-shadow:inset 1px 1px 0 #000000;font-size:11px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <span id="flashIsoNameLabel" style="font-weight:bold;color:#000080;">ubuntu.iso</span>
+                      <span id="flashIsoSizeLabel" style="font-weight:bold;color:#000000;">2.4 Go</span>
+                    </div>
+                    <div id="flashIsoUefiBadge" style="margin-top:3px;color:#006000;font-weight:bold;display:flex;align-items:center;gap:4px;">
+                      <span>✓ Format d'amorce UEFI confirmé</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. Sélection Clé USB -->
+                <div class="modal-field" style="margin-bottom:10px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <label class="modal-label" style="font-weight:bold;color:#000080;margin:0;">2. Périphérique USB cible :</label>
+                    <button class="btn" id="btnRefreshFlashDrives" style="padding:2px 8px;font-size:10.5px;" title="Actualiser la liste des clés USB">
+                      🔄 Rafraîchir
+                    </button>
+                  </div>
+                  <select id="flashTargetSelect" class="wds-select" style="width:100%;">
+                    <option value="">Recherche des clés USB connectées...</option>
+                  </select>
+                </div>
+
+                <!-- 3. Paramètres UEFI (Style Windows 98) -->
+                <div class="clone-info-box" style="margin-bottom:10px;">
+                  <div style="font-weight:bold;margin-bottom:2px;color:#000080;">Amorçage UEFI exclusif (Class 3 / GPT) :</div>
+                  <div>Le périphérique USB sera gravé avec table de partitionnement GPT et amorce EFI (`\EFI\BOOT\BOOTX64.EFI`), optimisé pour un démarrage direct sur tous les ordinateurs récents et Mac.</div>
+                </div>
+
+                <!-- Avertissement (Style Windows 98) -->
+                <div id="flashWarningBox" class="clone-warning-box" style="margin-bottom:12px;">
+                  ⚠️ <strong>Attention :</strong> Toutes les données existantes sur la clé USB sélectionnée seront définitivement écrasées et remplacées.
+                </div>
+
+                <!-- Bouton Lancer Flash -->
+                <div style="margin-top:auto;display:flex;justify-content:flex-end;">
+                  <button class="btn primary" id="btnStartFlash" style="padding:6px 18px;font-weight:bold;font-size:12px;display:flex;align-items:center;gap:6px;" disabled>
+                    <img src="static/icons/win98/usb_key_detail.png" width="18" height="18" style="image-rendering:pixelated;" alt="">
+                    <span>Flasher la clé USB (UEFI)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- COLONNE DROITE : SUIVI EN DIRECT & OSCILLOSCOPE DE VITESSE -->
+            <div class="clone-card" id="flashMonitorCard">
+              <div class="clone-card-titlebar" style="justify-content:space-between;">
+                <div style="display:flex;align-items:center;">
+                  <span id="flashProgressTitle">Suivi du transfert & Débit en temps réel</span>
+                </div>
+                <div id="flashProgressSpeedBadge" style="font-family:monospace;font-size:12px;font-weight:bold;color:#00ff00;background:#000;padding:2px 8px;border:1px solid #003600;">
+                  0.00 Mo/s
+                </div>
+              </div>
+              <div class="clone-card-body" style="display:flex;flex-direction:column;flex:1;">
+                <!-- Description d'étape -->
+                <div class="clone-progress-desc" id="flashProgressDesc" style="font-weight:bold;color:#000080;margin-bottom:4px;">
+                  En attente du démarrage du flash...
+                </div>
+
+                <!-- Barre de progression rétro Windows 98 -->
+                <div class="transfer-progress-bar" style="height:20px;margin:4px 0 6px 0;">
+                  <div class="transfer-progress-fill" id="flashProgressFill" style="width:0%;"></div>
+                </div>
+
+                <!-- Métriques de transfert -->
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#222;margin-bottom:8px;padding:3px 6px;background:#d4d0c8;border-top:1px solid #808080;border-left:1px solid #808080;border-right:1px solid #fff;border-bottom:1px solid #fff;box-shadow:inset 1px 1px 0 #000;">
+                  <span id="flashProgressBytesText" style="font-weight:bold;font-family:monospace;">0 Mo / 0 Mo</span>
+                  <span id="flashProgressEtaText" style="color:#444;">--</span>
+                  <span id="flashProgressPctText" style="font-weight:bold;color:#000080;">0% complété</span>
+                </div>
+
+                <!-- Oscilloscope CRT temps réel prenant toute la hauteur restante -->
+                <div style="display:flex;flex-direction:column;flex:1;min-height:220px;margin-bottom:10px;">
+                  <div style="font-size:11px;font-weight:bold;color:#000080;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
+                    <span>📈 Oscilloscope de débit d'écriture (temps réel) :</span>
+                    <span id="flashGraphPeakSpeed" style="color:#000;font-family:monospace;font-size:11px;">Pic : 0.0 Mo/s</span>
+                  </div>
+                  <div style="flex:1;border:2px inset #ffffff;box-shadow:inset 1px 1px #000;background:#000;border-radius:0;overflow:hidden;position:relative;min-height:180px;">
+                    <canvas id="flashSpeedCanvas" style="width:100%;height:100%;display:block;"></canvas>
+                  </div>
+                </div>
+
+                <!-- Bouton Annuler -->
+                <div style="display:flex;justify-content:flex-end;">
+                  <button class="btn danger" id="btnCancelFlash" style="padding:4px 16px;font-weight:bold;" disabled>
+                    Annuler le flash
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VUE 7 : CONNEXIONS RÉSEAU & PROPRIÉTÉS TCP/IP -->
+      <section class="view-section" id="viewNetwork">
+        <div class="network-view">
+          <div class="network-header">
+            <div class="network-title-wrap">
+              <img src="static/icons/win98/network.png" width="32" height="32" style="image-rendering:pixelated;" alt="Réseau">
+              <div>
+                <div style="font-weight:bold;font-size:14px;color:#000080;">Connexions Réseau & Paramètres TCP/IP</div>
+                <div style="font-size:11px;color:#555;">Paramétrage des adaptateurs réseau du Mac, adressage IP / Passerelle / DNS et test de connectivité</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button class="btn" id="btnToggleInactiveNet" style="padding:4px 10px;font-size:11px;white-space:nowrap;">
+                Afficher les interfaces désactivées
+              </button>
+              <button class="btn" id="btnRefreshNetwork" style="padding:4px 12px;font-weight:bold;display:flex;align-items:center;gap:5px;">
+                <span>🔄 Actualiser</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ligne de démarcation Windows 98 -->
+          <div class="network-divider"></div>
+
+          <!-- Grille des adaptateurs réseau -->
+          <div class="network-cards-grid" id="networkCardsGrid">
+            <div style="padding:20px;text-align:center;color:#666;font-style:italic;">
+              Recherche des interfaces réseau physiques en cours...
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 3. Boîte de Dialogue de Transfert avec Courbe Haute Précision (10ms) -->
+  <div class="transfer-dialog" id="transferDialog">
+    <div class="transfer-header">
+      <div class="transfer-title" id="transferTitle">Transfert en cours...</div>
+      <button class="transfer-close-btn" id="transferCloseBtn" title="Fermer">✕</button>
+    </div>
+
+    <!-- Animation Culte de Copie : Feuilles volantes d'un dossier à l'autre -->
+    <div class="transfer-copy-anim" id="transferCopyAnim">
+      <!-- Dossier Source (gauche) -->
+      <div class="copy-anim-folder source-folder" title="Dossier source">
+        <div class="folder-back"></div>
+        <div class="folder-papers"></div>
+        <div class="folder-body"></div>
+        <div class="folder-front"></div>
+      </div>
+
+      <!-- Trajectoire en arc des documents volants -->
+      <div class="copy-anim-flight">
+        <div class="flying-doc doc-1">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+        <div class="flying-doc doc-2">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+        <div class="flying-doc doc-3">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dossier Destination (droite) -->
+      <div class="copy-anim-folder dest-folder" title="Dossier destination">
+        <div class="folder-back"></div>
+        <div class="folder-papers"></div>
+        <div class="folder-body"></div>
+        <div class="folder-front"></div>
+      </div>
+    </div>
+
+    <!-- Animation Authentique Pixel-Art Windows 98 (Canvas 280x60) -->
+    <canvas id="win98CopyCanvas" class="win98-copy-canvas" width="280" height="60"></canvas>
+
+    <div class="transfer-file-info" id="transferFileInfo">Traitement en cours...</div>
+    <div class="transfer-dir-info" id="transferDirInfo" style="display:none;"></div>
+
+    <div class="transfer-stats-row" id="transferStatsRow" style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--w11-text-secondary);padding:1px 2px;min-height:16px;">
+      <span id="transferFilesBadge"></span>
+      <span id="transferSizesBadge" style="font-weight:600;"></span>
+    </div>
+
+    <div class="transfer-progress-bar">
+      <div class="transfer-progress-fill" id="transferProgressFill"></div>
+    </div>
+
+    <div class="transfer-metrics-row">
+      <div class="transfer-speed-badge" id="transferSpeedBadge">0.00 Mo/s</div>
+      <div class="transfer-eta-text" id="transferEtaText">Calcul du temps restant...</div>
+    </div>
+
+    <!-- Courbe graphique Canvas ultra précise -->
+    <div class="speed-canvas-container">
+      <canvas class="speed-canvas" id="speedCanvas"></canvas>
+    </div>
+
+    <div class="transfer-actions">
+      <button class="btn danger" id="transferCancelBtn">Annuler</button>
+    </div>
+  </div>
+
+  <!-- 4. Modale de Connexion Lecteur SMB adaptée macOS -->
+  <div class="modal-overlay" id="smbModalOverlay">
+    <div class="modal-card smb-modal-card" style="width: 520px;">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <span class="modal-title-text">Connecter un partage réseau SMB</span>
+        </div>
+        <button class="modal-close-x-btn" id="smbCloseXBtn" title="Fermer">✕</button>
+      </div>
+      
+      <div class="modal-content-pad">
+        <div class="modal-field">
+          <label class="modal-label">Serveur ou machine réseau (IP ou nom d'hôte)</label>
+          <input type="text" class="modal-input" id="smbServerInput" placeholder="ex: 192.168.1.10 ou serveur-nas" spellcheck="false">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="modal-field">
+            <label class="modal-label">Nom d'utilisateur (optionnel)</label>
+            <input type="text" class="modal-input" id="smbUsername" placeholder="ex: utilisateur" spellcheck="false">
+          </div>
+
+          <div class="modal-field">
+            <label class="modal-label">Mot de passe (optionnel)</label>
+            <input type="password" class="modal-input" id="smbPassword" placeholder="••••••••">
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;">
+          <button class="btn primary" id="smbBtnDiscover" style="flex-shrink:0;">
+            <span>🔍 Explorer les partages</span>
+          </button>
+        </div>
+
+        <!-- Zone de liste des partages découverts -->
+        <div class="modal-field" id="smbSharesContainer" style="display:none;">
+          <label class="modal-label">Partages disponibles sur ce serveur :</label>
+          <div id="smbSharesList" class="smb-shares-list" style="max-height: 140px; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 4px;"></div>
+        </div>
+
+        <div class="modal-field">
+          <label class="modal-label">Chemin complet du partage sélectionné</label>
+          <input type="text" class="modal-input" id="smbRemotePath" placeholder="smb://192.168.1.10/partage" spellcheck="false">
+        </div>
+
+        <div class="modal-field" id="smbDriveLetterField" style="display:none;">
+          <label class="modal-label">Lettre de lecteur</label>
+          <select class="modal-input" id="smbDriveLetter"></select>
+        </div>
+
+        <label class="modal-checkbox-row">
+          <input type="checkbox" id="smbRemember" checked>
+          <span>Mémoriser les identifiants dans le Trousseau d'accès macOS</span>
+        </label>
+
+        <div class="modal-actions">
+          <button class="btn" id="smbCancelBtn">Annuler</button>
+          <button class="btn primary" id="smbConfirmBtn">Monter le lecteur réseau</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Menu contextuel flottant personnalisé -->
+  <div class="context-menu" id="contextMenu"></div>
+
+  <!-- 6. Modale standard (Nouveau dossier / Renommer) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card standard-modal-card">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <span class="modal-title-text" id="modalTitle">Titre</span>
+        </div>
+        <button class="modal-close-x-btn" id="modalCloseXBtn" title="Fermer">✕</button>
+      </div>
+      <div class="modal-content-pad">
+        <input type="text" class="modal-input" id="modalInput" spellcheck="false">
+        <div class="modal-actions">
+          <button class="btn" id="modalCancelBtn">Annuler</button>
+          <button class="btn primary" id="modalConfirmBtn">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Conteneur des notifications toasts -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 8. Modale Paramètres & Choix du thème -->
+  <div class="modal-overlay" id="settingsModalOverlay">
+    <div class="modal-card settings-modal-card" style="width: 480px;">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <span class="settings-title-icon" id="settingsTitleIcon"></span>
+          <span class="modal-title-text">Paramètres</span>
+        </div>
+        <button class="modal-close-x-btn" id="settingsCloseBtn" title="Fermer">✕</button>
+      </div>
+
+      <div class="settings-content" style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <div style="font-weight:600;font-size:13.5px;color:var(--w11-text-primary);margin-bottom:8px;">À propos</div>
+          <div class="settings-app-info-card" style="padding:10px 14px;background:var(--w11-surface-alt, rgba(255,255,255,0.05));border:1px solid var(--w11-border, rgba(255,255,255,0.12));border-radius:6px;display:flex;align-items:center;gap:14px;">
+            <img src="static/icon.png" width="36" height="36" style="image-rendering:pixelated;flex-shrink:0;" alt="Explorer 2 Logo">
+            <div style="display:flex;flex-direction:column;gap:3px;flex:1;">
+              <div style="font-weight:700;font-size:14px;">explorer 2 mac</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--w11-text-secondary, #94a3b8);">
+                <span>Version : <strong style="color:var(--w11-text-primary, #ffffff);">1.0</strong></span>
+                <span>Auteur : <strong style="color:var(--w11-text-primary, #ffffff);">martin astruc</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:8px;">
+        <button class="btn primary" id="settingsOkBtn">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Modale Calcul de taille / Propriétés du dossier -->
+  <div class="modal-overlay" id="folderSizeModalOverlay" style="display:none;">
+    <div class="modal-card folder-props-modal-card" style="width: 440px;">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <img id="folderSizeTitleIcon" src="static/icons/win98/file.png" width="16" height="16" style="image-rendering:pixelated;" alt="">
+          <span class="modal-title-text" id="folderSizeModalTitle">Propriétés</span>
+        </div>
+        <button class="modal-close-x-btn" id="folderSizeCloseBtn" title="Fermer">✕</button>
+      </div>
+
+      <div class="modal-content-pad" style="font-size:12px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+          <div id="folderSizeIcon" style="flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">
+            <img src="static/icons/win98/folder.png" width="32" height="32" style="image-rendering:pixelated;" alt="">
+          </div>
+          <div style="overflow:hidden;flex:1;">
+            <div id="folderSizeName" style="font-weight:600; font-size:13px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Nom du dossier</div>
+            <div id="folderSizePath" style="font-size:11px; color:#555; word-break:break-all;">/...</div>
+          </div>
+        </div>
+
+        <div style="height:0; border-top:1px solid #808080; border-bottom:1px solid #ffffff; margin:8px 0;"></div>
+
+        <div id="folderSizeLoading" style="display:flex; align-items:center; gap:10px; color:#000080; padding:10px 0;">
+          <div class="spinner" style="width:14px; height:14px; border:2px solid #808080; border-top-color:#000080; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+          <span>Calcul des informations en cours...</span>
+        </div>
+
+        <div id="folderSizeDetails" style="display:none; flex-direction:column; gap:6px;">
+          <div style="display:flex; justify-content:space-between;" id="folderSizeTypeRow">
+            <span style="color:#000;">Type :</span>
+            <span id="folderSizeType" style="color:#000;">--</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:#000;">Taille :</span>
+            <span id="folderSizeFormatted" style="font-weight:bold; color:#000;">0 Mo</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:#000;">Taille exacte :</span>
+            <span id="folderSizeBytes" style="color:#555; font-family:monospace;">0 octets</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;" id="folderSizeCountsRow">
+            <span style="color:#000;">Contenu :</span>
+            <span id="folderSizeCounts" style="color:#000;">0 fichiers, 0 dossiers</span>
+          </div>
+          <div style="height:0; border-top:1px solid #808080; border-bottom:1px solid #ffffff; margin:4px 0;"></div>
+          <div style="display:flex; justify-content:space-between;" id="folderSizeModifiedRow">
+            <span style="color:#000;">Modifié le :</span>
+            <span id="folderSizeModified" style="font-weight:bold; color:#000;">--</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;" id="folderSizeCreatedRow">
+            <span style="color:#000;">Créé le :</span>
+            <span id="folderSizeCreated" style="color:#555;">--</span>
+          </div>
+          <div id="folderSizeSkippedRow" style="display:none; justify-content:space-between; font-size:11px; color:#c00000;">
+            <span>Éléments inaccessibles :</span>
+            <span id="folderSizeSkipped">0</span>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:10px;">
+          <button class="btn primary" id="folderSizeOkBtn">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- 10. Modale MacDirStat : Sélectionner un disque entier ou un dossier dans l'arborescence -->
+  <div class="modal-overlay" id="spacePickerModalOverlay" style="display:none;">
+    <div class="modal-card wds-picker-modal-card" style="width: 560px;">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <img src="static/icons/win98/space.png" width="16" height="16" style="image-rendering:pixelated;" alt="Espace">
+          <span class="modal-title-text">MacDirStat — Sélectionner un disque ou un dossier</span>
+        </div>
+        <button class="modal-close-x-btn" id="spacePickerCloseBtn" title="Fermer">✕</button>
+      </div>
+
+      <div class="modal-content-pad" style="gap:10px;">
+        <div class="modal-field">
+          <label class="modal-label">1. Choisir un lecteur / disque entier :</label>
+          <div id="spacePickerDrivesList" class="wds-picker-drives-list"></div>
+        </div>
+
+        <div class="modal-field">
+          <label class="modal-label">2. Ou parcourir l'arborescence des dossiers :</label>
+          <div id="spacePickerTreeContainer" class="wds-picker-tree-container"></div>
+        </div>
+
+        <div class="modal-field">
+          <label class="modal-label">Chemin sélectionné à analyser :</label>
+          <input type="text" class="modal-input" id="spacePickerPathInput" placeholder="/Users/..." spellcheck="false">
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn" id="spacePickerCancelBtn">Annuler</button>
+          <button class="btn primary" id="spacePickerConfirmBtn">
+            <img src="static/icons/win98/space.png" class="win98-custom-icon" style="width:16px;height:16px;" alt="">
+            <span>Analyser</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. Modale Formatage de Disque (APFS, Mac OS Étendu, ExFAT) -->
+  <div class="modal-overlay" id="formatDiskModalOverlay" style="display:none;">
+    <div class="modal-card format-modal-card" style="width: 460px;">
+      <div class="modal-titlebar">
+        <div class="modal-title-wrap">
+          <img src="static/icons/win98/drive.png" width="16" height="16" style="image-rendering:pixelated;" alt="">
+          <span class="modal-title-text" id="formatModalTitle">Formater le disque</span>
+        </div>
+        <button class="modal-close-x-btn" id="formatModalCloseBtn" title="Fermer">✕</button>
+      </div>
+
+      <div class="modal-content-pad" style="gap:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img id="formatModalDiskIcon" src="static/icons/win98/drive.png" width="36" height="36" style="image-rendering:pixelated;" alt="">
+          <div>
+            <div id="formatModalDiskName" style="font-weight:bold;font-size:13px;color:#000080;">Disque</div>
+            <div id="formatModalDiskMeta" style="font-size:11px;color:#555;">Taille et point de montage</div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:#808080;"></div>
+
+        <div class="modal-field">
+          <label class="modal-label">Nom du volume (Label) :</label>
+          <input type="text" id="formatVolumeNameInput" class="modal-input" value="SANS TITRE" maxlength="32" spellcheck="false">
+        </div>
+
+        <div class="modal-field">
+          <label class="modal-label">Système de fichiers :</label>
+          <select id="formatFileSystemSelect" class="wds-select" style="width:100%;">
+            <option value="apfs" selected>APFS (Apple File System - Recommandé Mac modernes)</option>
+            <option value="jhfs+">Mac OS Étendu (journalisé) (HFS+ pour anciens Mac)</option>
+            <option value="exfat">ExFAT (Compatible Mac et PC Windows)</option>
+          </select>
+        </div>
+
+        <div class="clone-warning-box">
+          ⚠️ <strong>AVERTISSEMENT :</strong> Le formatage effacera irrémédiablement l'intégralité des données et partitions présentes sur ce disque.
+        </div>
+
+        <div id="formatProgressMsg" style="display:none;align-items:center;gap:8px;font-weight:bold;color:#000080;">
+          <span class="spinner" style="width:14px;height:14px;border:2px solid #000080;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>
+          <span id="formatProgressText">Formatage en cours, veuillez patienter...</span>
+        </div>
+
+        <div class="modal-actions" style="margin-top:6px;">
+          <button class="btn" id="formatModalCancelBtn">Annuler</button>
+          <button class="btn danger" id="formatModalConfirmBtn" style="padding:4px 14px;">
+            <span>Formater maintenant</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="static/retro-spectrum.js"></script>
+  <script src="static/copy-anim.js"></script>
+  <script src="static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6231 @@
+:root {
+  --w11-bg: #181818;
+  --w11-sidebar-bg: #202020;
+  --w11-rail-bg: #141414;
+  --w11-surface: #242424;
+  --w11-surface-alt: #2b2e34;
+  --w11-surface-hover: rgba(255, 255, 255, 0.08);
+  --w11-surface-selected: #1e3a5f;
+  --w11-surface-selected-hover: #264875;
+  --w11-surface-selected-border: #3b82f6;
+  --w11-surface-active: rgba(255, 255, 255, 0.12);
+  
+  --w11-accent: #3b82f6;
+  --w11-accent-hover: #60a5fa;
+  --w11-accent-active: #2563eb;
+  --w11-accent-light: #1e3a5f;
+
+  --w11-success: #107c41;
+  --w11-success-bg: #123524;
+  --w11-warning: #d83b01;
+  --w11-warning-bg: #3d1d11;
+  --w11-danger: #c42b1c;
+  --w11-danger-bg: #3b1414;
+  
+  --w11-text-primary: #f8fafc;
+  --w11-text-secondary: #cbd5e1;
+  --w11-text-tertiary: #94a3b8;
+  --w11-text-disabled: #64748b;
+
+  --w11-border: rgba(255, 255, 255, 0.12);
+  --w11-border-subtle: rgba(255, 255, 255, 0.06);
+  --w11-divider: rgba(255, 255, 255, 0.08);
+
+  --w11-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --w11-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55);
+  --w11-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.7);
+  --w11-shadow-flyout: 0 12px 32px rgba(0, 0, 0, 0.85);
+
+  --w11-radius-sm: 4px;
+  --w11-radius-md: 6px;
+  --w11-radius-lg: 8px;
+  --w11-radius-xl: 10px;
+
+  --font-family: 'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+/* Éléments sombres avec contraste renforcé */
+.modal-card,
+.transfer-dialog,
+.context-menu {
+  background: #242424;
+  color: #f8fafc;
+}
+
+.preview-body {
+  background-color: #1a1a1a;
+}
+
+.preview-text-container {
+  background-color: #161616;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+.preview-table td {
+  border-color: var(--w11-border-subtle, #e2e8f0);
+  color: var(--w11-text-primary);
+}
+
+.drive-big-letter {
+  background-color: rgba(56, 189, 248, 0.18) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.btn {
+  background-color: #2d2d2d;
+  color: #f8fafc;
+  border-color: #3d3d3d;
+}
+
+.btn:hover {
+  background-color: #383838;
+}
+
+.modal-input {
+  background-color: #1e1e1e;
+  border-color: #3d3d3d;
+  color: #f8fafc;
+}
+
+/* ==========================================================================
+   THÈME WINDOWS 98 CLASSIQUE (Rétro Authentique)
+   ========================================================================== */
+[data-theme="windows98"] {
+  --w11-bg: #008080;
+  --w11-sidebar-bg: #c0c0c0;
+  --w11-rail-bg: #a0a0a0;
+  --w11-surface: #c0c0c0;
+  --w11-surface-alt: #c0c0c0;
+  --w11-surface-hover: #000080;
+  --w11-surface-selected: #000080;
+  --w11-surface-selected-hover: #000099;
+  --w11-surface-selected-border: #000080;
+  --w11-surface-active: #000080;
+
+  --w11-accent: #000080;
+  --w11-accent-hover: #1084d0;
+  --w11-accent-active: #000050;
+  --w11-accent-light: #000080;
+
+  --w11-text-primary: #000000;
+  --w11-text-secondary: #222222;
+  --w11-text-tertiary: #444444;
+  --w11-text-disabled: #808080;
+
+  --w11-border: #808080;
+  --w11-border-subtle: #ffffff;
+  --w11-divider: #808080;
+
+  --w11-shadow-sm: none;
+  --w11-shadow-md: none;
+  --w11-shadow-lg: 2px 2px 0 #000000;
+  --w11-shadow-flyout: 2px 2px 0 #000000;
+
+  --w11-radius-sm: 0px;
+  --w11-radius-md: 0px;
+  --w11-radius-lg: 0px;
+  --w11-radius-xl: 0px;
+
+  --font-family: 'Segoe UI', Tahoma, 'MS Sans Serif', Arial, sans-serif;
+}
+
+[data-theme="windows98"] .app-container {
+  background-color: #008080;
+}
+
+[data-theme="windows98"] .app-titlebar {
+  height: 24px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  border-bottom: none;
+  padding: 2px 4px;
+}
+
+[data-theme="windows98"] .titlebar-brand {
+  color: #ffffff;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+[data-theme="windows98"] .titlebar-btn {
+  width: 18px;
+  height: 16px;
+  background-color: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  border-radius: 0;
+  color: #000000;
+  margin-left: 2px;
+  padding: 0;
+}
+
+[data-theme="windows98"] .titlebar-btn:active {
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+
+[data-theme="windows98"] .titlebar-btn.close-btn:hover {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .global-rail {
+  width: 64px;
+  background-color: #c0c0c0;
+  border-right: 2px solid #808080;
+}
+
+[data-theme="windows98"] .rail-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  background-color: #c0c0c0;
+  color: #000000;
+  margin-bottom: 6px;
+  padding: 3px 2px;
+  gap: 3px;
+}
+
+[data-theme="windows98"] #railBtnSmart .rail-btn-label {
+  font-size: 9px;
+  letter-spacing: -0.3px;
+}
+
+[data-theme="windows98"] .rail-btn.active,
+[data-theme="windows98"] .rail-btn:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  background-color: #dfdfdf;
+}
+
+[data-theme="windows98"] .tabs-bar {
+  background-color: #c0c0c0;
+  border-bottom: 2px solid #808080;
+}
+
+[data-theme="windows98"] .tab-item {
+  border-radius: 4px 4px 0 0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  background-color: #c0c0c0;
+  color: #000000;
+  margin-right: 4px;
+}
+
+[data-theme="windows98"] .tab-item.active {
+  background-color: #dfdfdf;
+  border-bottom: 2px solid #dfdfdf;
+  font-weight: bold;
+}
+
+[data-theme="windows98"] .w11-header {
+  background-color: #c0c0c0;
+  border-bottom: 2px solid #808080;
+}
+
+[data-theme="windows98"] .w11-sidebar {
+  background-color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  margin: 6px;
+}
+
+[data-theme="windows98"] .sidebar-item {
+  border-radius: 0;
+  color: #000000;
+}
+
+[data-theme="windows98"] .sidebar-item:hover {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+[data-theme="windows98"] .sidebar-item.active {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+[data-theme="windows98"] .w11-content {
+  background-color: #c0c0c0;
+}
+
+[data-theme="windows98"] .file-table-container {
+  background-color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  margin: 6px;
+}
+
+[data-theme="windows98"] .file-table th {
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  color: #000000;
+  font-weight: bold;
+  border-radius: 0;
+}
+
+[data-theme="windows98"] .file-table th:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+[data-theme="windows98"] .file-row {
+  color: #000000;
+}
+
+[data-theme="windows98"] .file-row:hover {
+  background-color: #e0e0e0;
+}
+
+[data-theme="windows98"] .file-row.selected {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+  outline: 1px dotted #ffffff;
+}
+
+[data-theme="windows98"] .file-row.selected td {
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .drive-card {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  padding: 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  min-height: 68px !important;
+  box-sizing: border-box !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+[data-theme="windows98"] .drive-card:hover {
+  background-color: #d4d0c8 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  transform: none !important;
+}
+
+[data-theme="windows98"] .drive-card.selected {
+  background-color: #dfdfdf !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+}
+
+[data-theme="windows98"] .drive-card.is-smb {
+  border-left: 2px solid #ffffff !important;
+}
+
+[data-theme="windows98"] .drive-card.is-smb:hover {
+  border-left: 2px solid #ffffff !important;
+}
+
+/* Groupbox Fieldset Windows 98 pour Périphériques et Lecteurs */
+.home-view {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #c0c0c0;
+  box-sizing: border-box;
+}
+
+.home-fieldset {
+  border: 2px groove #ffffff;
+  padding: 14px 10px 10px 10px;
+  position: relative;
+  background: #c0c0c0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.home-legend {
+  font-size: 11.5px;
+  font-weight: bold;
+  color: #000000;
+  padding: 0 6px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+
+.home-smb-btn {
+  position: absolute;
+  top: -11px;
+  right: 12px;
+  font-size: 11px;
+  padding: 2px 8px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-weight: normal;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  box-shadow: 1px 1px 0 #000000;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.home-smb-btn:active {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+}
+
+.drives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.drive-card-left {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drive-card-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.drive-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 58px;
+}
+
+.drive-badge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.drive-card-eject-btn {
+  position: static !important;
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #404040 !important;
+  border-bottom: 1px solid #404040 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  padding: 1px 4px !important;
+  cursor: pointer !important;
+  height: 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+}
+
+.drive-card-eject-btn:hover {
+  background: #d4d0c8 !important;
+  color: #c00000 !important;
+}
+
+.drive-card-eject-btn:active {
+  border-top: 1px solid #404040 !important;
+  border-left: 1px solid #404040 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+}
+
+.drive-badge {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 1px solid #808080 !important;
+  border-left: 1px solid #808080 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  font-size: 10px !important;
+  font-weight: bold !important;
+  font-family: 'MS Sans Serif', Tahoma, monospace, sans-serif !important;
+  padding: 1px 5px !important;
+  white-space: nowrap !important;
+}
+
+.drive-pie-canvas {
+  width: 34px;
+  height: 26px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.drive-unc-path {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 10px;
+  color: #444444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+
+.drive-bytes-text {
+  font-size: 10.5px;
+  color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+[data-theme="windows98"] .home-section-header {
+  font-size: 13px !important;
+  font-weight: bold !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 18px !important;
+  border-bottom: 1px solid #808080 !important;
+  box-shadow: 0 1px 0 #ffffff !important;
+}
+
+[data-theme="windows98"] .drive-progress-bar {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  background-color: #ffffff !important;
+  height: 14px;
+  border-radius: 0;
+}
+
+[data-theme="windows98"] .drive-progress-fill {
+  background-color: #000080 !important;
+  border-radius: 0;
+}
+
+[data-theme="windows98"] .drive-big-letter {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000;
+  border-radius: 0;
+  font-size: 11px !important;
+  padding: 2px 6px !important;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* --- Windows 98 Custom Pixel-Art Icons --- */
+[data-theme="windows98"] .win98-custom-icon {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  object-fit: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+[data-theme="windows98"] .toolbar-btn .win98-custom-icon,
+[data-theme="windows98"] .btn .win98-custom-icon,
+[data-theme="windows98"] button .win98-custom-icon {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+}
+
+[data-theme="windows98"] .file-icon .win98-custom-icon,
+[data-theme="windows98"] .item-icon .win98-custom-icon,
+[data-theme="windows98"] .tab-item .win98-custom-icon {
+  width: 20px;
+  height: 20px;
+}
+
+[data-theme="windows98"] .drive-icon .win98-custom-icon {
+  width: 36px;
+  height: 36px;
+}
+
+[data-theme="windows98"] .rail-btn .win98-custom-icon,
+[data-theme="windows98"] .rail-btn img,
+[data-theme="windows98"] .rail-btn svg {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+}
+
+[data-theme="windows98"] .perf-nav-icon .win98-custom-icon {
+  width: 22px;
+  height: 22px;
+}
+
+[data-theme="windows98"] .perf-detail-icon .win98-custom-icon {
+  width: 34px;
+  height: 34px;
+}
+
+[data-theme="windows98"] .taskmgr-tab-btn .win98-custom-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+[data-theme="windows98"] .grid-view .file-icon .win98-custom-icon {
+  width: 44px;
+  height: 44px;
+}
+
+[data-theme="windows98"] .preview-icon-placeholder .win98-custom-icon {
+  width: 56px;
+  height: 56px;
+}
+
+[data-theme="windows98"] .btn,
+[data-theme="windows98"] .toolbar-btn {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  color: #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #000000 !important;
+}
+
+[data-theme="windows98"] .btn:active,
+[data-theme="windows98"] .toolbar-btn:active {
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000, inset -1px -1px 0 #dfdfdf !important;
+}
+
+[data-theme="windows98"] .w11-toolbar {
+  gap: 3px !important;
+  min-height: 28px !important;
+  padding: 2px 4px !important;
+  flex-wrap: nowrap !important;
+}
+
+[data-theme="windows98"] .toolbar-btn {
+  height: 24px !important;
+  padding: 0 6px !important;
+  font-size: 11px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="windows98"] .modal-card,
+[data-theme="windows98"] .transfer-dialog,
+[data-theme="windows98"] .context-menu {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  border-radius: 0 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .modal-input,
+[data-theme="windows98"] .breadcrumb-container {
+  background-color: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .preview-pane {
+  background-color: #c0c0c0;
+  border-left: 2px solid #ffffff;
+  border-radius: 0;
+  min-height: 0;
+}
+
+[data-theme="windows98"] .preview-body {
+  background-color: #ffffff !important;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  margin: 6px;
+  width: auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  color: #000000 !important;
+}
+
+/* ================== THÈME WINDOWS 98 : SANTÉ DES DISQUES S.M.A.R.T. ================== */
+[data-theme="windows98"] .smart-view {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .smart-title {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] #btnRefreshSmart {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+  padding: 4px 12px !important;
+}
+
+[data-theme="windows98"] #btnRefreshSmart:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+}
+
+[data-theme="windows98"] .smart-card {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  color: #000000 !important;
+  gap: 10px !important;
+  padding: 12px !important;
+}
+
+[data-theme="windows98"] .smart-card:hover {
+  background-color: #c0c0c0 !important;
+  transform: none !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+}
+
+[data-theme="windows98"] .disk-canvas-3d {
+  background: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  height: 180px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+[data-theme="windows98"] .smart-health-badge {
+  border-radius: 0 !important;
+  width: 74px !important;
+  height: 74px !important;
+  background-color: #008000 !important;
+  color: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .smart-health-badge.warning {
+  background-color: #ffaa00 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .smart-health-badge.danger {
+  background-color: #aa0000 !important;
+  color: #ffffff !important;
+}
+
+/* Boutons d'éjection des volumes */
+.sidebar-eject-btn {
+  background: transparent;
+  border: none;
+  color: var(--w11-text-secondary, #94a3b8);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 3px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-eject-btn:hover {
+  opacity: 1;
+  background: rgba(220, 38, 38, 0.2);
+  color: #ef4444;
+}
+
+[data-theme="windows98"] .sidebar-eject-btn {
+  background: #c0c0c0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #404040 !important;
+  border-bottom: 1px solid #404040 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  font-size: 11px !important;
+  padding: 0 4px !important;
+  line-height: 14px !important;
+}
+
+[data-theme="windows98"] .sidebar-eject-btn:active {
+  border-top: 1px solid #404040 !important;
+  border-left: 1px solid #404040 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+}
+
+.drive-card-eject-btn {
+  position: static !important;
+  background: var(--w11-surface-alt, rgba(0,0,0,0.15));
+  border: 1px solid var(--w11-border, #444);
+  color: var(--w11-text-secondary, #94a3b8);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 2px;
+  opacity: 0.85;
+  transition: opacity 0.15s, color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  line-height: 1;
+}
+
+.drive-card-eject-btn:hover {
+  opacity: 1;
+  color: #ef4444;
+  background: rgba(220, 38, 38, 0.18);
+}
+
+[data-theme="windows98"] .drive-card-eject-btn {
+  position: static !important;
+  background: #c0c0c0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #404040 !important;
+  border-bottom: 1px solid #404040 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  font-size: 10px !important;
+  padding: 1px 4px !important;
+  height: 16px !important;
+  margin: 0 !important;
+}
+
+[data-theme="windows98"] .big-drive-badge {
+  background: #c0c0c0 !important;
+  color: #000080 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: clamp(12px, 2vw, 17px) !important;
+  font-weight: bold !important;
+  max-width: 48% !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  text-align: center !important;
+  white-space: normal !important;
+  line-height: 1.25 !important;
+  flex-shrink: 0 !important;
+  padding: 4px 8px !important;
+}
+
+[data-theme="windows98"] .smart-disk-model {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-weight: bold !important;
+  font-size: 15px !important;
+}
+
+[data-theme="windows98"] .smart-disk-meta {
+  color: #404040 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 13px !important;
+}
+
+[data-theme="windows98"] .smart-body-metrics {
+  background: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  padding: 10px 14px !important;
+  gap: 8px !important;
+}
+
+[data-theme="windows98"] .smart-row {
+  border-bottom: 1px solid #f0f0f0 !important;
+  padding: 5px 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 13px !important;
+}
+
+[data-theme="windows98"] .smart-label {
+  color: #000000 !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] .smart-val {
+  color: #000080 !important;
+  font-weight: bold !important;
+  font-size: 13.5px !important;
+}
+
+[data-theme="windows98"] .smart-val.highlight {
+  color: #000080 !important;
+  font-weight: bold !important;
+  font-size: 13.5px !important;
+}
+
+[data-theme="windows98"] .settings-version-badge {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000, inset -1px -1px 0 #dfdfdf !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, monospace !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  padding: 1px 8px !important;
+  display: inline-block !important;
+}
+
+/* Windows 98 16-Bit S.M.A.R.T. Disks */
+[data-theme="windows98"] .win98-disk-pixel-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  box-sizing: border-box;
+  background: #c0c0c0;
+  user-select: none;
+}
+
+[data-theme="windows98"] .win98-disk-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #ffffff;
+  padding: 3px 6px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
+[data-theme="windows98"] .win98-disk-banner-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="windows98"] .win98-disk-banner-type {
+  font-size: 10px;
+  background: #000000;
+  color: #00ff00;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+[data-theme="windows98"] .win98-disk-svg-container,
+[data-theme="windows98"] .win98-disk-art-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  overflow: hidden;
+}
+
+[data-theme="windows98"] .win98-disk-svg-container svg {
+  max-width: 100%;
+  max-height: 115px;
+  shape-rendering: crispEdges;
+  filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.35));
+}
+
+[data-theme="windows98"] .win98-pixel-disk-img {
+  max-width: 95%;
+  max-height: 122px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  user-select: none;
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+[data-theme="windows98"] .win98-disk-bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  padding: 2px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="windows98"] .win98-disk-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00ff00;
+  box-shadow: 0 0 4px #00ff00;
+  display: inline-block;
+  animation: win98DiskBlink 1.2s infinite steps(1);
+}
+
+@keyframes win98DiskBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* Volet latéral gauche - Panneau des tâches XP */
+
+/* Les conteneurs de tâches XP (Favoris, Lecteurs, SMB) - Cartes claires pour visibilité parfaite */
+
+/* Zone de contenu principale & Liste de fichiers */
+
+/* Cartes de disques (Vue Accueil / Poste de travail) */
+
+/* Volet d'aperçu */
+
+/* Modales, Menus contextuels, Boîte de transfert */
+
+/* Barre de progression XP aux célèbres blocs verts segmentés */
+
+/* Badge de version dans les paramètres */
+
+/* Cartes des composants à gauche (CPU, RAM, Disques, Réseau, GPU) */
+
+/* Volet de détail des performances */
+
+/* CADRES DES STATISTIQUES AU BAS DU GESTIONNAIRE DE TÂCHES (CORRECTION DU TEXTE INVISIBLE) */
+
+/* Poignée de redimensionnement de l'aperçu */
+.resizer-v {
+  width: 6px;
+  background: transparent;
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  transition: background-color 0.15s ease;
+  z-index: 20;
+}
+
+.resizer-v:hover, .resizer-v.resizing {
+  background-color: var(--w11-accent) !important;
+}
+
+/* Poignée de redimensionnement des colonnes */
+.col-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+  z-index: 10;
+}
+
+.col-resizer:hover, .col-resizer.resizing {
+  background-color: var(--w11-accent) !important;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  color: var(--w11-text-primary);
+  background-color: var(--w11-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================== DISCORD-STYLE INTEGRATED TITLEBAR ================== */
+.app-titlebar {
+  height: 32px;
+  background-color: var(--w11-bg);
+  border-bottom: 1px solid var(--w11-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  padding-left: 12px;
+  z-index: 9999;
+}
+
+.titlebar-drag-region {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+body.is-maximized .app-titlebar,
+body.is-snapped .app-titlebar,
+body.is-titlebar-dragging .app-titlebar,
+body.is-maximized .titlebar-drag-region,
+body.is-snapped .titlebar-drag-region,
+body.is-titlebar-dragging .titlebar-drag-region {
+  -webkit-app-region: no-drag !important;
+}
+
+.titlebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--w11-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.titlebar-controls {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: var(--w11-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--w11-text-primary);
+}
+
+.titlebar-btn.close-btn:hover {
+  background-color: #e81123 !important;
+  color: #ffffff !important;
+}
+
+/* Master Layout */
+.app-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 100vw;
+  background-color: var(--w11-bg);
+  overflow: hidden;
+}
+
+/* ================== GLOBAL LEFT NAVIGATION RAIL ================== */
+.titlebar-toggle-rail-btn {
+  -webkit-app-region: no-drag !important;
+  background: transparent;
+  border: none;
+  color: var(--w11-text-primary);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: all 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.titlebar-toggle-rail-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.titlebar-toggle-rail-btn:active {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.titlebar-toggle-rail-btn svg {
+  stroke: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.titlebar-toggle-rail-btn.rail-is-collapsed svg {
+  transform: rotate(90deg);
+}
+
+[data-theme="windows98"] .titlebar-toggle-rail-btn {
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  background: #c0c0c0;
+  color: #000000;
+  width: 20px;
+  height: 18px;
+  border-radius: 0;
+}
+
+.global-rail {
+  width: 58px;
+  background-color: var(--w11-rail-bg);
+  border-right: 1px solid var(--w11-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 16px 0;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 50;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.15s ease,
+              border-color 0.2s ease !important;
+}
+
+.global-rail.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-right: none !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
+.rail-logo {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.rail-btn {
+  width: 46px;
+  height: 44px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--w11-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.12s ease;
+  overflow: hidden;
+  padding: 2px 2px;
+}
+
+.rail-btn:hover {
+  background-color: var(--w11-surface-hover);
+  color: var(--w11-text-primary);
+}
+
+.rail-btn.active {
+  background-color: var(--w11-surface);
+  color: var(--w11-accent);
+  box-shadow: var(--w11-shadow-sm);
+  border-color: var(--w11-border);
+}
+
+.rail-btn.active::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  background-color: var(--w11-accent);
+  border-radius: 2px;
+}
+
+.rail-btn-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+#railBtnSmart .rail-btn-label {
+  font-size: 8px;
+  letter-spacing: -0.4px;
+}
+
+.rail-spacer {
+  flex: 1;
+}
+
+/* Main Viewport Container */
+.main-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.view-section {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.view-section.active {
+  display: flex;
+}
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--w11-bg);
+  padding: 6px 12px 0 12px;
+  gap: 4px;
+  height: 42px;
+  border-bottom: 1px solid var(--w11-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 35px;
+  padding: 0 12px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top-left-radius: var(--w11-radius-lg);
+  border-top-right-radius: var(--w11-radius-lg);
+  border: 1px solid transparent;
+  border-bottom: none;
+  color: var(--w11-text-secondary);
+  font-size: 12.5px;
+  font-weight: 450;
+  cursor: pointer;
+  max-width: 200px;
+  min-width: 130px;
+  position: relative;
+  transition: all 0.12s ease;
+}
+
+.tab-item:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--w11-text-primary);
+}
+
+.tab-item.active {
+  background-color: var(--w11-surface);
+  color: var(--w11-text-primary);
+  border-color: var(--w11-border);
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.03);
+  font-weight: 500;
+}
+
+.tab-item.tab-dragging {
+  opacity: 0.45;
+  transform: scale(0.96);
+  cursor: grabbing !important;
+}
+
+.tab-item.tab-drop-target {
+  border-left: 3px solid var(--w11-accent) !important;
+  background-color: var(--w11-accent-light) !important;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--w11-surface);
+  z-index: 2;
+}
+
+.tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-close-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--w11-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--w11-text-secondary);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.12s ease;
+}
+
+.tab-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--w11-danger);
+  opacity: 1;
+}
+
+.new-tab-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--w11-text-primary);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.new-tab-btn:hover {
+  background-color: var(--w11-surface-hover);
+  border-color: var(--w11-border-subtle);
+}
+
+/* ================== EXPLORER HEADER & TOOLBAR ================== */
+.w11-header {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--w11-bg);
+  border-bottom: 1px solid var(--w11-border);
+  padding: 8px 12px 6px 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.w11-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--w11-text-primary);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background-color: var(--w11-surface-hover);
+  border-color: var(--w11-border-subtle);
+}
+
+.icon-btn:active:not(:disabled) {
+  background-color: var(--w11-surface-active);
+}
+
+.icon-btn:disabled {
+  color: var(--w11-text-disabled);
+  cursor: default;
+}
+
+.address-bar-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 34px;
+  background-color: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 0 8px;
+  position: relative;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.address-bar-wrapper:focus-within {
+  border-color: var(--w11-accent);
+  box-shadow: 0 0 0 1px var(--w11-accent);
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 2px;
+  scrollbar-width: none;
+}
+.breadcrumb-container::-webkit-scrollbar {
+  display: none;
+}
+
+.breadcrumb-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: var(--w11-radius-sm);
+  color: var(--w11-text-primary);
+  font-weight: 450;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.breadcrumb-segment:hover {
+  background-color: var(--w11-surface-hover);
+}
+
+.breadcrumb-separator {
+  color: var(--w11-text-tertiary);
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.path-input {
+  display: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--w11-text-primary);
+  background: transparent;
+  user-select: text;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  width: 240px;
+  height: 34px;
+  background-color: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 0 8px;
+  gap: 6px;
+  transition: border-color 0.15s ease;
+}
+
+.search-wrapper:focus-within {
+  border-color: var(--w11-accent);
+  box-shadow: 0 0 0 1px var(--w11-accent);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--w11-text-primary);
+  user-select: text;
+}
+
+.w11-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-wrap: nowrap;
+}
+
+.w11-toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--w11-text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap !important;
+  flex-shrink: 0;
+}
+
+.toolbar-btn span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1450px) {
+  #tbToggleHidden span,
+  #tbTogglePreview span,
+  #tbToggleSidebar span,
+  #tbToggleTerminal span {
+    display: none !important;
+  }
+  #tbToggleHidden,
+  #tbTogglePreview,
+  #tbToggleSidebar,
+  #tbToggleTerminal {
+    padding: 0 8px !important;
+    justify-content: center;
+    min-width: 34px;
+  }
+}
+
+@media (max-width: 1200px) {
+  #tbCut span, #tbCopy span, #tbPaste span, #tbRename span, #tbDelete span {
+    display: none !important;
+  }
+  #tbCut, #tbCopy, #tbPaste, #tbRename, #tbDelete {
+    padding: 0 8px !important;
+    justify-content: center;
+    min-width: 34px;
+  }
+}
+
+@media (max-width: 950px) {
+  #tbNewFolder span, #tbNewFile span {
+    display: none !important;
+  }
+  #tbNewFolder, #tbNewFile {
+    padding: 0 8px !important;
+    justify-content: center;
+    min-width: 34px;
+  }
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background-color: var(--w11-surface-hover);
+  border-color: var(--w11-border-subtle);
+}
+
+.toolbar-btn:active:not(:disabled) {
+  background-color: var(--w11-surface-active);
+}
+
+.toolbar-btn:disabled {
+  color: var(--w11-text-disabled);
+  cursor: default;
+}
+
+.toolbar-btn.primary {
+  background-color: var(--w11-surface);
+  border-color: var(--w11-border);
+  font-weight: 500;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background-color: var(--w11-divider);
+  margin: 0 4px;
+}
+
+/* ================== BODY & SIDEBAR ================== */
+.w11-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 0 8px 8px 8px;
+  gap: 8px;
+}
+
+.w11-sidebar {
+  width: 240px;
+  background-color: var(--w11-sidebar-bg);
+  border-radius: var(--w11-radius-lg);
+  border: 1px solid var(--w11-border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 6px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.w11-sidebar.collapsed {
+  display: none !important;
+}
+
+.sidebar-resizer {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  transition: background-color 0.15s ease;
+  user-select: none;
+  z-index: 5;
+  border-radius: 2px;
+}
+
+.sidebar-resizer:hover,
+.sidebar-resizer.resizing {
+  background: rgba(0, 120, 212, 0.45);
+}
+
+.sidebar-resizer.collapsed {
+  display: none !important;
+}
+
+[data-theme="windows98"] .sidebar-resizer {
+  width: 5px;
+  background: #c0c0c0;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--w11-text-tertiary);
+  padding: 8px 10px 4px 10px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--w11-radius-md);
+  color: var(--w11-text-primary);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.1s ease;
+  font-size: 13px;
+}
+
+.sidebar-item:hover {
+  background-color: var(--w11-surface-hover);
+}
+
+.sidebar-item.active {
+  background-color: var(--w11-surface-selected);
+  font-weight: 500;
+}
+
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background-color: var(--w11-accent);
+  border-radius: 2px;
+}
+
+.sidebar-item .item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-item .remove-fav-btn {
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--w11-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-item:hover .remove-fav-btn {
+  opacity: 1;
+}
+
+.sidebar-item .remove-fav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #c42b1c;
+}
+
+/* Drag & Drop indicators */
+.sidebar-item.dragging {
+  opacity: 0.4;
+  background-color: var(--w11-surface-active);
+}
+
+.sidebar-item.drag-over-top {
+  border-top: 2px solid var(--w11-accent);
+}
+
+.sidebar-item.drag-over-bottom {
+  border-bottom: 2px solid var(--w11-accent);
+}
+
+/* ================== MAIN CONTENT AREA ================== */
+.w11-content {
+  flex: 1;
+  background-color: var(--w11-surface);
+  border-radius: var(--w11-radius-lg);
+  border: 1px solid var(--w11-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--w11-shadow-sm);
+  position: relative;
+}
+
+/* Home / Drives View */
+.home-view {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.home-section-header {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  color: var(--w11-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--w11-border);
+}
+
+.drives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.drive-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--w11-surface-alt);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-lg);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.drive-big-letter {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--w11-accent);
+  background: var(--w11-accent-light);
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.drive-card:hover {
+  background-color: var(--w11-surface-hover);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+  transform: translateY(-2px);
+}
+
+.drive-card.selected {
+  background-color: var(--w11-accent-light) !important;
+  border-color: var(--w11-accent) !important;
+  box-shadow: 0 0 0 1.5px var(--w11-accent), var(--w11-shadow-sm) !important;
+}
+
+.drive-card.is-smb {
+  border-left: 3px solid #0078d4;
+}
+
+.drive-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drive-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.drive-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drive-name span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drive-tag {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background-color: var(--w11-accent-light);
+  color: var(--w11-accent);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+[data-theme="windows98"] .drive-tag {
+  display: none !important;
+}
+
+.drive-progress-bar {
+  width: 100%;
+  height: 5px;
+  background-color: #e5e5e5;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.drive-progress-fill {
+  height: 100%;
+  background-color: var(--w11-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.drive-progress-fill.danger {
+  background-color: #e81123;
+}
+
+.drive-capacity-text {
+  font-size: 12px;
+  color: var(--w11-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Folder / Table View */
+.folder-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-table-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+}
+
+.file-table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.file-table th {
+  position: sticky;
+  top: 0;
+  background-color: var(--w11-surface);
+  border-bottom: 1px solid var(--w11-border);
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--w11-text-secondary);
+  cursor: pointer;
+  user-select: none;
+  z-index: 10;
+  transition: background-color 0.1s ease;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.file-table th:hover {
+  background-color: var(--w11-surface-hover);
+  color: var(--w11-text-primary);
+}
+
+.file-table th.col-dragging {
+  opacity: 0.45;
+  background-color: var(--w11-surface-hover) !important;
+}
+
+.file-table th.col-drag-over-left {
+  position: relative;
+  box-shadow: inset 4px 0 0 0 #0078d4 !important;
+  background-color: rgba(0, 120, 212, 0.15) !important;
+}
+
+.file-table th.col-drag-over-right {
+  position: relative;
+  box-shadow: inset -4px 0 0 0 #0078d4 !important;
+  background-color: rgba(0, 120, 212, 0.15) !important;
+}
+
+[data-theme="windows98"] .file-table th.col-drag-over-left {
+  box-shadow: inset 4px 0 0 0 #000080 !important;
+  background-color: rgba(0, 0, 128, 0.2) !important;
+}
+
+[data-theme="windows98"] .file-table th.col-drag-over-right {
+  box-shadow: inset -4px 0 0 0 #000080 !important;
+  background-color: rgba(0, 0, 128, 0.2) !important;
+}
+
+.file-table th.th-filler {
+  width: auto !important;
+  padding: 0 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.file-table td.td-filler {
+  width: auto !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
+.th-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.th-content span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.th-content * {
+  pointer-events: none;
+}
+
+.sort-icon {
+  font-size: 11px;
+  opacity: 0.6;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.file-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--w11-border-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.file-row {
+  cursor: default;
+  transition: background-color 0.08s ease;
+}
+
+.file-row:hover {
+  background-color: var(--w11-surface-hover);
+}
+
+.file-row.selected {
+  background-color: var(--w11-surface-selected) !important;
+  outline: 1px solid var(--w11-surface-selected-border);
+}
+
+.file-row.selected:hover {
+  background-color: var(--w11-surface-selected-hover) !important;
+}
+
+.file-row.selected td:first-child {
+  border-left: 3px solid var(--w11-accent);
+}
+
+.file-row.cut-item {
+  opacity: 0.45;
+}
+
+.file-table td:first-child,
+.file-table td.file-name-td {
+  padding: 0 !important;
+  height: 100%;
+}
+
+.file-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  min-height: 38px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.file-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-name-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 450;
+  flex: 1;
+}
+
+/* Empty State / Loading State */
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--w11-text-secondary);
+  gap: 12px;
+}
+
+/* Footer Status Bar */
+.w11-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  background-color: var(--w11-bg);
+  border-top: 1px solid var(--w11-border-subtle);
+  padding: 0 16px;
+  font-size: 12px;
+  color: var(--w11-text-secondary);
+  flex-shrink: 0;
+}
+
+/* Zone de sélection rectangulaire souris (Marquee / Rubber-band) */
+.selection-marquee {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  background: rgba(0, 120, 215, 0.22);
+  border: 1px solid rgba(0, 120, 215, 0.85);
+  border-radius: 2px;
+}
+
+[data-theme="windows98"] .selection-marquee {
+  background: rgba(0, 0, 128, 0.18) !important;
+  border: 1px dotted #000080 !important;
+  border-radius: 0 !important;
+}
+
+body.is-marquee-selecting {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* ================== THÈME WINDOWS 98 : BOÎTE DE TRANSFERT RETRO 90s ================== */
+[data-theme="windows98"] .transfer-dialog {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #dfdfdf !important;
+  border-left: 2px solid #dfdfdf !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  border-radius: 0 !important;
+  padding: 4px !important;
+  font-family: 'MS Sans Serif', Tahoma, 'Segoe UI', sans-serif !important;
+  gap: 8px !important;
+  width: 440px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+[data-theme="windows98"] .transfer-header {
+  background: linear-gradient(90deg, #000080, #1084d0) !important;
+  color: #ffffff !important;
+  padding: 3px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+[data-theme="windows98"] .transfer-title {
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  letter-spacing: 0.3px !important;
+}
+
+[data-theme="windows98"] .transfer-close-btn {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  width: 16px !important;
+  height: 14px !important;
+  font-size: 10px !important;
+  line-height: 11px !important;
+  padding: 0 !important;
+  font-weight: bold !important;
+  font-family: monospace !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+[data-theme="windows98"] .transfer-close-btn:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+/* Animation Windows 98 Pixel-art Canvas 280x60 */
+.win98-copy-canvas {
+  display: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 300px;
+  height: 70px;
+  margin: 4px auto !important;
+  background-color: #c0c0c0;
+}
+
+[data-theme="windows98"] .transfer-copy-anim {
+  display: none !important;
+}
+
+[data-theme="windows98"] .win98-copy-canvas {
+  display: block !important;
+}
+
+.transfer-dir-info {
+  font-size: 11px;
+  color: var(--w11-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="windows98"] .transfer-dir-info {
+  display: block !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+  padding: 0 4px !important;
+}
+
+[data-theme="windows98"] .transfer-copy-anim {
+  background: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  margin: 6px 4px !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .copy-anim-folder .folder-back {
+  background: #ffff99 !important;
+  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .copy-anim-folder .folder-body {
+  background: #ffff99 !important;
+  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="windows98"] .copy-anim-folder .folder-front {
+  background: #d4a017 !important;
+  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="windows98"] .doc-sheet {
+  background: #ffffff !important;
+  border: 1px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+}
+
+[data-theme="windows98"] .doc-sheet::after {
+  background: #c0c0c0 !important;
+  border-left: 1px solid #000000 !important;
+  border-bottom: 1px solid #000000 !important;
+}
+
+[data-theme="windows98"] .doc-line {
+  background: #000080 !important;
+}
+[data-theme="windows98"] .doc-line.l2,
+[data-theme="windows98"] .doc-line.l3 {
+  background: #000000 !important;
+}
+
+[data-theme="windows98"] .transfer-file-info {
+  color: #000000 !important;
+  font-size: 11px !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .transfer-progress-bar {
+  background: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  height: 20px !important;
+  border-radius: 0 !important;
+  padding: 2px !important;
+  box-sizing: border-box !important;
+  width: auto !important;
+  margin: 0 4px !important;
+}
+
+[data-theme="windows98"] .transfer-progress-fill {
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0px,
+    #000080 8px,
+    #c0c0c0 8px,
+    #c0c0c0 10px
+  ) !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .transfer-metrics-row {
+  margin: 0 4px !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .transfer-speed-badge {
+  color: #006000 !important;
+  font-family: 'Consolas', 'Courier New', monospace !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  padding: 0 !important;
+}
+
+[data-theme="windows98"] .transfer-eta-text {
+  color: #000000 !important;
+  font-size: 11px !important;
+  padding: 0 !important;
+}
+
+[data-theme="windows98"] .speed-canvas-container {
+  background: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  height: 85px !important;
+  margin: 0 4px !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .transfer-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding: 4px !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .transfer-actions .btn {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  font-size: 11px !important;
+  padding: 4px 18px !important;
+}
+
+[data-theme="windows98"] .transfer-actions .btn:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+.transfer-dialog {
+  position: fixed;
+  bottom: 24px;
+  left: 80px;
+  width: 440px;
+  background: #25272c;
+  color: #f8fafc;
+  border-radius: var(--w11-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+  padding: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 2500;
+  box-sizing: border-box;
+  animation: transferPop 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes transferPop {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.transfer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  user-select: none;
+}
+.transfer-header:active {
+  cursor: grabbing;
+}
+
+.transfer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+}
+
+.transfer-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--w11-text-secondary);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.transfer-close-btn:hover {
+  background-color: var(--w11-surface-hover);
+}
+
+/* ================== ANIMATION DE TRANSFERT DE DOCUMENTS VOLANTS ================== */
+.transfer-copy-anim {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  position: relative;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--w11-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.copy-anim-folder {
+  position: relative;
+  width: 44px;
+  height: 36px;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.copy-anim-folder .folder-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 8px;
+  background: #f59e0b;
+  border-radius: 3px 3px 0 0;
+}
+
+.copy-anim-folder .folder-body {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 44px;
+  height: 30px;
+  background: #fbbf24;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.copy-anim-folder .folder-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  height: 22px;
+  background: #f59e0b;
+  border-radius: 0 0 3px 3px;
+  transform-origin: bottom;
+  transform: skewX(-4deg);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.source-folder .folder-papers {
+  position: absolute;
+  top: 2px;
+  left: 8px;
+  width: 26px;
+  height: 22px;
+  background: #ffffff;
+  border-radius: 2px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.dest-folder .folder-papers {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  width: 26px;
+  height: 14px;
+  background: #f1f5f9;
+  border-radius: 2px;
+  border: 1px solid #cbd5e1;
+  z-index: 1;
+}
+
+.copy-anim-flight {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.flying-doc {
+  position: absolute;
+  width: 20px;
+  height: 26px;
+  animation: flyPaper 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  opacity: 0;
+}
+
+.flying-doc.doc-1 {
+  animation-delay: 0s;
+}
+
+.flying-doc.doc-2 {
+  animation-delay: 0.6s;
+}
+
+.flying-doc.doc-3 {
+  animation-delay: 1.2s;
+}
+
+.doc-sheet {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid #94a3b8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+  padding: 4px 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+  box-sizing: border-box;
+}
+
+.doc-sheet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  background: #e2e8f0;
+  border-left: 1px solid #94a3b8;
+  border-bottom: 1px solid #94a3b8;
+}
+
+.doc-line {
+  height: 2px;
+  background: #0078d4;
+  border-radius: 1px;
+  width: 100%;
+}
+.doc-line.l2 {
+  background: #94a3b8;
+  width: 80%;
+}
+.doc-line.l3 {
+  background: #94a3b8;
+  width: 60%;
+}
+
+@keyframes flyPaper {
+  0% {
+    left: 0%;
+    top: 36px;
+    transform: scale(0.6) rotate(-22deg);
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+    transform: scale(0.9) rotate(-12deg);
+  }
+  50% {
+    left: 48%;
+    top: 12px;
+    transform: scale(1.02) rotate(6deg);
+    opacity: 1;
+  }
+  84% {
+    opacity: 1;
+    transform: scale(0.9) rotate(20deg);
+  }
+  100% {
+    left: 96%;
+    top: 36px;
+    transform: scale(0.55) rotate(30deg);
+    opacity: 0;
+  }
+}
+
+.transfer-file-info {
+  font-size: 12.5px;
+  color: var(--w11-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.transfer-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e5e5e5;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.transfer-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0078d4, #107c41);
+  width: 0%;
+  transition: width 0.15s ease;
+}
+
+.transfer-metrics-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.transfer-speed-badge {
+  font-size: 20px;
+  font-weight: 700;
+  color: #107c41;
+}
+
+.transfer-eta-text {
+  font-size: 12px;
+  color: var(--w11-text-secondary);
+}
+.speed-canvas-container {
+  width: 100%;
+  height: 90px;
+  background-color: #1a1c20;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--w11-radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.speed-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.transfer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ================== S.M.A.R.T. / CRYSTALDISKINFO VIEW ================== */
+.smart-view {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background-color: var(--w11-bg);
+}
+
+.smart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.smart-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.smart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.smart-card {
+  background: #25282e;
+  border-radius: var(--w11-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+}
+
+.disk-canvas-3d {
+  width: 100%;
+  height: 170px;
+  background: radial-gradient(circle at center, #22262d 0%, #16181d 100%);
+  border-radius: var(--w11-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+  cursor: default;
+}
+.disk-canvas-3d:active {
+  cursor: default;
+}
+
+.smart-card:hover {
+  background: #2a2e36;
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
+  transform: translateY(-2px);
+}
+
+.smart-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+  min-width: 0;
+}
+
+.big-drive-badge {
+  font-size: clamp(13px, 2vw, 20px);
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0078d4, #005fb8);
+  padding: 4px 12px;
+  border-radius: var(--w11-radius-md);
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.35);
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 48%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.25;
+  flex-shrink: 0;
+}
+
+.big-drive-badge.empty {
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
+.smart-health-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 3px solid #107c41;
+  background: var(--w11-success-bg);
+  color: #107c41;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.smart-health-badge.warning {
+  border-color: #d83b01;
+  background: var(--w11-warning-bg);
+  color: #d83b01;
+}
+
+.smart-health-badge.danger {
+  border-color: #c42b1c;
+  background: var(--w11-danger-bg);
+  color: #c42b1c;
+}
+
+.health-status-text {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.health-percent-text {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.smart-disk-details {
+  flex: 1;
+  margin-left: 16px;
+}
+
+.smart-disk-model {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+  margin-bottom: 6px;
+}
+
+.smart-pill-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.smart-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.smart-table {
+  width: 100%;
+  font-size: 12.5px;
+  border-collapse: collapse;
+}
+
+.smart-table tr {
+  border-bottom: 1px solid var(--w11-border-subtle);
+}
+
+.smart-table td {
+  padding: 6px 0;
+  color: var(--w11-text-secondary);
+}
+
+.smart-table td.val {
+  text-align: right;
+  font-weight: 500;
+  color: var(--w11-text-primary);
+}
+
+.smart-disk-meta {
+  font-size: 12px;
+  color: var(--w11-text-secondary);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.smart-body-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.smart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.smart-label {
+  color: var(--w11-text-secondary);
+}
+
+.smart-val {
+  color: var(--w11-text-primary);
+  font-weight: 500;
+}
+
+.smart-val.highlight {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* ================== NETWORK SMB VIEW ================== */
+.smb-view {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background-color: var(--w11-bg);
+}
+
+.smb-share-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #25272c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--w11-radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-size: 12.5px;
+  color: var(--w11-text-primary);
+}
+
+.smb-share-item:hover {
+  background-color: var(--w11-accent-light);
+  border-color: var(--w11-accent);
+}
+
+.smb-share-item.selected {
+  background-color: var(--w11-accent-light);
+  border-color: var(--w11-accent);
+  font-weight: 500;
+}
+
+.smb-banner {
+  background: linear-gradient(135deg, #0078d4, #005fb8);
+  color: #ffffff;
+  padding: 24px;
+  border-radius: var(--w11-radius-xl);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--w11-shadow-md);
+}
+
+.smb-banner-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.smb-banner-desc {
+  font-size: 13px;
+  opacity: 0.9;
+  max-width: 500px;
+}
+.preview-pane {
+  width: 360px;
+  background-color: var(--w11-surface);
+  border-radius: var(--w11-radius-lg);
+  border: 1px solid var(--w11-border);
+  box-shadow: var(--w11-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: slideInRight 0.15s ease;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.preview-header {
+  height: 38px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--w11-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--w11-surface-alt);
+}
+
+.preview-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color: var(--w11-text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.preview-close-btn:hover {
+  background-color: var(--w11-surface-hover);
+  color: var(--w11-danger);
+}
+
+.preview-body {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--w11-surface);
+  position: relative;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--w11-text-secondary);
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.preview-image-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--w11-radius-sm);
+  box-shadow: var(--w11-shadow-sm);
+}
+
+/* Aperçu d'image accompagné de sa fiche de propriétés & métadonnées */
+.preview-image-wrap-card {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  min-height: 110px;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: var(--w11-surface-alt, #f2f2f2);
+  border: 1px solid var(--w11-border-subtle, rgba(0, 0, 0, 0.12));
+  border-radius: 6px;
+}
+
+.preview-image-card {
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+[data-theme="windows98"] .preview-image-wrap-card {
+  background-color: #ffffff !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .preview-image-card {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.preview-iframe {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  border: none;
+  display: block;
+}
+
+.preview-text-container {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: auto;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--w11-text-primary);
+  background-color: var(--w11-surface);
+  padding: 16px;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  user-select: text;
+  box-sizing: border-box;
+}
+
+.preview-table-container {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+body.is-resizing iframe {
+  pointer-events: none !important;
+}
+
+body.is-resizing {
+  user-select: none !important;
+  cursor: col-resize !important;
+}
+
+.preview-info-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+.preview-table td {
+  border: 1px solid var(--w11-border-subtle, #cbd5e1);
+  color: var(--w11-text-primary);
+  padding: 4px 6px;
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-table tr.archive-row-dir {
+  cursor: pointer;
+  user-select: none;
+}
+
+.preview-table tr.archive-row-dir:hover {
+  background-color: var(--w11-hover, rgba(125, 125, 125, 0.12));
+}
+
+/* Drop targets for Drag & Drop */
+.file-row.drop-target {
+  background-color: var(--w11-accent-light) !important;
+  outline: 2px dashed var(--w11-accent);
+}
+
+.breadcrumb-segment.drop-target {
+  background-color: var(--w11-accent-light) !important;
+  outline: 2px dashed var(--w11-accent);
+}
+
+.sidebar-item.drop-target {
+  background-color: var(--w11-accent-light) !important;
+  outline: 2px dashed var(--w11-accent);
+}
+.context-menu {
+  position: fixed;
+  display: none;
+  min-width: 220px;
+  background: #25272c;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--w11-radius-xl);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  padding: 6px;
+  z-index: 3000;
+  color: var(--w11-text-primary);
+  animation: contextMenuPop 0.12s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes contextMenuPop {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--w11-radius-md);
+  color: var(--w11-text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.context-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.context-menu-item.disabled {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: default;
+  pointer-events: none;
+}
+
+.context-menu-item .menu-shortcut {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--w11-text-tertiary);
+}
+
+.context-menu-separator {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 4px 6px;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  width: 440px;
+  background: #25272c;
+  color: var(--w11-text-primary);
+  border-radius: var(--w11-radius-xl);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: modalScale 0.18s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+@keyframes modalScale {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--w11-text-secondary);
+}
+
+.modal-input {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  color: var(--w11-text-primary);
+  user-select: text;
+}
+
+.modal-input:focus {
+  border-color: var(--w11-accent);
+  box-shadow: 0 0 0 1px var(--w11-accent);
+}
+
+.modal-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--w11-text-primary);
+  cursor: pointer;
+}
+
+.settings-version-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--w11-accent);
+  background: var(--w11-accent-light);
+  padding: 2px 8px;
+  border-radius: var(--w11-radius-sm);
+  display: inline-block;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 7px 18px;
+  border-radius: var(--w11-radius-md);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--w11-border);
+  background-color: var(--w11-surface);
+  color: var(--w11-text-primary);
+  transition: all 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover {
+  background-color: var(--w11-surface-hover);
+  color: var(--w11-text-primary);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn.primary {
+  background-color: var(--w11-accent);
+  border-color: var(--w11-accent);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.btn.primary:hover {
+  background-color: var(--w11-accent-hover);
+}
+
+.btn.danger {
+  background-color: #c42b1c;
+  border-color: #c42b1c;
+  color: #ffffff;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 5000;
+  pointer-events: none;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 380px;
+  background: #25272c;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--w11-radius-lg);
+  padding: 12px 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #f8fafc;
+  pointer-events: auto;
+  animation: toastSlideIn 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+@keyframes toastSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast.toast-error {
+  border-left: 4px solid #c42b1c;
+}
+
+.toast.toast-success {
+  border-left: 4px solid #107c41;
+}
+
+.toast.toast-info {
+  border-left: 4px solid var(--w11-accent);
+}
+
+/* ================== THÈME WINDOWS 98 : NOTIFICATIONS / POPUPS RÉTRO ================== */
+[data-theme="windows98"] .toast {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, 'Segoe UI', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: normal !important;
+  padding: 8px 14px !important;
+  min-width: 220px !important;
+}
+
+[data-theme="windows98"] .toast.toast-error,
+[data-theme="windows98"] .toast.toast-success,
+[data-theme="windows98"] .toast.toast-info {
+  border-top-color: #ffffff !important;
+  border-left-color: #ffffff !important;
+  border-right-color: #404040 !important;
+  border-bottom-color: #404040 !important;
+}
+
+/* ================== GESTIONNAIRE DES TÂCHES (WINDOWS 98) ================== */
+.taskmgr-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--w11-bg);
+  overflow: hidden;
+}
+
+.taskmgr-tabs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: var(--w11-surface);
+  border-bottom: 1px solid var(--w11-border);
+  gap: 12px;
+}
+
+.taskmgr-subtabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.taskmgr-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--w11-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--w11-text-secondary);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.taskmgr-tab-btn:hover {
+  background: var(--w11-surface-hover);
+  color: var(--w11-text-primary);
+}
+
+.taskmgr-tab-btn.active {
+  background: var(--w11-surface-active);
+  color: var(--w11-text-primary);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--w11-shadow-sm);
+}
+
+.taskmgr-actions-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskmgr-page {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.taskmgr-page.active {
+  display: flex;
+}
+
+/* Page Processus */
+.taskmgr-proc-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--w11-bg);
+  border-bottom: 1px solid var(--w11-border);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.taskmgr-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 6px 12px;
+  min-width: 280px;
+  max-width: 380px;
+  flex: 1;
+}
+
+.taskmgr-search-box input {
+  background: transparent;
+  border: none;
+  color: var(--w11-text-primary);
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+
+.taskmgr-summary-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.summary-badge {
+  background: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-sm);
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--w11-text-secondary);
+}
+
+.summary-badge strong {
+  color: var(--w11-text-primary);
+}
+
+.taskmgr-table-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.taskmgr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: var(--w11-text-primary);
+}
+
+.taskmgr-table thead {
+  position: sticky;
+  top: 0;
+  background: var(--w11-surface);
+  z-index: 10;
+  border-bottom: 1px solid var(--w11-border);
+}
+
+.taskmgr-table th {
+  padding: 9px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--w11-text-secondary);
+  user-select: none;
+}
+
+.taskmgr-table th.sortable {
+  cursor: pointer;
+}
+
+.taskmgr-table th.sortable:hover {
+  color: var(--w11-text-primary);
+}
+
+.taskmgr-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskmgr-proc-row {
+  cursor: pointer;
+  user-select: none;
+}
+
+.taskmgr-proc-row:hover {
+  background-color: var(--w11-surface-hover);
+}
+
+.taskmgr-proc-row.selected {
+  background-color: var(--w11-surface-active) !important;
+  color: #ffffff;
+  outline: 1px solid rgba(0, 120, 215, 0.4);
+}
+
+.proc-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.proc-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.proc-load-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proc-load-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 40px;
+}
+
+.proc-load-bar-fill {
+  height: 100%;
+  background: #0078d4;
+  border-radius: 3px;
+}
+
+/* Page Performances */
+.taskmgr-perf-layout {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.taskmgr-perf-sidebar {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.perf-nav-card {
+  background: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perf-nav-card:hover {
+  background: var(--w11-surface-hover);
+}
+
+.perf-nav-card.active {
+  background: var(--w11-surface-active);
+  border-color: var(--card-color, #10b981);
+  box-shadow: 0 0 0 1px var(--card-color, #10b981);
+}
+
+.perf-nav-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.perf-nav-title-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.perf-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.perf-nav-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.perf-detail-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.perf-detail-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.perf-detail-icon svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.perf-nav-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--w11-text-primary);
+}
+
+.perf-nav-pct {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0078d4;
+}
+
+.perf-mini-canvas {
+  width: 100%;
+  height: 38px;
+  background: #121417;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.perf-nav-card-bottom {
+  font-size: 11.5px;
+  color: var(--w11-text-secondary);
+}
+
+.taskmgr-perf-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  background: var(--w11-surface);
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-lg);
+  padding: 20px;
+}
+
+.perf-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.perf-detail-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--w11-text-primary);
+}
+
+.perf-detail-subname {
+  font-size: 13px;
+  color: var(--w11-text-secondary);
+  margin-top: 4px;
+}
+
+.perf-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.perf-view-switch {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--w11-radius-md);
+  padding: 3px;
+  gap: 3px;
+}
+
+.perf-switch-btn {
+  background: transparent;
+  border: none;
+  color: var(--w11-text-secondary);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--w11-radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.perf-switch-btn:hover {
+  color: var(--w11-text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.perf-switch-btn.active {
+  color: #ffffff;
+  background: #0078d4;
+  font-weight: 600;
+}
+
+.perf-nav-disks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.perf-logical-cores-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+@media (max-width: 1100px) {
+  .perf-logical-cores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.perf-core-card {
+  background: #14161a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--w11-radius-sm);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.perf-core-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.perf-core-name {
+  color: var(--w11-text-secondary);
+  font-weight: 500;
+}
+
+.perf-core-pct {
+  color: #60cdff;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.perf-core-canvas {
+  width: 100%;
+  height: 52px;
+  display: block;
+}
+
+.perf-temp-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  color: var(--w11-text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.perf-temp-pill strong {
+  color: #10b981;
+}
+
+.perf-temp-pill strong.temp-normal {
+  color: #10b981;
+}
+
+.perf-temp-pill strong.temp-warm {
+  color: #f59e0b;
+}
+
+.perf-temp-pill strong.temp-hot {
+  color: #ef4444;
+}
+
+.perf-main-canvas-wrap {
+  width: 100%;
+  height: 220px;
+  background: #14161a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--w11-radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.perf-vram-canvas-wrap {
+  height: 160px;
+}
+
+.taskmgr-perf-detail.is-gpu-view .perf-main-canvas-wrap {
+  height: 160px;
+}
+
+.perf-canvas-legend {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.perf-main-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.perf-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.perf-metric-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-left: 3px solid var(--metric-color, #0078d4);
+  border-radius: var(--w11-radius-md);
+  padding: 11px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.perf-metric-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--w11-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.perf-metric-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: 'Segoe UI Variable Display', 'Segoe UI', -apple-system, sans-serif;
+  letter-spacing: 0.2px;
+}
+
+/* ================== THÈME WINDOWS 98 : GESTIONNAIRE DES TÂCHES RÉTRO ================== */
+[data-theme="windows98"] .taskmgr-view {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .taskmgr-tabs-header {
+  background-color: #c0c0c0 !important;
+  border-bottom: 2px solid #808080 !important;
+  padding: 6px 8px !important;
+}
+
+[data-theme="windows98"] .taskmgr-tab-btn {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  padding: 4px 14px !important;
+}
+
+[data-theme="windows98"] .taskmgr-tab-btn.active {
+  border-bottom: 2px solid #c0c0c0 !important;
+  background-color: #c0c0c0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="windows98"] .taskmgr-proc-toolbar {
+  background-color: #c0c0c0 !important;
+  border-bottom: 2px solid #808080 !important;
+  padding: 6px 8px !important;
+}
+
+[data-theme="windows98"] .taskmgr-search-box {
+  background-color: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .taskmgr-search-box input {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+}
+
+[data-theme="windows98"] .summary-badge {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  font-size: 11px !important;
+}
+
+[data-theme="windows98"] .taskmgr-table {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+}
+
+[data-theme="windows98"] .taskmgr-table thead {
+  background-color: #c0c0c0 !important;
+}
+
+[data-theme="windows98"] .taskmgr-table th {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+}
+
+[data-theme="windows98"] .taskmgr-table td {
+  border-bottom: 1px solid #e0e0e0 !important;
+  padding: 4px 8px !important;
+}
+
+[data-theme="windows98"] .taskmgr-proc-row:hover {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .taskmgr-proc-row:hover td,
+[data-theme="windows98"] .taskmgr-proc-row:hover span,
+[data-theme="windows98"] .taskmgr-proc-row:hover div {
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .taskmgr-proc-row.selected {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .taskmgr-proc-row.selected td,
+[data-theme="windows98"] .taskmgr-proc-row.selected span,
+[data-theme="windows98"] .taskmgr-proc-row.selected div {
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .perf-nav-card {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .perf-nav-card.active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  background-color: #d4d0c8 !important;
+}
+
+[data-theme="windows98"] .perf-nav-title,
+[data-theme="windows98"] .perf-detail-name {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .perf-nav-pct {
+  background: #000000 !important;
+  border-top: 1px solid #808080 !important;
+  border-left: 1px solid #808080 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  padding: 1px 6px !important;
+  color: var(--card-color, #00ff00) !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  border-radius: 0 !important;
+  text-shadow: 0 0 3px var(--card-color, #00ff00) !important;
+}
+
+[data-theme="windows98"] .perf-mini-canvas {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .taskmgr-perf-detail {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+  padding: 12px !important;
+}
+
+[data-theme="windows98"] .perf-main-canvas-wrap {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .perf-temp-pill {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000, inset -1px -1px 0 #404040 !important;
+  border-radius: 0 !important;
+  color: #00ff00 !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  padding: 3px 8px !important;
+}
+
+[data-theme="windows98"] .perf-temp-pill strong {
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] .perf-temp-pill strong.temp-normal {
+  color: #00ff00 !important;
+}
+
+[data-theme="windows98"] .perf-temp-pill strong.temp-warm {
+  color: #ffff00 !important;
+}
+
+[data-theme="windows98"] .perf-temp-pill strong.temp-hot {
+  color: #ff3333 !important;
+}
+
+[data-theme="windows98"] .perf-metrics-grid {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+[data-theme="windows98"] .perf-metric-card {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  min-height: 80px !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="windows98"] .perf-metric-label {
+  font-family: 'MS Sans Serif', Tahoma, Arial, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: bold !important;
+  color: #000080 !important;
+  text-transform: none !important;
+  letter-spacing: 0.2px !important;
+}
+
+[data-theme="windows98"] .perf-metric-val {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000, inset -1px -1px 0 #303030 !important;
+  color: var(--metric-color, #00ff00) !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding: 8px 12px !important;
+  border-radius: 0 !important;
+  letter-spacing: 0.5px !important;
+  text-align: right !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  text-shadow: 0 0 3px var(--metric-color, #00ff00) !important;
+}
+
+[data-theme="windows98"] .perf-view-switch {
+  background: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+  padding: 2px !important;
+  gap: 2px !important;
+}
+
+[data-theme="windows98"] .perf-switch-btn {
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+  color: #000000 !important;
+  padding: 3px 8px !important;
+}
+
+[data-theme="windows98"] .perf-switch-btn.active {
+  background: #000080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="windows98"] .perf-core-card {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .perf-core-name {
+  color: #a0a0a0 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .perf-core-pct {
+  color: #00ff00 !important;
+}
+
+/* ==========================================================================
+   BARRES DE DÉFILEMENT (SCROLLBARS) WINDOWS 98 AUTHENTIQUES
+   ========================================================================== */
+
+/* -------------------- 1. BARRES DE DÉFILEMENT WINDOWS 98 -------------------- */
+[data-theme="windows98"] ::-webkit-scrollbar {
+  width: 16px !important;
+  height: 16px !important;
+  background-color: #c0c0c0 !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(#c0c0c0 0% 25%, #ffffff 0% 50%) 50% / 2px 2px !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #000000 !important;
+  border-bottom: 2px solid #000000 !important;
+  box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #808080 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-thumb:active {
+  border-top: 2px solid #000000 !important;
+  border-left: 2px solid #000000 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0px #808080, inset -1px -1px 0px #dfdfdf !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #000000 !important;
+  border-bottom: 2px solid #000000 !important;
+  box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #808080 !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button:active {
+  border-top: 2px solid #000000 !important;
+  border-left: 2px solid #000000 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0px #808080, inset -1px -1px 0px #dfdfdf !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='8,4 3.5,10 12.5,10' fill='%23000000'/%3E%3C/svg%3E") !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button:vertical:increment {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='8,12 3.5,6 12.5,6' fill='%23000000'/%3E%3C/svg%3E") !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='4,8 10,3.5 10,12.5' fill='%23000000'/%3E%3C/svg%3E") !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='12,8 6,3.5 6,12.5' fill='%23000000'/%3E%3C/svg%3E") !important;
+}
+
+[data-theme="windows98"] ::-webkit-scrollbar-corner {
+  background-color: #c0c0c0 !important;
+}
+
+:root {
+}
+
+[data-theme="windows98"] .w11-body {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+/* Barre d'adresse & recherche en verre dépoli */
+
+/* Cartes colonne de gauche (CPU, Mémoire, Disques, Réseau, GPU) */
+
+/* Panneau de droite : détails des performances en verre dépoli semi-transparent */
+
+/* Grand graphique des courbes : fond noir vitré sombre translucide */
+
+/* ==============================================================================
+   MODALE PARAMÈTRES (WINDOWS 98)
+   ============================================================================== */
+/* ==============================================================================
+   BOÎTES DE DIALOGUE & MODALES (WINDOWS 98)
+   ============================================================================== */
+.modal-card {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.modal-content-pad {
+  padding: 18px 22px 14px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+.modal-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--w11-border);
+  user-select: none;
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title-text {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--w11-text-primary);
+}
+
+.modal-close-x-btn {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--w11-text-secondary);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.modal-close-x-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--w11-text-primary);
+}
+
+.settings-content {
+  padding: 18px 22px 10px 22px;
+}
+
+.smb-shares-list {
+  max-height: 140px;
+  overflow-y: auto;
+  border: 1px solid var(--w11-border);
+  border-radius: var(--w11-radius-md);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* --- STYLE WINDOWS 98 : BOÎTES DE DIALOGUE AVEC HAUT BLEU 98 --- */
+[data-theme="windows98"] .modal-card,
+[data-theme="windows98"] .transfer-dialog {
+  padding: 2px !important;
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .modal-titlebar,
+[data-theme="windows98"] .transfer-header {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%) !important;
+  color: #ffffff !important;
+  padding: 3px 4px 3px 6px !important;
+  border-bottom: none !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  margin-bottom: 4px !important;
+}
+
+[data-theme="windows98"] .modal-title-text,
+[data-theme="windows98"] .transfer-title {
+  color: #ffffff !important;
+  font-weight: bold !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.3px !important;
+}
+
+[data-theme="windows98"] .modal-close-x-btn,
+[data-theme="windows98"] .transfer-close-btn {
+  background-color: #c0c0c0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #000000 !important;
+  border-bottom: 1px solid #000000 !important;
+  box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf !important;
+  color: #000000 !important;
+  width: 16px !important;
+  height: 14px !important;
+  font-size: 9px !important;
+  font-weight: bold !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+[data-theme="windows98"] .modal-close-x-btn:active,
+[data-theme="windows98"] .transfer-close-btn:active {
+  border-top: 1px solid #000000 !important;
+  border-left: 1px solid #000000 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  box-shadow: inset 1px 1px #808080 !important;
+}
+
+[data-theme="windows98"] .modal-content-pad,
+[data-theme="windows98"] .settings-content {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  padding: 10px 12px !important;
+}
+
+[data-theme="windows98"] .modal-label {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+}
+
+[data-theme="windows98"] .modal-input,
+[data-theme="windows98"] select.modal-input {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  height: 24px !important;
+  font-size: 11px !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  padding: 2px 6px !important;
+}
+
+[data-theme="windows98"] .smb-shares-list {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="windows98"] .modal-checkbox-row {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+}
+
+/* ================== FICHE MÉTADONNÉES APERÇU (NON-IMAGE / NON-PDF) ================== */
+.preview-metadata-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.preview-meta-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--w11-border);
+}
+
+.preview-meta-icon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.preview-meta-icon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.preview-meta-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.preview-row-icon svg,
+.preview-row-icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.preview-meta-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.preview-meta-filename {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--w11-text-primary);
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.preview-meta-type {
+  font-size: 11.5px;
+  color: var(--w11-text-secondary);
+  margin-top: 3px;
+}
+
+.preview-meta-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--w11-text-secondary);
+  margin-top: 4px;
+}
+
+.preview-meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.preview-meta-table td {
+  padding: 6px 4px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.preview-meta-table .meta-label {
+  width: 110px;
+  color: var(--w11-text-secondary);
+  font-weight: 500;
+}
+
+.preview-meta-table .meta-value {
+  color: var(--w11-text-primary);
+  word-break: break-all;
+}
+
+.preview-meta-table .meta-sub {
+  font-size: 11px;
+  color: var(--w11-text-secondary);
+  font-weight: normal;
+}
+
+.preview-meta-table .meta-path {
+  font-family: monospace;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.preview-meta-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+[data-theme="windows98"] .preview-metadata-card {
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .preview-meta-table td {
+  border-bottom: 1px solid #dfdfdf !important;
+}
+
+[data-theme="windows98"] .preview-meta-filename,
+[data-theme="windows98"] .preview-meta-table .meta-value,
+[data-theme="windows98"] .preview-meta-table .meta-label {
+  color: #000000 !important;
+}
+
+[data-theme="windows98"] .preview-meta-table td {
+  padding: 6px 6px !important;
+  font-size: 13px !important;
+}
+
+[data-theme="windows98"] .preview-meta-table .meta-label {
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] .preview-meta-filename {
+  font-size: 14.5px !important;
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] .preview-meta-type {
+  font-size: 12.5px !important;
+  color: #333333 !important;
+}
+
+[data-theme="windows98"] .preview-meta-section-title {
+  font-size: 13.5px !important;
+  font-weight: bold !important;
+  color: #000080 !important;
+}
+
+/* ==============================================================================
+   LECTEUR AUDIO & VIDÉO WINDOWS 95 / 98 16-BIT AUTHENTIQUE (CD PLAYER / WMP 6.4)
+   ============================================================================== */
+.win98-media-player {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 2px 2px 0 #000000 !important;
+  padding: 4px !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  margin-bottom: 12px !important;
+  box-sizing: border-box !important;
+  user-select: none !important;
+  color: #000000 !important;
+}
+
+.win98-player-titlebar {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%) !important;
+  color: #ffffff !important;
+  padding: 3px 6px !important;
+  font-size: 11.5px !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 5px !important;
+}
+
+.win98-player-title-btns {
+  display: flex !important;
+  gap: 2px !important;
+}
+
+.win98-pbtn {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #000000 !important;
+  border-bottom: 1px solid #000000 !important;
+  font-size: 9px !important;
+  font-weight: bold !important;
+  width: 14px !important;
+  height: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: default !important;
+}
+
+.win98-player-lcd {
+  background-color: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  padding: 7px 10px !important;
+  margin-bottom: 6px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+}
+
+.win98-player-lcd.media-audio-lcd {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.spectrum-viewport {
+  flex: 1 !important;
+  min-height: 56px !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  background: #000000 !important;
+  border-top: 1px solid #003300 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.spectrum-viewport canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  background: #000000 !important;
+  image-rendering: pixelated !important;
+}
+
+.win98-lcd-track {
+  color: #00ff00 !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 180px !important;
+  text-shadow: 0 0 3px #00ff00 !important;
+}
+
+.win98-lcd-status {
+  color: #a3e635 !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.win98-lcd-time {
+  color: #00ff00 !important;
+  font-family: 'Lucida Console', 'Courier New', monospace !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 0 4px #00ff00 !important;
+}
+
+.win98-video-crt-viewport {
+  background: #000000 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  overflow: hidden !important;
+  margin-bottom: 5px !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+}
+
+.win98-player-trackbar {
+  padding: 5px 2px 7px 2px !important;
+  cursor: pointer !important;
+}
+
+.win98-trackbar-groove {
+  background: #808080 !important;
+  border-top: 1px solid #404040 !important;
+  border-bottom: 1px solid #ffffff !important;
+  height: 4px !important;
+  position: relative !important;
+}
+
+.win98-trackbar-fill {
+  background: #000080 !important;
+  height: 100% !important;
+  width: 0%;
+}
+
+.win98-trackbar-thumb {
+  position: absolute !important;
+  top: -7px !important;
+  left: 0%;
+  width: 11px !important;
+  height: 17px !important;
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  transform: translateX(-50%) !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  pointer-events: none !important;
+}
+
+.win98-player-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 3px 0 !important;
+}
+
+.win98-ctrl-btn {
+  background: #c0c0c0 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  box-shadow: 1px 1px 0 #000000 !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  color: #000000 !important;
+  padding: 3px 8px !important;
+  min-width: 28px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.win98-ctrl-btn:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+.win98-vol-group {
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.win98-vol-slider {
+  width: 65px !important;
+  height: 4px !important;
+  cursor: pointer !important;
+  accent-color: #000080 !important;
+}
+
+/* CARTE INFO APPLICATION DANS PARAMÈTRES WINDOWS 98 */
+[data-theme="windows98"] .settings-app-info-card {
+  background-color: #c0c0c0 !important;
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+[data-theme="windows98"] .settings-app-info-card strong {
+  color: #000080 !important;
+}
+
+/* ==============================================================================
+   TERMINAL INTÉGRÉ DANS L'EXPLORATEUR (FLEX SPLIT AVEC LA LISTE DES FICHIERS)
+============================================================================== */
+.w11-content {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1;
+  overflow: hidden !important;
+  position: relative;
+}
+
+.file-view-workspace {
+  flex: 1;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminal-resizer {
+  height: 5px;
+  background: var(--w11-border, #333333);
+  cursor: row-resize;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  z-index: 10;
+}
+
+.terminal-resizer:hover {
+  background: #0284c7;
+}
+
+.embedded-terminal-pane {
+  height: 240px;
+  min-height: 100px;
+  max-height: 85%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0c0c0c;
+  color: #cccccc;
+  font-family: 'Consolas', 'Courier New', monospace;
+  border-top: 1px solid var(--w11-border, #333);
+  overflow: hidden;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.terminal-header {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  background: #181818;
+  border-bottom: 1px solid #282828;
+  user-select: none;
+}
+
+.terminal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.terminal-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.terminal-hdr-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #cccccc;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.terminal-hdr-btn:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+.terminal-hdr-btn.close:hover {
+  background: #c42b1c;
+  border-color: #c42b1c;
+}
+
+.terminal-body {
+  flex: 1;
+  min-height: 0;
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  background: #0c0c0c;
+}
+
+/* Hôte xterm.js : un vrai émulateur de terminal relié au PTY macOS */
+.xterm-host {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  bottom: 6px;
+  left: 8px;
+  overflow: hidden;
+}
+
+.xterm-host .xterm {
+  height: 100%;
+}
+
+.xterm-host .xterm-viewport {
+  background-color: transparent !important;
+}
+
+.xterm-host .xterm-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+
+.xterm-host .xterm-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 5px;
+}
+
+.xterm-host .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="windows98"] .terminal-body {
+  background: #000000;
+}
+
+.terminal-output {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.terminal-line.cmd-prompt {
+  color: #38bdf8;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.terminal-line.stdout {
+  color: #f1f5f9;
+}
+
+.terminal-line.stderr {
+  color: #f87171;
+}
+
+.terminal-line.welcome {
+  color: #64748b;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.terminal-prompt {
+  color: #38bdf8;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 0;
+}
+
+/* Thème Windows 98 pour le terminal */
+[data-theme="windows98"] .embedded-terminal-pane {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-top: 2px solid #808080 !important;
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+[data-theme="windows98"] .terminal-header {
+  background: #000080 !important;
+  color: #ffffff !important;
+  height: 22px !important;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+}
+
+[data-theme="windows98"] .terminal-hdr-btn {
+  background: #c0c0c0 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #404040 !important;
+  border-bottom: 1px solid #404040 !important;
+  color: #000000 !important;
+  border-radius: 0 !important;
+  font-family: inherit !important;
+  font-size: 10px !important;
+  padding: 1px 5px !important;
+}
+
+[data-theme="windows98"] .terminal-prompt,
+[data-theme="windows98"] .terminal-line.cmd-prompt {
+  color: #ffffff !important;
+}
+
+/* ==============================================================================
+   11. WINDIRSTAT — ANALYSEUR D'ESPACE DISQUE (VUE ESPACE)
+   ============================================================================== */
+.wds-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #c0c0c0;
+  color: #000000;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  overflow: hidden;
+  padding: 4px;
+  gap: 4px;
+}
+
+.wds-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 6px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  flex-shrink: 0;
+}
+
+.wds-toolbar-left,
+.wds-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.wds-title {
+  font-weight: bold;
+  font-size: 12px;
+  color: #000080;
+}
+
+.wds-label {
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.wds-select {
+  height: 23px;
+  padding: 1px 6px;
+  font-family: inherit;
+  font-size: 11px;
+  background: #ffffff;
+  color: #000000;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  min-width: 170px;
+}
+
+.wds-scan-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  background: #000080;
+  color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.wds-scan-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.wds-scan-dir {
+  font-family: monospace;
+  font-size: 11px;
+  color: #ffff00;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wds-top-split {
+  display: flex;
+  flex-direction: row;
+  height: 44%;
+  min-height: 120px;
+  max-height: 75%;
+  width: 100%;
+  overflow: hidden;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.wds-tree-pane {
+  flex: 1.55;
+  min-width: 240px;
+  height: 100%;
+  background: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  overflow: auto;
+}
+
+.wds-ext-pane {
+  flex: 1;
+  min-width: 210px;
+  height: 100%;
+  background: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  overflow: auto;
+}
+
+.wds-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 11px;
+  user-select: none;
+}
+
+.wds-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #c0c0c0;
+  color: #000000;
+  font-weight: bold;
+  text-align: left;
+  padding: 3px 6px;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  box-shadow: inset -1px -1px 0 #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wds-table tbody tr {
+  height: 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.wds-table tbody tr:hover {
+  background: #e4ecf7;
+}
+
+.wds-table tbody tr.selected {
+  background: #000080 !important;
+  color: #ffffff !important;
+}
+
+.wds-table tbody td {
+  padding: 2px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.wds-tree-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.wds-tree-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #808080;
+  background: #ffffff;
+  color: #000000;
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 1;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.wds-tree-toggle.empty {
+  border-color: transparent;
+  background: transparent;
+  cursor: default;
+}
+
+.wds-subtree-bar-wrap {
+  width: 100%;
+  height: 11px;
+  background: #e0e0e0;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.wds-subtree-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #cc0000 0px,
+    #cc0000 5px,
+    transparent 5px,
+    transparent 6px
+  );
+}
+
+.wds-ext-color-box {
+  display: inline-block;
+  width: 14px;
+  height: 12px;
+  border: 1px solid #000000;
+  vertical-align: middle;
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.65), inset -1px -1px 2px rgba(0,0,0,0.45);
+}
+
+.wds-treemap-pane {
+  flex: 1;
+  min-height: 140px;
+  width: 100%;
+  position: relative;
+  background: #000000;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  overflow: hidden;
+}
+
+.wds-treemap-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+.wds-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 22px;
+  padding: 2px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  font-size: 11px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+#wdsStatusSelected {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+#wdsStatusSummary {
+  font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Modale Sélecteur d'arborescence WinDirStat */
+.wds-picker-drives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 4px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.wds-picker-drive-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  cursor: pointer;
+  font-size: 11.5px;
+}
+
+.wds-picker-drive-row:hover {
+  background: #e4ecf7;
+}
+
+.wds-picker-drive-row.selected {
+  background: #000080;
+  color: #ffffff;
+}
+
+.wds-picker-tree-container {
+  height: 210px;
+  overflow: auto;
+  background: #ffffff;
+  padding: 4px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  font-size: 11.5px;
+  user-select: none;
+}
+
+.wds-picker-node-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wds-picker-node-row:hover {
+  background: #e4ecf7;
+}
+
+.wds-picker-node-row.selected {
+  background: #000080;
+  color: #ffffff;
+}
+
+/* ==============================================================================
+   12. VUE CLONAGE & IMAGE DISQUE
+   ============================================================================== */
+.clone-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #c0c0c0;
+  color: #000000;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  overflow-y: auto;
+  padding: 10px;
+  gap: 12px;
+}
+
+.clone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  flex-shrink: 0;
+}
+
+.clone-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clone-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 12px;
+  flex: 1;
+}
+
+.clone-card {
+  display: flex;
+  flex-direction: column;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  box-shadow: 1px 1px 0 #000000;
+  padding: 2px;
+}
+
+.clone-card-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #000080;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 11.5px;
+}
+
+.clone-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+  gap: 10px;
+}
+
+.clone-warning-box {
+  background: #c0c0c0;
+  color: #000000;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  padding: 6px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.clone-info-box {
+  background: #c0c0c0;
+  color: #000000;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  padding: 6px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.flash-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .flash-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.smart-disk-capacity-badge {
+  font-size: 15px !important;
+  font-weight: bold !important;
+  color: #000080 !important;
+  background: #ffffff !important;
+  border-top: 1px solid #808080 !important;
+  border-left: 1px solid #808080 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  box-shadow: inset 1px 1px 0 #000000 !important;
+  padding: 1px 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  font-family: 'MS Sans Serif', Tahoma, monospace, sans-serif !important;
+  vertical-align: middle !important;
+  letter-spacing: 0.5px !important;
+}
+
+.clone-progress-pane {
+  background: #c0c0c0;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  padding: 10px;
+  box-shadow: inset 1px 1px 0 #000000;
+}
+
+.clone-progress-title {
+  font-weight: bold;
+  font-size: 12px;
+  color: #000080;
+  margin-bottom: 2px;
+}
+
+.clone-progress-desc {
+  font-size: 11px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* ================== ONGLET RÉSEAU & TCP/IP WINDOWS 98 ================== */
+.network-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #c0c0c0;
+  color: #000000;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  overflow-y: auto;
+  padding: 10px;
+  gap: 10px;
+}
+
+.network-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  flex-shrink: 0;
+}
+
+.network-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.network-divider {
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #ffffff;
+  margin: 2px 0 8px 0;
+}
+
+.network-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.network-card {
+  display: flex;
+  flex-direction: column;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  box-shadow: 1px 1px 0 #000000;
+  padding: 2px;
+}
+
+.network-card-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000080;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 4px 8px;
+  font-size: 11.5px;
+}
+
+.network-card-title-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.network-card-status-badge {
+  font-size: 10px;
+  padding: 1px 7px;
+  font-weight: bold;
+  border: 1px solid #ffffff;
+  text-shadow: none;
+}
+
+.network-card-status-badge.connected {
+  background: #008000;
+  color: #ffffff;
+}
+
+.network-card-status-badge.disconnected {
+  background: #707070;
+  color: #d0d0d0;
+}
+
+.network-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+}
+
+.network-info-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  background: #d4d0c8;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  font-size: 10.5px;
+}
+
+.network-groupbox {
+  border: 2px groove #ffffff;
+  padding: 8px 10px 10px 10px;
+  margin: 0;
+  position: relative;
+  background: #c0c0c0;
+}
+
+.network-groupbox legend {
+  font-weight: bold;
+  color: #000080;
+  padding: 0 4px;
+}
+
+.network-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.network-radio-row input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.network-fields-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 18px;
+  margin-bottom: 4px;
+}
+
+.network-field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.network-field-label {
+  width: 140px;
+  font-size: 11px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.network-input {
+  flex: 1;
+  background: #ffffff;
+  color: #000000;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  padding: 2px 6px;
+  font-family: 'MS Sans Serif', Tahoma, monospace, sans-serif;
+  font-size: 11px;
+}
+
+.network-input:disabled {
+  background: #d4d0c8;
+  color: #222222;
+  -webkit-text-fill-color: #222222;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.network-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.network-ping-console {
+  background: #000000;
+  color: #00ff66;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  box-shadow: inset 1px 1px 0 #000000;
+  font-family: 'Consolas', 'Courier New', Courier, monospace;
+  font-size: 10.5px;
+  padding: 6px 8px;
+  height: 85px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.35;
+}
+
+.network-ping-result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border: 1px solid #808080;
+}
+
+.network-ping-result-badge.ok {
+  background: #e6ffe6;
+  color: #006600;
+  border-color: #008000;
+}
+
+.network-ping-result-badge.fail {
+  background: #ffe6e6;
+  color: #990000;
+  border-color: #cc0000;
+}
+
+/* ==============================================================================
+   MISE À L'ÉCHELLE DES 4 FONCTIONNALITÉS ESPACE / CLONER / FLASH / RÉSEAU
+   Agrandit d'un seul coup le texte, les tableaux, les icônes et les contrôles
+   de ces vues (les autres vues conservent leur échelle d'origine).
+   ============================================================================== */
+#viewSpace > .wds-view,
+#viewClone > .clone-view,
+#viewFlash > .clone-view,
+#viewNetwork > .network-view {
+  zoom: 1.25;
+}
+
+/* En vue agrandie, la Treemap peut se réduire davantage pour que la barre d'état
+   et le bas de la vue restent toujours visibles dans les fenêtres peu hautes. */
+#viewSpace > .wds-view .wds-treemap-pane {
+  min-height: 90px;
+}
+
+/* Lisibilité : texte blanc sur les éléments sélectionnés de la liste de fichiers
+   (fond de sélection bleu marine Windows 98). */
+
+/* Aperçu du contenu de dossier / d'archive : texte blanc sur la ligne sélectionnée
+   (les cellules ont une couleur en ligne qui écrasait celle de la ligne). */
+.preview-row-selected,
+.preview-row-selected td,
+.preview-row-selected td *:not(img):not(svg):not(path) {
+  color: #ffffff !important;
+}

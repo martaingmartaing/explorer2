@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecteur Multimédia</title>
+  <script>
+    (function() {
+      document.documentElement.setAttribute('data-theme', 'windows98');
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-family, sans-serif);
+      user-select: none;
+    }
+
+    .media-window-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      background: #1c1c1c;
+      color: #ffffff;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Cadre Windows 98 */
+    [data-theme="windows98"] .media-window-frame {
+      background: #c0c0c0 !important;
+      border-top: 2px solid #ffffff !important;
+      border-left: 2px solid #ffffff !important;
+      border-right: 2px solid #808080 !important;
+      border-bottom: 2px solid #808080 !important;
+      border-radius: 0 !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+      color: #000000 !important;
+    }
+
+    /* BARRE DE TITRE */
+    .media-titlebar {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      background: #181818;
+      border-bottom: 1px solid #2d2d2d;
+      -webkit-app-region: drag;
+      cursor: default;
+    }
+
+    [data-theme="windows98"] .media-titlebar {
+      background: linear-gradient(90deg, #000080, #1084d0) !important;
+      color: #ffffff !important;
+      height: 22px !important;
+      padding: 0 3px !important;
+      border-bottom: none !important;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+      font-weight: bold !important;
+      font-size: 11px !important;
+    }
+
+    .media-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .media-title-controls {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      -webkit-app-region: no-drag;
+    }
+    .media-win-btn {
+      width: 28px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.1s;
+    }
+
+    .media-win-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .media-win-btn.close:hover {
+      background: #dc2626;
+      color: #ffffff;
+    }
+
+    /* BOUTONS TITRE WINDOWS 98 (PETIT TRAIT STRICTEMENT CALÉ EN BAS ET 3D BORDER) */
+    [data-theme="windows98"] .media-win-btn {
+      width: 16px !important;
+      height: 14px !important;
+      background: #c0c0c0 !important;
+      border-top: 1px solid #ffffff !important;
+      border-left: 1px solid #ffffff !important;
+      border-right: 1px solid #404040 !important;
+      border-bottom: 1px solid #404040 !important;
+      color: #000000 !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      margin-left: 2px !important;
+    }
+
+    [data-theme="windows98"] .media-win-btn:active {
+      border-top: 1px solid #404040 !important;
+      border-left: 1px solid #404040 !important;
+      border-right: 1px solid #ffffff !important;
+      border-bottom: 1px solid #ffffff !important;
+    }
+
+    /* Le petit trait net de minimisation calé en bas pour Windows 98 */
+    [data-theme="windows98"] #btnMin {
+      display: flex !important;
+      align-items: flex-end !important;
+      justify-content: center !important;
+      padding-bottom: 2px !important;
+    }
+
+    [data-theme="windows98"] #btnMin svg {
+      width: 7px !important;
+      height: 2px !important;
+      display: block !important;
+    }
+
+    [data-theme="windows98"] #btnMax svg,
+    [data-theme="windows98"] #btnClose svg {
+      width: 8px !important;
+      height: 8px !important;
+      display: block !important;
+    }
+
+    /* VIEWPORT GÉNÉRAL */
+    .media-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ==============================================================================
+       1. VUE IMAGE : ADAPTÉE À CHAQUE THÈME
+    ============================================================================== */
+    .image-viewer-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #0d0f12;
+      overflow: hidden;
+    }
+
+    [data-theme="windows98"] .image-viewer-container {
+      background: #808080 !important;
+    }
+
+    .image-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      padding: 10px;
+      position: relative;
+    }
+
+    .viewer-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.15s ease-out;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .image-toolbar {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #181818;
+      border-top: 1px solid #2d2d2d;
+      padding: 0 10px;
+    }
+
+    [data-theme="windows98"] .image-toolbar {
+      background: #c0c0c0 !important;
+      border-top: 2px solid #ffffff !important;
+      border-bottom: 2px solid #808080 !important;
+      height: 30px !important;
+    }
+
+    .viewer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #282a30;
+      color: inherit;
+      border: 1px solid #444;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    [data-theme="windows98"] .viewer-btn {
+      background: #c0c0c0 !important;
+      border-top: 2px solid #ffffff !important;
+      border-left: 2px solid #ffffff !important;
+      border-right: 2px solid #404040 !important;
+      border-bottom: 2px solid #404040 !important;
+      border-radius: 0 !important;
+      color: #000000 !important;
+      font-family: 'MS Sans Serif', Tahoma, sans-serif !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+    }
+
+    /* ==============================================================================
+       2. VUE AUDIO & VIDÉO WINDOWS 98 (CD PLAYER & ACTIVEMOVIE 16-BIT RÉTRO)
+    ============================================================================== */
+    .retro-wrap {
+      flex: 1;
+      padding: 8px;
+      background: #c0c0c0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    @keyframes xpPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 160, 255, 0.4); }
+      50% { transform: scale(1.03); box-shadow: 0 0 32px rgba(0, 210, 255, 0.7); }
+    }
+
+    /* NOTICE CODEC NON SUPPORTÉ */
+    .codec-notice {
+      display: none;
+      background: rgba(180, 20, 20, 0.9);
+      color: #ffffff;
+      padding: 6px 12px;
+      font-size: 12px;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+  <div class="media-window-frame">
+    <!-- Barre de titre -->
+    <div class="media-titlebar">
+      <div class="media-title-wrap">
+        <span id="winIcon">🎵</span>
+        <span id="winTitleText">Lecteur Multimédia</span>
+      </div>
+      <div class="media-title-controls">
+        <button class="media-win-btn" id="btnMin" title="Réduire">
+          <svg width="8" height="2" viewBox="0 0 8 2"><rect width="8" height="2" fill="currentColor"/></svg>
+        </button>
+        <button class="media-win-btn" id="btnMax" title="Agrandir / Restaurer">
+          <svg id="svgMaxIcon" width="8" height="8" viewBox="0 0 8 8"><rect x="0.5" y="0.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="media-win-btn close" id="btnClose" title="Fermer">
+          <svg width="8" height="8" viewBox="0 0 8 8"><line x1="1" y1="1" x2="7" y2="7" stroke="currentColor" stroke-width="1.3"/><line x1="7" y1="1" x2="1" y2="7" stroke="currentColor" stroke-width="1.3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bannière de codec externe -->
+    <div class="codec-notice" id="codecNotice">
+      <span id="codecNoticeText">Audio extrait et synchronisé automatiquement.</span>
+      <button class="viewer-btn" id="btnOpenSystemApp" style="padding:2px 8px;font-size:11px;background:#ffffff;color:#000000;border:none;">Ouvrir avec le système</button>
+    </div>
+
+    <!-- Conteneur d'affichage selon le type et le thème -->
+    <div class="media-viewport" id="mediaViewport"></div>
+  </div>
+
+  <script src="retro-spectrum.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let filePath = params.get('path') || '';
+    let fileName = params.get('name') || (filePath ? filePath.split(/[\\/]/).pop() : 'Fichier');
+    let ext = (params.get('ext') || (filePath ? '.' + filePath.split('.').pop() : '')).toLowerCase();
+    let theme = 'windows98';
+
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+
+    if (window.electronAPI?.onSettingsChanged) {
+      window.electronAPI.onSettingsChanged((data) => {
+        if (data && data.theme) {
+          let th = data.theme;
+          document.documentElement.setAttribute('data-theme', th);
+          document.body.setAttribute('data-theme', th);
+          window.location.reload();
+        }
+      });
+    }
+
+    const AUDIO_EXTS = ['.mp3', '.wav', '.m4a', '.aac', '.flac', '.ogg', '.oga', '.opus', '.aiff', '.aif', '.wma', '.mid', '.midi'];
+    const VIDEO_EXTS = ['.mp4', '.mov', '.webm', '.mkv', '.m4v', '.avi', '.wmv', '.flv', '.ogv'];
+    const isAudio = AUDIO_EXTS.includes(ext);
+    const isVideo = VIDEO_EXTS.includes(ext);
+    const isImage = !isAudio && !isVideo;
+
+    // Titres de fenêtres fidèles aux OS respectifs
+    const winIcon = document.getElementById('winIcon');
+    const winTitleText = document.getElementById('winTitleText');
+    const viewport = document.getElementById('mediaViewport');
+
+    if (isAudio) {
+      winIcon.textContent = '🎵';
+      winTitleText.textContent = `Lecteur de disque compact - ${fileName}`;
+    } else if (isVideo) {
+      winIcon.textContent = '🎬';
+      winTitleText.textContent = `ActiveMovie - ${fileName}`;
+    } else {
+      winIcon.textContent = '🖼️';
+      winTitleText.textContent = `Visionneuse d'images - ${fileName}`;
+    }
+
+    // Gestion boutons de fenêtre
+    document.getElementById('btnClose').onclick = () => {
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    };
+    document.getElementById('btnMin').onclick = () => {
+      if (window.electronAPI?.minimize) window.electronAPI.minimize();
+    };
+    document.getElementById('btnMax').onclick = () => {
+      if (window.electronAPI?.maximize) window.electronAPI.maximize();
+    };
+    document.getElementById('btnOpenSystemApp').onclick = () => {
+      if (window.electronAPI?.openPath) window.electronAPI.openPath(filePath);
+    };
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || seconds < 0) return '00:00';
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function toFileUrl(p) {
+      if (!p) return '';
+      const clean = p.replace(/\\/g, '/');
+      const encoded = clean.split('/').map(seg => encodeURIComponent(seg)).join('/');
+      return encoded.startsWith('/') ? `file://${encoded}` : `file:///${encoded}`;
+    }
+
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+    const fileMediaUrl = toFileUrl(filePath);
+    const httpMediaUrl = filePath ? `${API_BASE}/api/fs/raw?path=${encodeURIComponent(filePath)}` : '';
+    const primaryUrl = fileMediaUrl || httpMediaUrl;
+    const secondaryUrl = (primaryUrl === fileMediaUrl) ? httpMediaUrl : fileMediaUrl;
+
+    // =========================================================================
+    // 1. VISIONNEUSE D'IMAGES
+    // =========================================================================
+    if (isImage) {
+      let zoomLevel = 1;
+      let rotation = 0;
+
+      viewport.innerHTML = `
+        <div class="image-viewer-container">
+          <div class="image-stage">
+            <img class="viewer-img" id="mainImg" src="${primaryUrl}" alt="${escapeHtml(fileName)}">
+          </div>
+          <div class="image-toolbar">
+            <button class="viewer-btn" id="btnZoomIn">🔍+ Zoom +</button>
+            <button class="viewer-btn" id="btnZoomOut">🔍- Zoom -</button>
+            <button class="viewer-btn" id="btnZoomFit">1:1 Réel</button>
+            <button class="viewer-btn" id="btnRotate">⟳ Rotation</button>
+          </div>
+        </div>
+      `;
+
+      const img = document.getElementById('mainImg');
+      function applyImgTransform() {
+        img.style.transform = `scale(${zoomLevel}) rotate(${rotation}deg)`;
+      }
+
+      img.onerror = () => {
+        if (!img.dataset.fallbackDone && secondaryUrl) {
+          img.dataset.fallbackDone = '1';
+          img.src = secondaryUrl;
+        }
+      };
+
+      document.getElementById('btnZoomIn').onclick = () => { zoomLevel = Math.min(4, zoomLevel + 0.25); applyImgTransform(); };
+      document.getElementById('btnZoomOut').onclick = () => { zoomLevel = Math.max(0.2, zoomLevel - 0.25); applyImgTransform(); };
+      document.getElementById('btnZoomFit').onclick = () => { zoomLevel = 1; rotation = 0; applyImgTransform(); };
+      document.getElementById('btnRotate').onclick = () => { rotation = (rotation + 90) % 360; applyImgTransform(); };
+
+    // =========================================================================
+    // 2. WINDOWS 98 (CONSERVÉ FIDÈLE EN CD PLAYER / ACTIVEMOVIE)
+    // =========================================================================
+    } else {
+      if (isAudio) {
+        viewport.innerHTML = `
+          <div class="retro-wrap" style="flex:1;width:100%;height:100%;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;padding:8px;">
+            <div class="win98-media-player" id="retroMediaPlayer" style="margin:0 !important;width:100% !important;height:100% !important;flex:1 !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important;box-sizing:border-box !important;">
+              <div class="win98-player-lcd media-audio-lcd" id="retroAudioLcd" style="margin-bottom:6px;flex:1;min-height:92px;display:flex !important;flex-direction:column !important;align-items:stretch !important;width:100% !important;box-sizing:border-box !important;gap:6px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;width:100%;flex-shrink:0;">
+                  <div style="display:flex;flex-direction:column;gap:2px;overflow:hidden;flex:1;margin-right:8px;">
+                    <div class="win98-lcd-track" id="trackTitle" title="${escapeHtml(fileName)}">${escapeHtml(fileName)}</div>
+                    <div class="win98-lcd-status" id="playStatus">[CHARGEMENT]</div>
+                  </div>
+                  <div class="win98-lcd-time" id="timeDisplay">00:00 / --:--</div>
+                </div>
+                <div class="spectrum-viewport" style="flex:1;min-height:56px;width:100% !important;align-self:stretch !important;background:#000000;border-top:1px solid #003300;position:relative !important;overflow:hidden !important;box-sizing:border-box !important;">
+                  <canvas id="audioSpectrumCanvas" style="position:absolute !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;display:block !important;background:#000000 !important;image-rendering:pixelated !important;"></canvas>
+                </div>
+              </div>
+
+              <div class="win98-player-trackbar" id="trackbar" title="Position" style="margin:6px 0;">
+                <div class="win98-trackbar-groove">
+                  <div class="win98-trackbar-fill" id="trackFill"></div>
+                  <div class="win98-trackbar-thumb" id="trackThumb"></div>
+                </div>
+              </div>
+
+              <div class="win98-player-controls">
+                <button class="win98-ctrl-btn" id="btnPlay" title="Lecture">▶</button>
+                <button class="win98-ctrl-btn" id="btnPause" title="Pause">❚❚</button>
+                <button class="win98-ctrl-btn" id="btnStop" title="Arrêt">■</button>
+                <button class="win98-ctrl-btn" id="btnRewind" title="Rembobiner (5s)">|◀◀</button>
+                <button class="win98-ctrl-btn" id="btnForward" title="Avancer (5s)">▶▶|</button>
+                <div class="win98-vol-group">
+                  <span style="font-size:11px;">🔊</span>
+                  <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.25" class="win98-vol-slider" title="Volume">
+                </div>
+              </div>
+
+              <audio id="mediaEngine" crossorigin="anonymous" src="${primaryUrl}" preload="auto" playsinline></audio>
+            </div>
+          </div>
+        `;
+      } else {
+        viewport.innerHTML = `
+          <div class="retro-wrap">
+            <div class="win98-media-player win98-video-player" style="margin:0;height:100%;display:flex;flex-direction:column;">
+              <div class="win98-video-crt-viewport" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;">
+                <video id="mediaEngine" src="${primaryUrl}" preload="auto" playsinline style="max-width:100%;max-height:100%;display:block;"></video>
+              </div>
+
+              <div class="win98-player-lcd" style="padding:4px 8px;margin-bottom:4px;">
+                <span class="win98-lcd-track" id="playStatus">[CHARGEMENT]</span>
+                <span class="win98-lcd-time" id="timeDisplay">00:00 / --:--</span>
+              </div>
+
+              <div class="win98-player-trackbar" id="trackbar" title="Position">
+                <div class="win98-trackbar-groove">
+                  <div class="win98-trackbar-fill" id="trackFill"></div>
+                  <div class="win98-trackbar-thumb" id="trackThumb"></div>
+                </div>
+              </div>
+
+              <div class="win98-player-controls">
+                <button class="win98-ctrl-btn" id="btnPlay" title="Lecture">▶</button>
+                <button class="win98-ctrl-btn" id="btnPause" title="Pause">❚❚</button>
+                <button class="win98-ctrl-btn" id="btnStop" title="Arrêt">■</button>
+                <button class="win98-ctrl-btn" id="btnRewind" title="Rembobiner (5s)">|◀◀</button>
+                <button class="win98-ctrl-btn" id="btnForward" title="Avancer (5s)">▶▶|</button>
+                <div class="win98-vol-group">
+                  <span style="font-size:11px;">🔊</span>
+                  <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.25" class="win98-vol-slider" title="Volume">
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      setupUnifiedPlayer('win98');
+
+    }
+
+    // =========================================================================
+    // CONTRÔLEUR UNIFIÉ POUR TOUS LES MODES + MKV AUDIO COMPANION
+    // =========================================================================
+    function setupUnifiedPlayer(mode) {
+      const engine = document.getElementById('mediaEngine');
+      if (!engine) return;
+
+      const btnPlay = document.getElementById('btnPlay');
+      const btnPause = document.getElementById('btnPause');
+      const btnStop = document.getElementById('btnStop');
+      const btnRewind = document.getElementById('btnRewind');
+      const btnForward = document.getElementById('btnForward');
+      const volSlider = document.getElementById('volSlider');
+      const timeDisplay = document.getElementById('timeDisplay');
+      const playStatus = document.getElementById('playStatus');
+      const trackbar = document.getElementById('trackbar');
+      const trackFill = document.getElementById('trackFill');
+      const trackThumb = document.getElementById('trackThumb');
+
+      engine.volume = 0.25;
+      if (volSlider) volSlider.value = '0.25';
+
+      let companionAudio = null;
+
+      // Détection automatique de piste audio non supportée nativement dans MKV/AVI (ex: AC3/DTS/AAC en MKV)
+      if (isVideo) {
+        fetch(`${API_BASE}/api/media/audio-info?path=${encodeURIComponent(filePath)}`)
+          .then(res => res.json())
+          .then(info => {
+            if (info && info.needs_companion && info.audio_url) {
+              const compUrl = `${API_BASE}${info.audio_url}`;
+              companionAudio = new Audio(compUrl);
+              companionAudio.preload = 'auto';
+              companionAudio.volume = engine.volume;
+              companionAudio.currentTime = engine.currentTime || 0;
+
+              // Ne muter la vidéo que dès que le flux audio compagnon démarre
+              companionAudio.addEventListener('playing', () => {
+                engine.muted = true;
+              });
+
+              // Si le flux audio échoue, rétablir le son de la vidéo par précaution
+              companionAudio.addEventListener('error', (e) => {
+                console.warn('Audio companion load error, unmuting video:', e);
+                engine.muted = false;
+              });
+
+              const notice = document.getElementById('codecNotice');
+              const noticeText = document.getElementById('codecNoticeText');
+              if (notice && noticeText) {
+                notice.style.display = 'flex';
+                noticeText.textContent = `Piste audio ${info.codec ? info.codec.toUpperCase() : 'MKV'} synchronisée en direct.`;
+                setTimeout(() => { notice.style.display = 'none'; }, 4000);
+              }
+
+              // Synchronisation exacte en temps réel
+              engine.addEventListener('play', () => {
+                if (companionAudio && companionAudio.paused) {
+                  companionAudio.currentTime = engine.currentTime;
+                  companionAudio.play().catch(e => console.warn(e));
+                }
+              });
+              engine.addEventListener('pause', () => { companionAudio?.pause(); });
+              engine.addEventListener('seeking', () => { if (companionAudio) companionAudio.currentTime = engine.currentTime; });
+              engine.addEventListener('seeked', () => { if (companionAudio) companionAudio.currentTime = engine.currentTime; });
+              engine.addEventListener('ratechange', () => { if (companionAudio) companionAudio.playbackRate = engine.playbackRate; });
+              engine.addEventListener('volumechange', () => {
+                if (companionAudio) {
+                  companionAudio.volume = engine.volume;
+                }
+              });
+              engine.addEventListener('timeupdate', () => {
+                if (companionAudio && !companionAudio.paused) {
+                  if (Math.abs(companionAudio.currentTime - engine.currentTime) > 0.35) {
+                    companionAudio.currentTime = engine.currentTime;
+                  }
+                }
+              });
+
+              // Si la vidéo est déjà en lecture active (autoplay), lancer la piste compagnon immédiatement
+              if (!engine.paused) {
+                companionAudio.currentTime = engine.currentTime;
+                companionAudio.play().catch(e => console.warn('companionAudio play error:', e));
+              }
+            }
+          })
+          .catch(e => console.warn('Audio companion check error:', e));
+      }
+
+      let animId = null;
+      const spectrumCanvas = document.getElementById('audioSpectrumCanvas');
+      let spectrumVisualizer = null;
+      if (spectrumCanvas && typeof window.RetroSpectrumVisualizer === 'function') {
+        spectrumVisualizer = new window.RetroSpectrumVisualizer(spectrumCanvas, engine, {
+          colorMode: 'green',
+          fftSize: 512,
+          smoothingTimeConstant: 0.8,
+          targetBarWidth: 8,
+          barGap: 2,
+          blockHeight: 3,
+          blockGap: 1
+        });
+      }
+
+      function update() {
+        const cur = engine.currentTime || 0;
+        const dur = engine.duration || 0;
+        if (timeDisplay) {
+          timeDisplay.textContent = `${formatTime(cur)} / ${dur > 0 ? formatTime(dur) : '--:--'}`;
+        }
+        const pct = dur > 0 ? Math.min(100, Math.max(0, (cur / dur) * 100)) : 0;
+        if (trackFill) trackFill.style.setProperty('width', `${pct}%`, 'important');
+        if (trackThumb) trackThumb.style.setProperty('left', `${pct}%`, 'important');
+      }
+
+      function loop() {
+        if (!engine.paused && !engine.ended) {
+          update();
+          animId = requestAnimationFrame(loop);
+        }
+      }
+
+      const tryPlay = () => {
+        const p = engine.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(err => {
+            console.warn("Autoplay restreint:", err);
+            if (playStatus && engine.paused) {
+              playStatus.textContent = '[CLIQUEZ ▶]';
+            }
+          });
+        }
+        if (companionAudio && companionAudio.paused) {
+          companionAudio.play().catch(e => console.warn(e));
+        }
+      };
+
+      engine.addEventListener('error', (e) => {
+        console.warn("Erreur source média:", engine.error, e);
+        if (!engine.dataset.fallbackDone && secondaryUrl && secondaryUrl !== engine.src) {
+          engine.dataset.fallbackDone = '1';
+          engine.src = secondaryUrl;
+          engine.load();
+          tryPlay();
+          return;
+        }
+        const notice = document.getElementById('codecNotice');
+        const noticeText = document.getElementById('codecNoticeText');
+        if (notice && noticeText) {
+          notice.style.display = 'flex';
+          noticeText.textContent = "Format non décodable directement.";
+        }
+      });
+
+      btnPlay?.addEventListener('click', () => {
+        tryPlay();
+      });
+
+      btnPause?.addEventListener('click', () => {
+        engine.pause();
+        if (companionAudio) companionAudio.pause();
+        cancelAnimationFrame(animId);
+      });
+
+      btnStop?.addEventListener('click', () => {
+        cancelAnimationFrame(animId);
+        engine.pause();
+        engine.currentTime = 0;
+        if (companionAudio) {
+          companionAudio.pause();
+          companionAudio.currentTime = 0;
+        }
+        spectrumVisualizer?.reset();
+        update();
+        if (playStatus) playStatus.textContent = '[ARRÊT]';
+      });
+
+      btnRewind?.addEventListener('click', () => {
+        const nextTime = Math.max(0, (engine.currentTime || 0) - 5);
+        engine.currentTime = nextTime;
+        if (companionAudio) companionAudio.currentTime = nextTime;
+        update();
+      });
+
+      btnForward?.addEventListener('click', () => {
+        const dur = engine.duration || 0;
+        const nextTime = dur > 0 ? Math.min(dur, (engine.currentTime || 0) + 5) : (engine.currentTime || 0) + 5;
+        engine.currentTime = nextTime;
+        if (companionAudio) companionAudio.currentTime = nextTime;
+        update();
+      });
+
+      volSlider?.addEventListener('input', (e) => {
+        const v = parseFloat(e.target.value);
+        engine.volume = v;
+        if (companionAudio) companionAudio.volume = v;
+      });
+
+      if (trackbar) {
+        let dragging = false;
+        const seek = (e) => {
+          const rect = trackbar.getBoundingClientRect();
+          const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+          const ratio = rect.width > 0 ? x / rect.width : 0;
+          const dur = engine.duration || 0;
+          if (dur > 0) {
+            const t = ratio * dur;
+            engine.currentTime = t;
+            if (companionAudio) companionAudio.currentTime = t;
+          }
+          const pct = Math.min(100, Math.max(0, ratio * 100));
+          if (trackFill) trackFill.style.setProperty('width', `${pct}%`, 'important');
+          if (trackThumb) trackThumb.style.setProperty('left', `${pct}%`, 'important');
+          if (timeDisplay && dur > 0) {
+            timeDisplay.textContent = `${formatTime(ratio * dur)} / ${formatTime(dur)}`;
+          }
+        };
+        trackbar.addEventListener('mousedown', (e) => {
+          dragging = true;
+          seek(e);
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (dragging) seek(e);
+        });
+        window.addEventListener('mouseup', () => {
+          dragging = false;
+        });
+      }
+
+      engine.addEventListener('play', () => {
+        if (playStatus) playStatus.textContent = '[LECTURE]';
+        cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(loop);
+      });
+
+      engine.addEventListener('pause', () => {
+        cancelAnimationFrame(animId);
+        if (playStatus && engine.currentTime > 0 && !engine.ended) {
+          playStatus.textContent = '[PAUSE]';
+        }
+      });
+
+      engine.addEventListener('ended', () => {
+        cancelAnimationFrame(animId);
+        if (playStatus) playStatus.textContent = '[TERMINÉ]';
+        update();
+      });
+
+      engine.addEventListener('timeupdate', update);
+      engine.addEventListener('loadedmetadata', update);
+      engine.addEventListener('canplay', () => {
+        if (engine.paused && engine.currentTime === 0 && !engine.ended) {
+          tryPlay();
+        }
+      }, { once: true });
+
+      window.addEventListener('beforeunload', () => {
+        spectrumVisualizer?.destroy();
+      });
+
+      update();
+      tryPlay();
+    }
+
+    // Raccourcis clavier (Espace = Play/Pause, Echap = Fermer)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (window.electronAPI?.close) window.electronAPI.close();
+        else window.close();
+      } else if (e.key === ' ' && (isAudio || isVideo)) {
+        e.preventDefault();
+        const media = document.getElementById('mediaEngine');
+        if (media) {
+          if (media.paused) media.play();
+          else media.pause();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

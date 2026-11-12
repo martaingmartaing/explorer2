@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfert de fichiers</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: var(--font-family, sans-serif);
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .standalone-transfer-window {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      padding: 10px 14px 12px 14px !important;
+      animation: none !important;
+      border-radius: 8px !important;
+    }
+    [data-theme="windows98"] .standalone-transfer-window {
+      border-radius: 0 !important;
+      padding: 3px 6px 6px 6px !important;
+    }
+    .transfer-header {
+      -webkit-app-region: drag;
+      cursor: default;
+    }
+    .transfer-close-btn, .transfer-actions button {
+      -webkit-app-region: no-drag;
+    }
+  </style>
+</head>
+<body>
+  <div class="standalone-transfer-window transfer-dialog" id="transferDialog" style="display:flex;">
+    <div class="transfer-header">
+      <div class="transfer-title" id="transferTitle">Transfert en cours...</div>
+      <button class="transfer-close-btn" id="transferCloseBtn" title="Fermer">✕</button>
+    </div>
+
+    <!-- Animation Culte de Copie : Feuilles volantes d'un dossier à l'autre -->
+    <div class="transfer-copy-anim" id="transferCopyAnim">
+      <div class="copy-anim-folder source-folder" title="Dossier source">
+        <div class="folder-back"></div>
+        <div class="folder-papers"></div>
+        <div class="folder-body"></div>
+        <div class="folder-front"></div>
+      </div>
+
+      <div class="copy-anim-flight">
+        <div class="flying-doc doc-1">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+        <div class="flying-doc doc-2">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+        <div class="flying-doc doc-3">
+          <div class="doc-sheet">
+            <span class="doc-line l1"></span>
+            <span class="doc-line l2"></span>
+            <span class="doc-line l3"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy-anim-folder dest-folder" title="Dossier destination">
+        <div class="folder-back"></div>
+        <div class="folder-papers"></div>
+        <div class="folder-body"></div>
+        <div class="folder-front"></div>
+      </div>
+    </div>
+
+    <canvas id="win98CopyCanvas" class="win98-copy-canvas" width="300" height="70" style="display:none;margin:2px auto;"></canvas>
+
+    <div class="transfer-file-info" id="transferFileInfo" style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px;">Traitement en cours...</div>
+    <div class="transfer-dir-info" id="transferDirInfo" style="display:none;font-size:11px;color:var(--w11-text-secondary);padding:0 2px;"></div>
+
+    <div class="transfer-stats-row" id="transferStatsRow" style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--w11-text-secondary);padding:1px 2px;min-height:16px;">
+      <span id="transferFilesBadge"></span>
+      <span id="transferSizesBadge" style="font-weight:600;"></span>
+    </div>
+
+    <div class="transfer-progress-bar" style="height:14px;margin-top:2px;">
+      <div class="transfer-progress-fill" id="transferProgressFill" style="width:0%;"></div>
+    </div>
+
+    <div class="transfer-metrics-row" style="display:flex;justify-content:space-between;align-items:center;padding:0 2px;">
+      <div class="transfer-speed-badge" id="transferSpeedBadge" style="font-size:13px;font-weight:700;">0.00 Mo/s</div>
+      <div class="transfer-eta-text" id="transferEtaText" style="font-size:11.5px;color:var(--w11-text-secondary);">Calcul en cours...</div>
+    </div>
+
+    <div class="speed-canvas-container" style="height:70px;">
+      <canvas class="speed-canvas" id="speedCanvas"></canvas>
+    </div>
+
+    <div class="transfer-actions" style="display:flex;justify-content:flex-end;margin-top:2px;padding:0 2px;">
+      <button class="btn danger" id="transferCancelBtn">Annuler</button>
+    </div>
+  </div>
+
+  <script src="copy-anim.js"></script>
+  <script>
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+    const params = new URLSearchParams(window.location.search);
+    let taskId = params.get('taskId');
+    const label = params.get('label') || 'Transfert en cours...';
+    const theme = 'windows98';
+
+    let win98Timer = null;
+    let pollInterval = null;
+    let isFinished = false;
+    let pollAttempts = 0;
+
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('transferTitle').textContent = label;
+    document.title = label;
+
+    const titleEl = document.getElementById('transferTitle');
+    const infoEl = document.getElementById('transferFileInfo');
+    const fillEl = document.getElementById('transferProgressFill');
+    const speedBadgeEl = document.getElementById('transferSpeedBadge');
+    const etaEl = document.getElementById('transferEtaText');
+    const cancelBtn = document.getElementById('transferCancelBtn');
+    const closeBtn = document.getElementById('transferCloseBtn');
+    const canvas = document.getElementById('speedCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function formatBytes(bytes) {
+      if (!bytes || isNaN(bytes) || bytes <= 0) return '0 o';
+      const units = ['o', 'Ko', 'Mo', 'Go', 'To'];
+      const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+      return (bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1) + ' ' + units[i];
+    }
+
+    // Lissage de la courbe de débit : moyenne mobile centrée (le backend fournit déjà
+    // une vitesse moyennée sur 5 s ; ce lissage supprime les derniers à-coups visuels).
+    function smoothSpeedHistory(history, radius = 4) {
+      if (!Array.isArray(history) || history.length < 3) return history || [];
+      const val = (p) => (typeof p === 'object' && p !== null) ? (Number(p.speed) || 0) : (Number(p) || 0);
+      const raw = history.map(val);
+      return history.map((p, i) => {
+        const a = Math.max(0, i - radius);
+        const b = Math.min(raw.length - 1, i + radius);
+        let sum = 0;
+        for (let k = a; k <= b; k++) sum += raw[k];
+        const avg = sum / (b - a + 1);
+        return (typeof p === 'object' && p !== null) ? { ...p, speed: avg } : avg;
+      });
+    }
+
+    function drawSpeedGraph(history, currentPercent = 0) {
+      history = smoothSpeedHistory(history);
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 400;
+      const h = canvas.clientHeight || 70;
+
+      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+      }
+      ctx.resetTransform?.();
+      ctx.scale(dpr, dpr);
+
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#003600';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 16) {
+        ctx.beginPath();
+        ctx.moveTo(x + 0.5, 0);
+        ctx.lineTo(x + 0.5, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 14) {
+        ctx.beginPath();
+        ctx.moveTo(0, y + 0.5);
+        ctx.lineTo(w, y + 0.5);
+        ctx.stroke();
+      }
+
+      const speeds = history.map(item => (typeof item === 'object' && item !== null) ? item.speed : Number(item) || 0);
+      if (!speeds || speeds.length < 2) return;
+
+      const maxSpeed = Math.max(...speeds, 5);
+      const points = speeds.length;
+      const progressW = Math.max(10, (Math.min(100, currentPercent) / 100) * w);
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#00ff00';
+      ctx.lineWidth = 1.5;
+
+      for (let i = 0; i < points; i++) {
+        const x = (i / (points - 1)) * progressW;
+        const val = speeds[i];
+        const y = h - (val / maxSpeed) * (h - 8) - 4;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.lineTo(progressW, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0, 255, 0, 0.15)';
+      ctx.fill();
+    }
+
+    // Animation de copie d'époque : la feuille vole d'un dossier ouvert à l'autre
+    let flyingAnim = null;
+    function startWin98Anim() {
+      const c = document.getElementById('win98CopyCanvas');
+      if (!c || !window.FlyingDocAnimation) return;
+      flyingAnim = window.FlyingDocAnimation.create(c);
+      flyingAnim.start();
+    }
+
+    async function poll() {
+      if (!taskId || isFinished) return;
+      pollAttempts++;
+      try {
+        const res = await fetch(`${API_BASE}/api/tasks/${taskId}`);
+        if (!res.ok) {
+          if (res.status === 404 && pollAttempts < 10) {
+            return;
+          }
+          if (res.status === 404) {
+            isFinished = true;
+            clearInterval(pollInterval);
+            titleEl.textContent = `${label} terminée !`;
+            infoEl.textContent = 'Opération terminée.';
+            fillEl.style.width = '100%';
+            speedBadgeEl.textContent = 'Terminé';
+            etaEl.textContent = '100% complété';
+            cancelBtn.textContent = 'Fermer';
+            cancelBtn.className = 'btn primary';
+            drawSpeedGraph([0, 0], 100);
+            if (window.electronAPI?.notifyTransferDone) {
+              window.electronAPI.notifyTransferDone();
+            }
+            setTimeout(() => { closeWin(); }, 1200);
+          }
+          return;
+        }
+
+        const data = await res.json();
+        if (isFinished) return;
+
+        if (data.current_file) {
+          infoEl.textContent = data.current_file;
+        }
+
+        const pct = Math.min(100, Math.max(0, data.percent || 0));
+        fillEl.style.width = `${pct}%`;
+
+        const speedMb = data.speed_mb_sec || 0;
+        speedBadgeEl.textContent = `${speedMb.toFixed(2)} Mo/s`;
+
+        if (data.eta_seconds !== undefined && data.eta_seconds !== null && data.eta_seconds > 0) {
+          etaEl.textContent = `Environ ${data.eta_seconds}s restante(s) (${pct}%)`;
+        } else {
+          etaEl.textContent = pct === 100 ? 'Terminé' : `${pct}% complété`;
+        }
+
+        // Statistiques détaillées (Fichiers & Tailles compressées/extraites)
+        const filesBadgeEl = document.getElementById('transferFilesBadge');
+        const sizesBadgeEl = document.getElementById('transferSizesBadge');
+
+        if (filesBadgeEl) {
+          if (data.total_files > 0) {
+            const proc = data.processed_files || 0;
+            const tot = data.total_files;
+            if (data.task_type === 'compress') {
+              filesBadgeEl.textContent = `📁 ${proc} / ${tot} fichier${tot > 1 ? 's' : ''}`;
+            } else if (data.task_type === 'extract') {
+              filesBadgeEl.textContent = `📦 ${proc} / ${tot} fichier${tot > 1 ? 's' : ''}`;
+            } else if (data.task_type === 'delete') {
+              filesBadgeEl.textContent = `🗑️ ${proc} / ${tot} élément${tot > 1 ? 's' : ''}`;
+            } else {
+              filesBadgeEl.textContent = `📄 ${proc} / ${tot} fichier${tot > 1 ? 's' : ''}`;
+            }
+          }
+        }
+
+        if (sizesBadgeEl) {
+          if (data.task_type === 'compress') {
+            const comp = formatBytes(data.compressed_bytes || 0);
+            const orig = formatBytes(data.total_bytes || data.processed_bytes || 0);
+            let gain = '';
+            if (data.processed_bytes > 0 && data.compressed_bytes > 0 && data.compressed_bytes < data.processed_bytes) {
+              const r = Math.round((1 - (data.compressed_bytes / data.processed_bytes)) * 100);
+              gain = ` (-${r}%)`;
+            }
+            sizesBadgeEl.textContent = `Compressé : ${comp} / ${orig}${gain}`;
+          } else if (data.task_type === 'extract') {
+            const ext = formatBytes(data.processed_bytes || 0);
+            const tot = formatBytes(data.total_bytes || 0);
+            const arch = data.compressed_bytes ? ` (Archive : ${formatBytes(data.compressed_bytes)})` : '';
+            sizesBadgeEl.textContent = `Extrait : ${ext} / ${tot}${arch}`;
+          } else if (data.total_bytes > 0) {
+            sizesBadgeEl.textContent = `${formatBytes(data.processed_bytes || 0)} / ${formatBytes(data.total_bytes)}`;
+          }
+        }
+
+        const hist = (data.speed_history && data.speed_history.length > 0) ? data.speed_history : [0, speedMb];
+        drawSpeedGraph(hist, pct);
+
+        if (data.status === 'completed') {
+          isFinished = true;
+          clearInterval(pollInterval);
+          titleEl.textContent = `${label} terminée !`;
+          infoEl.textContent = 'Opération terminée avec succès.';
+          fillEl.style.width = '100%';
+          speedBadgeEl.textContent = 'Terminé';
+          etaEl.textContent = '100% complété';
+          cancelBtn.textContent = 'Fermer';
+          cancelBtn.className = 'btn primary';
+          drawSpeedGraph(hist, 100);
+
+          if (window.electronAPI?.notifyTransferDone) {
+            window.electronAPI.notifyTransferDone();
+          }
+
+          // Auto-fermeture fluide après 1.2s pour les suppressions/petits transferts
+          setTimeout(() => {
+            closeWin();
+          }, 1200);
+        } else if (data.status === 'cancelled') {
+          isFinished = true;
+          clearInterval(pollInterval);
+          titleEl.textContent = 'Opération annulée';
+          infoEl.textContent = 'Le transfert a été interrompu.';
+          cancelBtn.textContent = 'Fermer';
+          cancelBtn.className = 'btn';
+        } else if (data.status === 'error') {
+          isFinished = true;
+          clearInterval(pollInterval);
+          titleEl.textContent = 'Erreur';
+          infoEl.textContent = data.error_message || 'Une erreur est survenue lors de l\'opération.';
+          cancelBtn.textContent = 'Fermer';
+          cancelBtn.className = 'btn';
+        }
+      } catch (e) {
+        console.warn('Poll error:', e);
+      }
+    }
+
+    function closeWin() {
+      isFinished = true;
+      if (pollInterval) clearInterval(pollInterval);
+      if (win98Timer) cancelAnimationFrame(win98Timer);
+      if (flyingAnim) flyingAnim.stop();
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    }
+
+    cancelBtn.onclick = async () => {
+      if (cancelBtn.textContent === 'Fermer' || isFinished) {
+        closeWin();
+      } else if (taskId) {
+        try {
+          await fetch(`${API_BASE}/api/tasks/${taskId}/cancel`, { method: 'POST' });
+        } catch (e) {}
+        cancelBtn.textContent = 'Fermer';
+        closeWin();
+      }
+    };
+
+    closeBtn.onclick = closeWin;
+
+    // Initialisation du rendu graphique
+    drawSpeedGraph([0, 0], 0);
+
+    document.getElementById('transferCopyAnim').style.display = 'none';
+    document.getElementById('win98CopyCanvas').style.display = 'block';
+    startWin98Anim();
+
+    poll();
+    pollInterval = setInterval(poll, 100);
+  </script>
+</body>
+</html>

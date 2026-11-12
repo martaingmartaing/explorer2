@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="windows98">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connecter un partage réseau SMB</title>
+  <script>
+    document.documentElement.setAttribute('data-theme', 'windows98');
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-family, sans-serif);
+      user-select: none;
+    }
+
+    .modal-card {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+      border-radius: 8px;
+    }
+
+    .modal-titlebar {
+      -webkit-app-region: drag;
+      cursor: default;
+    }
+
+    .modal-close-x-btn, .modal-actions button, .btn, input, select {
+      -webkit-app-region: no-drag;
+    }
+
+    .smb-shares-list {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--w11-border, #404040);
+      border-radius: 4px;
+      min-height: 80px;
+      max-height: 130px;
+      overflow-y: auto;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .smb-share-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+      transition: background 0.12s ease;
+      color: inherit;
+    }
+
+    .smb-share-item:hover {
+      background: var(--w11-accent-light, rgba(255, 255, 255, 0.08));
+    }
+
+    .smb-share-item.selected {
+      background: var(--w11-accent, #0078d4) !important;
+      color: #ffffff !important;
+    }
+
+    /* Style Windows 98 */
+    [data-theme="windows98"] .modal-card {
+      border-radius: 0 !important;
+      background: #c0c0c0 !important;
+      box-shadow: 2px 2px 0 #000000 !important;
+    }
+
+    [data-theme="windows98"] .smb-shares-list {
+      background: #ffffff !important;
+      border-top: 2px solid #808080 !important;
+      border-left: 2px solid #808080 !important;
+      border-right: 2px solid #ffffff !important;
+      border-bottom: 2px solid #ffffff !important;
+      border-radius: 0 !important;
+      color: #000000 !important;
+    }
+
+    [data-theme="windows98"] .smb-share-item {
+      border-radius: 0 !important;
+      color: #000000 !important;
+    }
+
+    [data-theme="windows98"] .smb-share-item:hover {
+      background: #000080 !important;
+      color: #ffffff !important;
+    }
+
+    [data-theme="windows98"] .smb-share-item.selected {
+      background: #000080 !important;
+      color: #ffffff !important;
+    }
+
+    /* Message d'état */
+    .status-box {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .status-box.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #ff6b6b;
+    }
+
+    [data-theme="windows98"] .status-box.error {
+      background: #ffe6e6 !important;
+      border: 1px solid #cc0000 !important;
+      color: #b30000 !important;
+    }
+
+    .status-box.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid #22c55e;
+      color: #4ade80;
+    }
+
+    [data-theme="windows98"] .status-box.success {
+      background: #e6ffe6 !important;
+      border: 1px solid #009900 !important;
+      color: #006600 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-card smb-modal-card">
+    <div class="modal-titlebar">
+      <div class="modal-title-wrap">
+        <span class="modal-title-text">Connecter un partage réseau SMB</span>
+      </div>
+      <button class="modal-close-x-btn" id="smbCloseXBtn" title="Fermer">✕</button>
+    </div>
+
+    <div class="modal-content-pad" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:11px;padding:14px 18px;">
+      
+      <!-- 1. Adresse IP / Serveur -->
+      <div class="modal-field">
+        <label class="modal-label" for="smbServerInput">Serveur ou machine réseau (IP ou nom d'hôte)</label>
+        <input type="text" class="modal-input" id="smbServerInput" placeholder="ex: 192.168.1.10 ou mon-nas.local" spellcheck="false">
+      </div>
+
+      <!-- 2. Identifiants de connexion -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="modal-field">
+          <label class="modal-label" for="smbUsername">Nom d'utilisateur (optionnel)</label>
+          <input type="text" class="modal-input" id="smbUsername" placeholder="ex: utilisateur" spellcheck="false">
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="smbPassword">Mot de passe (optionnel)</label>
+          <input type="password" class="modal-input" id="smbPassword" placeholder="••••••••">
+        </div>
+      </div>
+
+      <!-- 3. Bouton Explorer les partages avec ces identifiants -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:-2px;">
+        <span style="font-size:11px;opacity:0.8;">Explorez les partages disponibles sur l'hôte :</span>
+        <button class="btn" id="smbScanBtn" style="white-space:nowrap;padding:5px 14px;font-weight:600;display:flex;align-items:center;gap:6px;">
+          <span>🔍</span> <span>Explorer les partages</span>
+        </button>
+      </div>
+
+      <!-- 4. Liste des partages disponibles -->
+      <div class="modal-field" style="display:flex;flex-direction:column;gap:4px;">
+        <label class="modal-label">Partages disponibles sur ce serveur :</label>
+        <div class="smb-shares-list" id="smbSharesList">
+          <div id="smbSharesEmptyMsg" style="opacity:0.75;font-size:12px;padding:8px;font-style:italic;">
+            Renseignez l'IP et les identifiants puis cliquez sur « Explorer les partages ».
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Partage sélectionné ou chemin direct -->
+      <div class="modal-field">
+        <label class="modal-label" for="smbRemotePath">Partage à connecter (ou chemin complet)</label>
+        <input type="text" class="modal-input" id="smbRemotePath" placeholder="ex: partage ou smb://192.168.1.10/partage" spellcheck="false">
+      </div>
+
+      <!-- 6. Option Trousseau macOS -->
+      <label class="modal-checkbox-row" style="margin-top:2px;">
+        <input type="checkbox" id="smbRememberPassword" checked>
+        <span>Se souvenir des identifiants dans le trousseau macOS</span>
+      </label>
+
+      <!-- 7. Message d'état -->
+      <div id="smbStatusMsg" class="status-box"></div>
+
+      <!-- 8. Actions Annuler / Connecter -->
+      <div class="modal-actions" style="margin-top:auto;padding-top:10px;display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn" id="smbCancelBtn">Annuler</button>
+        <button class="btn primary" id="smbMountBtn" style="min-width:96px;">Connecter</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+    const params = new URLSearchParams(window.location.search);
+    let theme = 'windows98';
+    document.documentElement.setAttribute('data-theme', theme);
+
+    function closeWin() {
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    }
+
+    document.getElementById('smbCloseXBtn').onclick = closeWin;
+    document.getElementById('smbCancelBtn').onclick = closeWin;
+
+    const serverInput = document.getElementById('smbServerInput');
+    const userInput = document.getElementById('smbUsername');
+    const passInput = document.getElementById('smbPassword');
+    const scanBtn = document.getElementById('smbScanBtn');
+    const sharesList = document.getElementById('smbSharesList');
+    const remotePathInput = document.getElementById('smbRemotePath');
+    const mountBtn = document.getElementById('smbMountBtn');
+    const statusMsg = document.getElementById('smbStatusMsg');
+    const rememberCheckbox = document.getElementById('smbRememberPassword');
+
+    function showStatus(text, type = 'error') {
+      statusMsg.className = `status-box ${type}`;
+      statusMsg.textContent = text;
+      statusMsg.style.display = 'block';
+    }
+
+    function hideStatus() {
+      statusMsg.style.display = 'none';
+      statusMsg.textContent = '';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Détection intelligente si l'utilisateur colle smb://ip/partage ou ip/partage dans le champ serveur
+    serverInput.addEventListener('input', () => {
+      hideStatus();
+      let raw = serverInput.value.trim().replace(/^smb:\/\//i, '').replace(/^\/+/, '');
+      if (raw.includes('/')) {
+        const parts = raw.split('/');
+        const srv = parts[0];
+        const sh = parts.slice(1).join('/').trim();
+        if (sh && !remotePathInput.value) {
+          remotePathInput.value = sh;
+        }
+      }
+    });
+
+    // 1. Exploration des partages SMB
+    scanBtn.onclick = async () => {
+      hideStatus();
+      let srv = serverInput.value.trim().replace(/^smb:\/\//i, '').replace(/^\/+/, '').split('/')[0];
+      if (!srv) {
+        showStatus("Veuillez saisir l'adresse IP ou le nom du serveur (ex: 192.168.1.10).", 'error');
+        serverInput.focus();
+        return;
+      }
+
+      scanBtn.disabled = true;
+      scanBtn.innerHTML = '<span>⏳</span> <span>Recherche...</span>';
+      sharesList.innerHTML = '<div style="opacity:0.75;font-size:12px;padding:8px;">Connexion au serveur SMB et scan des partages...</div>';
+
+      try {
+        const u = userInput.value.trim();
+        const p = passInput.value;
+        let url = `${API_BASE}/api/network/discover?server=${encodeURIComponent(srv)}`;
+        if (u) url += `&username=${encodeURIComponent(u)}`;
+        if (p) url += `&password=${encodeURIComponent(p)}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || "Impossible d'explorer les partages sur ce serveur.");
+        }
+
+        sharesList.innerHTML = '';
+        if (data.shares && data.shares.length > 0) {
+          data.shares.forEach((sh, idx) => {
+            const item = document.createElement('div');
+            item.className = 'smb-share-item';
+            item.innerHTML = `
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:15px;">📁</span>
+                <strong>${escapeHtml(sh.name)}</strong>
+              </div>
+              <span style="font-size:11px;opacity:0.7;">${escapeHtml(sh.comment || sh.type || 'Partage')}</span>
+            `;
+
+            const selectThis = () => {
+              sharesList.querySelectorAll('.smb-share-item').forEach(el => el.classList.remove('selected'));
+              item.classList.add('selected');
+              remotePathInput.value = sh.name;
+              hideStatus();
+            };
+
+            item.onclick = selectThis;
+
+            // Présélection si spécifié par le backend ou s'il correspond au nom déjà saisi ou si 1er élément
+            const defaultShare = data.specified_share || remotePathInput.value.trim().replace(/^smb:\/\//i, '').split('/').pop();
+            if (defaultShare && defaultShare.toLowerCase() === sh.name.toLowerCase()) {
+              item.classList.add('selected');
+              remotePathInput.value = sh.name;
+            } else if (!defaultShare && (data.shares.length === 1 || idx === 0)) {
+              item.classList.add('selected');
+              remotePathInput.value = sh.name;
+            }
+
+            sharesList.appendChild(item);
+          });
+
+          showStatus(`${data.shares.length} partage(s) trouvé(s) sur ${srv}. Cliquez pour sélectionner.`, 'success');
+        } else {
+          sharesList.innerHTML = '<div style="opacity:0.75;font-size:12px;padding:8px;">Aucun dossier partagé accessible trouvé pour ces identifiants.</div>';
+        }
+      } catch (err) {
+        sharesList.innerHTML = `<div style="color:var(--w11-danger, #ef4444);font-size:12px;padding:8px;">${escapeHtml(err.message)}</div>`;
+        showStatus(err.message, 'error');
+      } finally {
+        scanBtn.disabled = false;
+        scanBtn.innerHTML = '<span>🔍</span> <span>Explorer les partages</span>';
+      }
+    };
+
+    // 2. Connexion et montage du partage SMB
+    mountBtn.onclick = async () => {
+      hideStatus();
+      let srv = serverInput.value.trim().replace(/^smb:\/\//i, '').replace(/^\/+/, '').split('/')[0];
+      let share = remotePathInput.value.trim();
+
+      if (!srv && share.includes('/')) {
+        const clean = share.replace(/^smb:\/\//i, '').replace(/^\/+/, '');
+        srv = clean.split('/')[0];
+        share = clean.split('/').slice(1).join('/');
+      }
+
+      if (!srv) {
+        showStatus("Veuillez saisir l'adresse IP ou le serveur.", 'error');
+        serverInput.focus();
+        return;
+      }
+
+      // Nettoyer le nom du partage
+      let cleanShare = share.replace(/^smb:\/\//i, '').replace(/^\/+/, '');
+      if (cleanShare.startsWith(`${srv}/`)) {
+        cleanShare = cleanShare.substring(srv.length + 1);
+      }
+      cleanShare = cleanShare.trim();
+
+      if (!cleanShare) {
+        showStatus("Veuillez sélectionner ou saisir le nom du partage à connecter.", 'error');
+        remotePathInput.focus();
+        return;
+      }
+
+      const fullRemote = `smb://${srv}/${cleanShare}`;
+
+      mountBtn.disabled = true;
+      mountBtn.textContent = 'Connexion...';
+
+      try {
+        const payload = {
+          remote_path: fullRemote,
+          username: userInput.value.trim() || undefined,
+          password: passInput.value || undefined,
+          remember_credentials: rememberCheckbox.checked,
+          remember_password: rememberCheckbox.checked
+        };
+
+        const res = await fetch(`${API_BASE}/api/network/connect`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.detail || 'Erreur lors du montage du lecteur réseau SMB.');
+        }
+
+        showStatus(data.message || `Connecté avec succès à ${cleanShare}`, 'success');
+
+        if (window.electronAPI?.notifyDrivesChanged) {
+          window.electronAPI.notifyDrivesChanged();
+        }
+        if (window.electronAPI?.refreshAllWindows) {
+          window.electronAPI.refreshAllWindows();
+        }
+
+        setTimeout(() => closeWin(), 600);
+      } catch (err) {
+        showStatus(err.message, 'error');
+        mountBtn.disabled = false;
+        mountBtn.textContent = 'Connecter';
+      }
+    };
+  </script>
+</body>
+</html>

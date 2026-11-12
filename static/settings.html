@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="windows98">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paramètres</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-family, sans-serif);
+      user-select: none;
+    }
+    .modal-card {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+      border-radius: 8px;
+    }
+    .modal-titlebar {
+      -webkit-app-region: drag;
+      cursor: default;
+    }
+    .modal-close-x-btn, .modal-actions button, select, input {
+      -webkit-app-region: no-drag;
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-card settings-modal-card">
+    <div class="modal-titlebar">
+      <div class="modal-title-wrap">
+        <span class="modal-title-text">Paramètres</span>
+      </div>
+      <button class="modal-close-x-btn" id="settingsCloseXBtn" title="Fermer">✕</button>
+    </div>
+
+    <div class="modal-content-pad" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;">
+      <div class="settings-app-info-card" style="padding:10px 14px;background:var(--w11-surface-alt, rgba(255,255,255,0.05));border:1px solid var(--w11-border, rgba(255,255,255,0.12));border-radius:6px;display:flex;align-items:center;gap:14px;margin-top:6px;">
+        <img src="icon.png" width="38" height="38" style="image-rendering:pixelated;flex-shrink:0;" alt="Explorer 2 Logo">
+        <div style="display:flex;flex-direction:column;gap:3px;flex:1;">
+          <div style="font-weight:700;font-size:14px;letter-spacing:0.3px;">explorer 2 mac</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--w11-text-secondary, #94a3b8);">
+            <span>Version : <strong style="color:var(--w11-text-primary, #ffffff);">1.0</strong></span>
+            <span>Auteur : <strong style="color:var(--w11-text-primary, #ffffff);">martin astruc</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:auto;padding-top:12px;">
+        <button class="btn primary" id="settingsSaveBtn">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.documentElement.setAttribute('data-theme', 'windows98');
+    localStorage.setItem('explorer_theme', 'windows98');
+
+    function closeWin() {
+      if (window.electronAPI?.close) window.electronAPI.close();
+      else window.close();
+    }
+
+    document.getElementById('settingsCloseXBtn').onclick = closeWin;
+    document.getElementById('settingsSaveBtn').onclick = closeWin;
+  </script>
+</body>
+</html>

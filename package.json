@@ -1,0 +1,89 @@
+{
+  "name": "explorer2",
+  "version": "1.0.0",
+  "description": "Explorateur de fichiers Web local moderne sous macOS",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:helper": "mkdir -p bin && clang -O2 -arch arm64 -arch x86_64 -framework AppKit -framework Foundation bin/mac-clipboard.m -o bin/mac-clipboard && chmod +x bin/mac-clipboard",
+    "build:backend": "mkdir -p /tmp/pyi_cache && PYINSTALLER_CONFIG_DIR=/tmp/pyi_cache ./.venv/bin/pyinstaller --noconfirm --onedir --name backend --distpath backend-bin --collect-all smbprotocol --collect-all spnego --collect-all websockets --collect-submodules uvicorn main.py && mkdir -p backend-bin/backend/bin && cp bin/mac-clipboard backend-bin/backend/bin/",
+    "pack": "electron-builder --dir",
+    "dist": "npm run build:helper && npm run build:backend && electron-builder --mac",
+    "dist:dmg": "npm run build:helper && npm run build:backend && electron-builder --mac dmg",
+    "dist:zip": "npm run build:helper && npm run build:backend && electron-builder --mac zip",
+    "backend": "./.venv/bin/python main.py"
+  },
+  "author": "martin astruc",
+  "license": "MIT",
+  "build": {
+    "appId": "com.explorer2.app",
+    "productName": "Explorer 2",
+    "afterSign": "scripts/afterSign.js",
+    "compression": "maximum",
+    "asar": true,
+    "mac": {
+      "icon": "icon.icns",
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ],
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
+      "extendInfo": {
+        "NSLocalNetworkUsageDescription": "Explorer 2 a besoin d'accéder au réseau local pour découvrir et monter vos partages réseau SMB / NAS.",
+        "NSBonjourServices": [
+          "_smb._tcp"
+        ],
+        "NSFullDiskAccessUsageDescription": "Explorer 2 requiert l'accès complet au disque pour inspecter, sauvegarder, formater et cloner vos disques physiques.",
+        "NSSystemAdministrationUsageDescription": "Explorer 2 requiert les privilèges administrateur pour cloner vos disques physiques bloc à bloc."
+      }
+    },
+    "dmg": {
+      "title": "Explorer 2",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "backend-bin/backend",
+        "to": "backend"
+      },
+      {
+        "from": "bin",
+        "to": "bin"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron-main.js",
+      "preload.js",
+      "icon.png",
+      "icon.icns",
+      "index.html",
+      "static/**/*",
+      "favorites.json",
+      "bin/mac-clipboard"
+    ],
+    "electronLanguages": [
+      "fr",
+      "en"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^40.8.0",
+    "electron-builder": "^26.7.0"
+  },
+  "dependencies": {}
+}
