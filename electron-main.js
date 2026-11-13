@@ -301,15 +301,16 @@ function setWindowSnapped(w, snapped) {
   }
 }
 
-function createWindow({ initialPath = null, bounds = null, tabData = null, showInactive = false } = {}) {
+function createWindow({ initialPath = null, bounds = null, tabData = null, showInactive = false, picker = null, parent = null } = {}) {
   const tBeforeWindow = performance.now();
 
   const winOpts = {
     title: 'Explorer 2',
-    width: (bounds && bounds.width) || 1300,
-    height: (bounds && bounds.height) || 820,
-    minWidth: 920,
-    minHeight: 600,
+    width: (bounds && bounds.width) || (picker ? 980 : 1300),
+    height: (bounds && bounds.height) || (picker ? 660 : 820),
+    minWidth: picker ? 720 : 920,
+    minHeight: picker ? 480 : 600,
+    ...(picker && parent && !parent.isDestroyed() ? { parent } : {}),
     resizable: true,
     maximizable: true,
     icon: path.join(__dirname, 'icon.png'),
@@ -349,7 +350,8 @@ function createWindow({ initialPath = null, bounds = null, tabData = null, showI
   if (webContentsId) {
     const initData = {
       initialPath: initialPath || (tabData ? tabData.path : null),
-      tabData: tabData
+      tabData: tabData,
+      picker: picker
     };
     windowInitData.set(webContentsId, initData);
   }
@@ -699,6 +701,44 @@ ipcMain.on('window:titlebar-drag-end', (event) => {
 });
 
 
+// Fenêtre Explorer 2 « sélecteur de fichier » : uniquement l'explorateur, renvoie le chemin choisi (ou null)
+const pickerResolvers = new Map(); // webContents.id -> resolve
+ipcMain.handle('window:open-file-picker', (event, opts = {}) => {
+  return new Promise((resolve) => {
+    const { app, BrowserWindow } = require('electron');
+    const parent = BrowserWindow.fromWebContents(event.sender);
+    let startPath = opts.startPath;
+    if (!startPath) {
+      try { startPath = app.getPath('downloads'); } catch (e) { startPath = null; }
+    }
+    const win = createWindow({
+      initialPath: startPath,
+      parent,
+      picker: {
+        title: opts.title || 'Sélectionner un fichier',
+        extensions: Array.isArray(opts.extensions) ? opts.extensions : [],
+        filterLabel: opts.filterLabel || '',
+        confirmLabel: opts.confirmLabel || 'Sélectionner'
+      }
+    });
+    const id = win.webContents.id;
+    pickerResolvers.set(id, resolve);
+    win.on('closed', () => {
+      const r = pickerResolvers.get(id);
+      if (r) { pickerResolvers.delete(id); r(null); }
+    });
+  });
+});
+
+ipcMain.on('window:file-picker-result', (event, chosenPath) => {
+  const id = event.sender.id;
+  const r = pickerResolvers.get(id);
+  if (r) { pickerResolvers.delete(id); r(chosenPath || null); }
+  const { BrowserWindow } = require('electron');
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win && !win.isDestroyed()) win.close();
+});
+
 // Demande d'ouverture d'une nouvelle fenêtre depuis un renderer (Ctrl+N ou menu)
 ipcMain.handle('window:open-new', (_event, opts = {}) => {
   const win = createWindow(opts || {});
@@ -856,10 +896,10 @@ ipcMain.handle('window:open-properties', (event, opts = {}) => {
 ipcMain.handle('window:open-smb', (event, opts = {}) => {
   const win = new BrowserWindow({
     title: 'Connecter un partage réseau SMB',
-    width: 540,
-    height: 580,
+    width: 560,
+    height: 720,
     minWidth: 480,
-    minHeight: 500,
+    minHeight: 560,
     resizable: true,
     maximizable: false,
     minimizable: true,

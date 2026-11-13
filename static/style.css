@@ -6229,3 +6229,92 @@ body.is-resizing {
 .preview-row-selected td *:not(img):not(svg):not(path) {
   color: #ffffff !important;
 }
+
+
+/* Sablier pixel-art façon Windows 95/98 (animation image par image) */
+.pixel-hourglass {
+  display: inline-block;
+  width: 18px;
+  height: 24px;
+  vertical-align: middle;
+  image-rendering: pixelated;
+  flex: 0 0 auto;
+}
+.pixel-hourglass svg { width: 100%; height: 100%; display: block; shape-rendering: crispEdges; }
+.pixel-hourglass .hg-f { visibility: hidden; animation: hg-step 1.2s steps(1, end) infinite; }
+.pixel-hourglass .hg-f0 { animation-delay: 0s; }
+.pixel-hourglass .hg-f1 { animation-delay: 0.2s; }
+.pixel-hourglass .hg-f2 { animation-delay: 0.4s; }
+.pixel-hourglass .hg-f3 { animation-delay: 0.6s; }
+.pixel-hourglass .hg-f4 { animation-delay: 0.8s; }
+.pixel-hourglass .hg-f5 { animation-delay: 1s; }
+@keyframes hg-step {
+  0%      { visibility: visible; }
+  16.666% { visibility: hidden; }
+  100%    { visibility: hidden; }
+}
+.net-busy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #000080;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  white-space: nowrap;
+}
+.network-card-status-badge.acquiring {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #c0c0c0;
+  color: #000080;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+.network-card-status-badge.acquiring .pixel-hourglass { width: 11px; height: 14px; }
+.network-card.is-acquiring .network-fields-wrap .network-input { color: #808080; }
+
+
+/* Mode « sélecteur de fichier » : fenêtre séparée avec uniquement l'explorateur */
+body.picker-mode .global-rail,
+body.picker-mode #btnToggleGlobalRail,
+body.picker-mode .tabs-bar,
+body.picker-mode #previewPane,
+body.picker-mode #previewResizer,
+body.picker-mode .w11-footer {
+  display: none !important;
+}
+body.picker-mode .picker-bar { display: flex !important; }
+.picker-bar {
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  box-shadow: inset 0 1px 0 #dfdfdf;
+}
+.picker-bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.picker-bar-row label { min-width: 92px; }
+.picker-bar-row input[type="text"], .picker-bar-row select {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 3px 5px;
+  font-family: inherit;
+  font-size: 12px;
+}
+.picker-bar-row .btn { min-width: 110px; }
+
+/* Barre du haut : texte blanc au survol (le fond de survol est bleu marine) */
+.breadcrumb-segment:hover,
+.breadcrumb-segment:hover *,
+.icon-btn:hover:not(:disabled),
+.new-tab-btn:hover,
+.file-table th:hover {
+  color: #ffffff !important;
+}
+.breadcrumb-segment:hover svg,
+.icon-btn:hover:not(:disabled) svg,
+.new-tab-btn:hover svg {
+  stroke: #ffffff;
+}

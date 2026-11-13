@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import time
 import struct
 import shutil
@@ -1443,7 +1444,7 @@ def connect_smb(req: ConnectSmbRequest):
     try:
         escaped_url = url.replace('\\', '\\\\').replace('"', '\\"')
         apple_script = f'mount volume "{escaped_url}"'
-        res = subprocess.run(["osascript", "-e", apple_script], capture_output=True, text=True, timeout=12)
+        res = subprocess.run(["osascript", "-e", apple_script], capture_output=True, text=True, timeout=(12 if password else 60))
         if res.returncode == 0:
             remember = req.remember_credentials or req.remember_password
             if remember and username and password:
@@ -1496,6 +1497,155 @@ def connect_smb(req: ConnectSmbRequest):
         if isinstance(e, HTTPException):
             raise e
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ------------------------------------------------------------------------------
+# Favoris SMB : adresses enregistrées, identifiants lus dans le Trousseau macOS
+# (aucun mot de passe n'est stocké par l'application : macOS le fournit lui-même au montage)
+# ------------------------------------------------------------------------------
+SMB_FAVORITES_FILE = USER_DATA_DIR / "smb_favorites.json"
+_smb_fav_lock = threading.Lock()
+
+
+def _load_smb_favorites() -> List[Dict[str, Any]]:
+    try:
+        with open(SMB_FAVORITES_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+
+def _save_smb_favorites(items: List[Dict[str, Any]]) -> None:
+    USER_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = SMB_FAVORITES_FILE.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(items, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, SMB_FAVORITES_FILE)
+
+
+def _keychain_smb_account(server: str) -> str:
+    """Nom d'utilisateur enregistré dans le Trousseau pour ce serveur SMB (sans lire le mot de passe,
+    donc sans demande d'autorisation)."""
+    server = (server or "").strip()
+    if not server or sys.platform != "darwin":
+        return ""
+    for extra in (["-r", "smb "], []):
+        try:
+            res = subprocess.run(["security", "find-internet-password", "-s", server, *extra],
+                                 capture_output=True, text=True, timeout=4)
+            if res.returncode == 0:
+                m = re.search(r'"acct"<blob>="([^"]*)"', res.stdout)
+                if m and m.group(1):
+                    return m.group(1)
+        except Exception:
+            pass
+    return ""
+
+
+def _clean_smb_target(server: str, share: str):
+    server = (server or "").strip()
+    server = re.sub(r"^smb://", "", server, flags=re.I).strip("/")
+    if "@" in server.split("/")[0]:
+        server = server.split("@", 1)[1]
+    if "/" in server and not share:
+        server, share = server.split("/", 1)
+    server = server.split("/")[0].strip()
+    share = (share or "").strip().strip("/")
+    share = re.sub(r"^smb://[^/]*/", "", share, flags=re.I)
+    return server, share
+
+
+class SmbFavoriteRequest(BaseModel):
+    id: Optional[str] = None
+    name: Optional[str] = None
+    server: str
+    share: str
+    username: Optional[str] = None
+
+
+@app.get("/api/network/keychain-account")
+def smb_keychain_account(server: str = Query(...)):
+    srv, _ = _clean_smb_target(server, "")
+    acct = _keychain_smb_account(srv)
+    return {"server": srv, "username": acct, "found": bool(acct)}
+
+
+@app.get("/api/smb/favorites")
+def list_smb_favorites():
+    items = _load_smb_favorites()
+    mounted = set()
+    try:
+        out = subprocess.run(["mount"], capture_output=True, text=True, timeout=3).stdout
+        for line in out.splitlines():
+            m = re.match(r"^//(?:[^@/]+@)?([^/]+)/(.+?) on (/Volumes/.+?) \(smbfs", line)
+            if m:
+                mounted.add((m.group(1).lower(), urllib.parse.unquote(m.group(2)).lower()))
+    except Exception:
+        pass
+    result = []
+    for it in items:
+        acct = it.get("username") or _keychain_smb_account(it.get("server", ""))
+        result.append({
+            **it,
+            "keychain_username": acct,
+            "mounted": (str(it.get("server", "")).lower(), str(it.get("share", "")).lower()) in mounted,
+        })
+    return result
+
+
+@app.post("/api/smb/favorites")
+def save_smb_favorite(req: SmbFavoriteRequest):
+    server, share = _clean_smb_target(req.server, req.share)
+    if not server or not share:
+        raise HTTPException(status_code=400, detail="Serveur et partage requis pour enregistrer un favori.")
+    with _smb_fav_lock:
+        items = _load_smb_favorites()
+        existing = None
+        for it in items:
+            if (req.id and it.get("id") == req.id) or (
+                    it.get("server", "").lower() == server.lower() and it.get("share", "").lower() == share.lower()):
+                existing = it
+                break
+        entry = {
+            "id": existing["id"] if existing else uuid.uuid4().hex[:10],
+            "name": (req.name or "").strip() or f"{share} sur {server}",
+            "server": server,
+            "share": share,
+            "username": (req.username or "").strip(),
+        }
+        if existing:
+            items[items.index(existing)] = entry
+        else:
+            items.append(entry)
+        _save_smb_favorites(items)
+    return entry
+
+
+@app.delete("/api/smb/favorites/{fav_id}")
+def delete_smb_favorite(fav_id: str):
+    with _smb_fav_lock:
+        items = _load_smb_favorites()
+        kept = [it for it in items if it.get("id") != fav_id]
+        if len(kept) == len(items):
+            raise HTTPException(status_code=404, detail="Favori introuvable.")
+        _save_smb_favorites(kept)
+    return {"status": "ok"}
+
+
+@app.post("/api/smb/favorites/{fav_id}/connect")
+def connect_smb_favorite(fav_id: str):
+    """Reconnexion en un clic : l'identifiant vient du favori ou du Trousseau, le mot de passe est
+    fourni par macOS (NetFS) depuis le Trousseau au moment du montage."""
+    fav = next((it for it in _load_smb_favorites() if it.get("id") == fav_id), None)
+    if not fav:
+        raise HTTPException(status_code=404, detail="Favori introuvable.")
+    username = fav.get("username") or _keychain_smb_account(fav["server"])
+    return connect_smb(ConnectSmbRequest(
+        remote_path=f"smb://{fav['server']}/{fav['share']}",
+        username=username or None,
+        password=None,
+    ))
 
 
 @app.post("/api/network/disconnect")
@@ -6042,6 +6192,76 @@ def _run_networksetup_admin(cmd_args: List[str]):
     return osa_res
 
 
+# ------------------------------------------------------------------------------
+# Surveillance des interfaces réseau (détection automatique, comme Réglages macOS)
+# ------------------------------------------------------------------------------
+_IGNORED_IF_PREFIXES = ("awdl", "llw", "ap", "anpi", "gif", "stf", "lo")
+_net_watch = {"version": 0, "signature": "", "changed_at": time.time()}
+_net_watch_lock = threading.Lock()
+
+
+def _network_signature() -> str:
+    """Empreinte légère de l'état réseau : interfaces, état du lien, adresses, route par défaut."""
+    parts = []
+    try:
+        out = subprocess.run(["ifconfig", "-a"], capture_output=True, text=True, timeout=4).stdout
+        name = None
+        cur: List[str] = []
+        for line in out.splitlines():
+            if line and not line[0].isspace():
+                if name and not name.startswith(_IGNORED_IF_PREFIXES):
+                    parts.append(name + "|" + ",".join(cur))
+                name = line.split(":", 1)[0]
+                flags = re.search(r"<([^>]*)>", line)
+                fl = set((flags.group(1) if flags else "").split(","))
+                cur = ["UP" if "UP" in fl else "DOWN", "RUN" if "RUNNING" in fl else "-"]
+            else:
+                t = line.strip()
+                if t.startswith(("inet ", "ether ", "status:")):
+                    cur.append(t)
+                elif t.startswith("inet6 ") and "temporary" not in t and "deprecated" not in t and "fe80" not in t.split()[1]:
+                    cur.append(t)
+        if name and not name.startswith(_IGNORED_IF_PREFIXES):
+            parts.append(name + "|" + ",".join(cur))
+    except Exception:
+        pass
+    try:
+        ns = subprocess.run(["netstat", "-nr", "-f", "inet"], capture_output=True, text=True, timeout=4).stdout
+        parts.extend(l.strip() for l in ns.splitlines() if l.startswith("default"))
+    except Exception:
+        pass
+    try:
+        hp = subprocess.run(["networksetup", "-listallhardwareports"], capture_output=True, text=True, timeout=4).stdout
+        parts.append(hp)
+    except Exception:
+        pass
+    return "\n".join(parts)
+
+
+def _network_watcher_worker():
+    while True:
+        try:
+            sig = _network_signature()
+            with _net_watch_lock:
+                if sig != _net_watch["signature"]:
+                    _net_watch["signature"] = sig
+                    _net_watch["version"] += 1
+                    _net_watch["changed_at"] = time.time()
+        except Exception:
+            pass
+        time.sleep(1.0)
+
+
+threading.Thread(target=_network_watcher_worker, daemon=True).start()
+
+
+@app.get("/api/network/version")
+def get_network_version():
+    """Numéro de version qui change dès qu'une interface apparaît, disparaît ou change d'état."""
+    with _net_watch_lock:
+        return {"version": _net_watch["version"], "changed_at": _net_watch["changed_at"]}
+
+
 @app.get("/api/network/interfaces")
 def get_network_interfaces():
     """Liste tous les adaptateurs et services réseau du Mac avec leurs paramètres TCP/IP et DNS."""
@@ -6224,12 +6444,15 @@ def get_network_interfaces():
             "router": router_ip,
             "dns_servers": dns_servers,
             "is_active": is_active,
+            # Lien établi mais adresse DHCP pas encore reçue
+            "is_acquiring": bool(is_active and not ip_addr and cfg_type != "manual"),
             "media_status": media_status,
             "is_default_gateway": bool(router_ip and router_ip == default_gw)
         })
 
-    # Trier pour afficher les interfaces actives (ou Wi-Fi/Ethernet) en premier
-    results.sort(key=lambda x: (not x["is_active"], not bool(x["ip_address"]), x["service_name"]))
+    # Ordre stable : interfaces actives d'abord, puis ordre des services macOS.
+    # (L'obtention d'une adresse IP ne doit pas déplacer une carte déjà affichée.)
+    results.sort(key=lambda x: not x["is_active"])  # tri stable : l'ordre macOS est conservé
     return results
 
 

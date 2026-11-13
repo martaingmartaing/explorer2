@@ -259,6 +259,20 @@
           <div id="statusText">0 élément(s)</div>
           <div id="selectedStatusText"></div>
         </footer>
+
+        <!-- Barre du mode « sélecteur de fichier » (fenêtre séparée) -->
+        <div class="picker-bar" id="pickerBar" style="display:none;">
+          <div class="picker-bar-row">
+            <label for="pickerFileName">Nom du fichier :</label>
+            <input type="text" id="pickerFileName" readonly placeholder="Sélectionnez un fichier dans la liste">
+            <button class="btn primary" id="pickerOkBtn">Sélectionner</button>
+          </div>
+          <div class="picker-bar-row">
+            <label for="pickerFilterSelect">Type :</label>
+            <select id="pickerFilterSelect"></select>
+            <button class="btn" id="pickerCancelBtn">Annuler</button>
+          </div>
+        </div>
       </section>
 
 
@@ -819,6 +833,7 @@
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
+              <span id="netBusyIndicator" class="net-busy" style="display:none;"></span>
               <button class="btn" id="btnToggleInactiveNet" style="padding:4px 10px;font-size:11px;white-space:nowrap;">
                 Afficher les interfaces désactivées
               </button>
@@ -1031,7 +1046,7 @@
             <div style="display:flex;flex-direction:column;gap:3px;flex:1;">
               <div style="font-weight:700;font-size:14px;">explorer 2 mac</div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--w11-text-secondary, #94a3b8);">
-                <span>Version : <strong style="color:var(--w11-text-primary, #ffffff);">1.0</strong></span>
+                <span>Version : <strong style="color:var(--w11-text-primary, #ffffff);">1.1</strong></span>
                 <span>Auteur : <strong style="color:var(--w11-text-primary, #ffffff);">martin astruc</strong></span>
               </div>
             </div>

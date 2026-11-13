@@ -1,6 +1,6 @@
 {
   "name": "explorer2",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Explorateur de fichiers Web local moderne sous macOS",
   "main": "electron-main.js",
   "scripts": {

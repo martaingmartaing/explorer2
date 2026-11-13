@@ -127,6 +127,8 @@ const api = {
   // Sélecteurs de fichiers / dossiers et autorisations
   selectSaveImagePath: (opts) => ipcRenderer.invoke('dialog:select-save-image', opts),
   selectIsoFile: (opts) => ipcRenderer.invoke('dialog:select-iso', opts),
+  openFilePicker: (opts) => ipcRenderer.invoke('window:open-file-picker', opts),
+  filePickerResult: (p) => ipcRenderer.send('window:file-picker-result', p),
   selectDirectory: (opts) => ipcRenderer.invoke('dialog:select-directory', opts),
   openFullDiskAccess: () => ipcRenderer.invoke('system:open-full-disk-access'),
   checkFullDiskAccess: () => ipcRenderer.invoke('system:check-full-disk-access'),

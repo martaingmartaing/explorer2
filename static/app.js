@@ -186,6 +186,7 @@ const MIN_COLUMN_WIDTH = 40;
 
 // --- Application State ---
 const state = {
+  picker: null,   // mode « sélecteur de fichier » (fenêtre séparée)
   theme: 'windows98',
   currentView: 'explorer',
   tabs: [],
@@ -1079,11 +1080,83 @@ function renderFolderLoading() {
   elements.contentArea.innerHTML = `<div class="state-container"><div>Chargement du contenu...</div></div>`;
 }
 
+// ===================== MODE « SÉLECTEUR DE FICHIER » (fenêtre Explorer 2 séparée) =====================
+function getPickerSelectedFile() {
+  const tab = getActiveTab();
+  if (!tab || !tab.selectedPaths || tab.selectedPaths.length === 0) return null;
+  const item = (tab.items || []).find(i => i.path === tab.selectedPaths[0]);
+  return item && !item.is_dir ? item : null;
+}
+
+function updatePickerBar() {
+  if (!state.picker) return;
+  const input = document.getElementById('pickerFileName');
+  const ok = document.getElementById('pickerOkBtn');
+  const file = getPickerSelectedFile();
+  if (input) input.value = file ? file.name : '';
+  if (ok) ok.disabled = !file;
+}
+
+function confirmPickerSelection() {
+  const file = getPickerSelectedFile();
+  if (!file) return;
+  window.electronAPI?.filePickerResult?.(file.path);
+}
+
+function cancelPicker() {
+  window.electronAPI?.filePickerResult?.(null);
+}
+
+function enterPickerMode(cfg) {
+  const exts = (cfg.extensions || []).map(e => String(e).replace(/^\./, '').toLowerCase());
+  state.picker = { ...cfg, extensions: exts, filterOn: exts.length > 0 };
+  document.body.classList.add('picker-mode');
+
+  const title = document.getElementById('titlebarTitle');
+  if (title) title.textContent = cfg.title || 'Sélectionner un fichier';
+  document.title = cfg.title || 'Sélectionner un fichier';
+
+  const sel = document.getElementById('pickerFilterSelect');
+  if (sel) {
+    sel.innerHTML = '';
+    if (exts.length) {
+      const o = document.createElement('option');
+      o.value = 'filtered';
+      o.textContent = cfg.filterLabel || `Fichiers (${exts.map(e => '*.' + e).join(', ')})`;
+      sel.appendChild(o);
+    }
+    const all = document.createElement('option');
+    all.value = 'all';
+    all.textContent = 'Tous les fichiers (*.*)';
+    sel.appendChild(all);
+    sel.onchange = () => {
+      state.picker.filterOn = sel.value === 'filtered';
+      renderFolder();
+    };
+  }
+
+  const ok = document.getElementById('pickerOkBtn');
+  if (ok) {
+    ok.textContent = cfg.confirmLabel || 'Sélectionner';
+    ok.onclick = confirmPickerSelection;
+  }
+  const cancel = document.getElementById('pickerCancelBtn');
+  if (cancel) cancel.onclick = cancelPicker;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cancelPicker();
+  });
+  updatePickerBar();
+}
+
 function getSortedAndFilteredItems() {
   const tab = getActiveTab();
   if (!tab) return [];
 
   let list = [...tab.items];
+  if (state.picker && state.picker.filterOn && state.picker.extensions.length) {
+    list = list.filter(item => item.is_dir || state.picker.extensions.includes((item.name.split('.').pop() || '').toLowerCase()));
+  }
   if (tab.searchQuery.trim()) {
     const q = tab.searchQuery.toLowerCase();
     list = list.filter(item => item.name.toLowerCase().includes(q));
@@ -1342,6 +1415,16 @@ function renderFolder() {
     // 2. DOUBLE-CLIC GAUCHE : OUVERTURE (Application lance le soft / Dossier navigue / Fichier ouvre le soft)
     tr.addEventListener('dblclick', (e) => {
       e.stopPropagation();
+      if (state.picker) {
+        if (item.is_dir) {
+          navigateTo(item.path);
+        } else {
+          tab.selectedPaths = [item.path];
+          updateSelectionUI();
+          confirmPickerSelection();
+        }
+        return;
+      }
       const isApp = !!(item.name && item.name.toLowerCase().endsWith('.app')) || (item.extension && item.extension.toLowerCase() === '.app');
       if (isApp) {
         openItem(item.path);
@@ -1758,6 +1841,8 @@ function updateSelectionUI() {
       row.classList.remove('selected');
     }
   });
+
+  updatePickerBar();
 
   const count = selectedPaths.length;
   if (count > 0 && tab && tab.items) {
@@ -5950,6 +6035,7 @@ function initEvents() {
             if (tab.selectedPaths && tab.selectedPaths.length > 0) {
               e.preventDefault();
               const item = items.find(i => i.path === tab.selectedPaths[0]);
+              if (item && state.picker && !item.is_dir) { confirmPickerSelection(); return; }
               if (item) {
                 if (item.is_dir) navigateTo(item.path);
                 else openItem(item.path);
@@ -7625,6 +7711,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {}
   }
 
+  if (initData?.picker) {
+    enterPickerMode(initData.picker);
+  }
+
   if (initData?.tabData) {
     const td = initData.tabData;
     const tab = createTab(td.path);
@@ -9261,7 +9351,15 @@ function initFlashEvents() {
   if (btnBrowseIso) {
     btnBrowseIso.onclick = async () => {
       let chosenPath = null;
-      if (window.electronAPI?.selectIsoFile) {
+      if (window.electronAPI?.openFilePicker) {
+        // Fenêtre Explorer 2 séparée contenant uniquement l'explorateur de fichiers
+        chosenPath = await window.electronAPI.openFilePicker({
+          title: 'Sélectionner une image ISO / disque amorçable',
+          extensions: ['iso', 'img', 'raw', 'bin', 'dmg'],
+          filterLabel: 'Images disque (*.iso, *.img, *.raw, *.bin, *.dmg)',
+          confirmLabel: 'Choisir cette image'
+        });
+      } else if (window.electronAPI?.selectIsoFile) {
         chosenPath = await window.electronAPI.selectIsoFile();
       } else if (window.api?.selectIsoFile) {
         chosenPath = await window.api.selectIsoFile();
@@ -9692,23 +9790,117 @@ const networkState = {
   interfaces: [],
   isLoading: false,
   showInactive: false,
+  visibleOrder: [],   // ordre d'affichage mémorisé : une carte déjà affichée ne change jamais de place
 };
+
+// Sablier pixel-art Windows 95/98 : 6 images (le sable s'écoule), animées en CSS
+function pixelHourglassHtml() {
+  const K = '#000000', W = '#ffffff', Y = '#e0b800', G = '#808080';
+  const hw = [4, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 4]; // demi-largeur intérieure, lignes y = 2..13
+  const span = (y) => { const h = hw[y - 2]; return [5 - h, 6 + h]; };
+  const rect = (x, y, w, c) => `<rect x="${x}" y="${y}" width="${w}" height="1" fill="${c}"/>`;
+  let frames = '';
+  for (let f = 0; f < 6; f++) {
+    const top = 5 - f, bottom = f;
+    let g = '';
+    g += rect(1, 0, 10, K) + rect(1, 1, 10, G);
+    g += rect(1, 14, 10, G) + rect(1, 15, 10, K);
+    for (let y = 2; y <= 13; y++) {
+      const [l, r] = span(y);
+      g += rect(l - 1, y, 1, K) + rect(r + 1, y, 1, K);
+      let c = W;
+      if (y <= 6 && y >= 7 - top) c = Y;                    // sable qui reste en haut
+      if (y >= 9 && y >= 14 - bottom) c = Y;                // tas de sable en bas
+      if ((y === 7 || y === 8) && f < 5) c = Y;             // filet de sable dans le col
+      g += rect(l, y, r - l + 1, c);
+    }
+    frames += `<g class="hg-f hg-f${f}">${g}</g>`;
+  }
+  return `<span class="pixel-hourglass" aria-hidden="true"><svg viewBox="0 0 12 16" xmlns="http://www.w3.org/2000/svg">${frames}</svg></span>`;
+}
+
+function setNetworkBusy(on, text) {
+  const el = document.getElementById('netBusyIndicator');
+  if (!el) return;
+  if (on) {
+    el.innerHTML = `${pixelHourglassHtml()}<span>${escapeHtml(text || 'Récupération de la configuration réseau...')}</span>`;
+    el.style.display = 'inline-flex';
+  } else {
+    el.style.display = 'none';
+    el.innerHTML = '';
+  }
+}
+
+// Détection automatique des interfaces (comme Réglages Système de macOS)
+let networkWatchTimer = null;
+let networkWatchVersion = null;
+let networkRefreshPending = false;
+let networkRefreshBusy = false;
 
 function onEnterNetworkView() {
   loadNetworkInterfaces();
+  startNetworkWatch();
 }
 
-async function loadNetworkInterfaces() {
+function startNetworkWatch() {
+  stopNetworkWatch();
+  networkWatchVersion = null;
+  networkWatchTimer = setInterval(async () => {
+    if (state.currentView !== 'network') { stopNetworkWatch(); return; }
+    try {
+      const res = await fetch('/api/network/version');
+      if (!res.ok) return;
+      const { version } = await res.json();
+      if (networkWatchVersion === null) { networkWatchVersion = version; return; }
+      if (version !== networkWatchVersion) {
+        networkWatchVersion = version;
+        requestNetworkRefresh();
+      } else if (networkRefreshPending) {
+        requestNetworkRefresh();
+      }
+    } catch (e) {}
+  }, 1500);
+}
+
+window.addEventListener('focus', () => {
+  if (state.currentView === 'network') requestNetworkRefresh();
+});
+
+function stopNetworkWatch() {
+  if (networkWatchTimer) clearInterval(networkWatchTimer);
+  networkWatchTimer = null;
+  networkRefreshPending = false;
+}
+
+// Ne remplace jamais les cartes pendant que l'utilisateur saisit des valeurs : on attend qu'il ait fini.
+function requestNetworkRefresh() {
+  const grid = document.getElementById('networkCardsGrid');
+  const ae = document.activeElement;
+  if (grid && ae && grid.contains(ae) && (ae.tagName === 'INPUT' || ae.tagName === 'SELECT')) {
+    networkRefreshPending = true;
+    return;
+  }
+  networkRefreshPending = false;
+  loadNetworkInterfaces({ silent: true });
+}
+
+async function loadNetworkInterfaces(opts = {}) {
+  const silent = !!opts.silent;
   const container = document.getElementById('networkCardsGrid');
   if (!container) return;
+  if (networkRefreshBusy) return;
+  networkRefreshBusy = true;
 
   networkState.isLoading = true;
-  container.innerHTML = `
-    <div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: #444; font-style: italic;">
-      <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px;">Détection des adaptateurs réseau en cours...</div>
-      <div style="font-size: 11px;">Interrogation du sous-système réseau macOS (networksetup & ifconfig)...</div>
-    </div>
-  `;
+  setNetworkBusy(true, silent ? 'Mise à jour de la configuration réseau...' : 'Récupération de la configuration réseau...');
+  if (!silent) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: #444; font-style: italic;">
+        <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px;">Détection des adaptateurs réseau en cours...</div>
+        <div style="font-size: 11px;">Interrogation du sous-système réseau macOS (networksetup & ifconfig)...</div>
+      </div>
+    `;
+  }
 
   try {
     const res = await fetch('/api/network/interfaces');
@@ -9717,9 +9909,27 @@ async function loadNetworkInterfaces() {
       throw new Error(errData.detail || `Erreur HTTP ${res.status}`);
     }
     const data = await res.json();
-    networkState.interfaces = Array.isArray(data) ? data : [];
+    const next = Array.isArray(data) ? data : [];
+    const prev = networkState.interfaces || [];
+
+    if (silent) {
+      // Annonce les adaptateurs ajoutés / retirés, puis ne redessine que si quelque chose a changé
+      const key = (i) => `${i.service_name}|${i.device || ''}`;
+      const prevKeys = new Set(prev.map(key));
+      const nextKeys = new Set(next.map(key));
+      next.filter(i => !prevKeys.has(key(i))).forEach(i => showToast(`Nouvelle interface détectée : ${i.service_name}${i.device ? ' (' + i.device + ')' : ''}`, 'info'));
+      prev.filter(i => !nextKeys.has(key(i))).forEach(i => showToast(`Interface retirée : ${i.service_name}`, 'info'));
+      if (JSON.stringify(prev) === JSON.stringify(next)) return;
+    }
+
+    if (!silent) networkState.visibleOrder = [];   // chargement complet : ordre initial recalculé
+    const scrollers = [container, container.parentElement, container.closest('.view-content')].filter(Boolean);
+    const tops = scrollers.map(el => el.scrollTop);
+    networkState.interfaces = next;
     renderNetworkCards(networkState.interfaces);
+    scrollers.forEach((el, i) => { el.scrollTop = tops[i]; });
   } catch (err) {
+    if (silent) return;
     container.innerHTML = `
       <div style="grid-column: 1 / -1; padding: 20px; background: #fff0f0; border: 1px solid #cc0000; color: #990000;">
         <div style="font-weight: bold; font-size: 12px; margin-bottom: 4px;">⚠️ Impossible de charger la configuration réseau</div>
@@ -9730,6 +9940,8 @@ async function loadNetworkInterfaces() {
     showToast(`Erreur réseau : ${err.message}`, 'error');
   } finally {
     networkState.isLoading = false;
+    networkRefreshBusy = false;
+    setNetworkBusy(false);
   }
 }
 
@@ -9749,7 +9961,14 @@ function renderNetworkCards(interfaces) {
     }
   }
 
-  const listToRender = (networkState.showInactive ? interfaces : (interfaces || []).filter(i => i.is_active)) || [];
+  let listToRender = (networkState.showInactive ? interfaces : (interfaces || []).filter(i => i.is_active)) || [];
+
+  // Ordre stable : les cartes déjà visibles gardent leur place, les nouvelles s'ajoutent à la fin
+  const orderKey = (i) => `${i.service_name}|${i.device || ''}`;
+  const known = networkState.visibleOrder || [];
+  const nowKeys = listToRender.map(orderKey);
+  networkState.visibleOrder = known.filter(k => nowKeys.includes(k)).concat(nowKeys.filter(k => !known.includes(k)));
+  listToRender = [...listToRender].sort((a, b) => networkState.visibleOrder.indexOf(orderKey(a)) - networkState.visibleOrder.indexOf(orderKey(b)));
 
   if (!listToRender || listToRender.length === 0) {
     container.innerHTML = `
@@ -9766,12 +9985,13 @@ function renderNetworkCards(interfaces) {
 
   listToRender.forEach((iface, idx) => {
     const card = document.createElement('div');
-    card.className = 'network-card';
+    card.className = 'network-card' + (iface.is_acquiring ? ' is-acquiring' : '');
 
     const isConnected = !!iface.is_active;
+    const isAcquiring = !!iface.is_acquiring;
     const isManual = iface.config_type === 'manual';
-    const statusClass = isConnected ? 'connected' : 'disconnected';
-    const statusText = isConnected ? '● Connecté' : 'Déconnecté';
+    const statusClass = isAcquiring ? 'acquiring' : (isConnected ? 'connected' : 'disconnected');
+    const statusText = isAcquiring ? `${pixelHourglassHtml()}<span>Obtention de l'adresse IP...</span>` : (isConnected ? '● Connecté' : 'Déconnecté');
     const iconSrc = iface.adapter_type === 'wifi'
       ? 'static/icons/win98/network.png'
       : (iface.adapter_type === 'thunderbolt' ? 'static/icons/win98/network.png' : 'static/icons/win98/network.png');
@@ -9780,7 +10000,7 @@ function renderNetworkCards(interfaces) {
     const dns2 = (iface.dns_servers && iface.dns_servers[1]) || '';
 
     // Déterminer la passerelle par défaut active globale comme fallback
-    const globalDefaultGw = (interfaces.find(i => i.is_default_gateway && i.router) || interfaces.find(i => i.router) || {}).router || '192.168.2.254';
+    const globalDefaultGw = (interfaces.find(i => i.is_default_gateway && i.router) || interfaces.find(i => i.router) || {}).router || '192.168.1.1';
 
     // Configuration actuelle de l'interface (même en DHCP)
     const currentIp = iface.ip_address || '';
@@ -9876,7 +10096,7 @@ function renderNetworkCards(interfaces) {
         <fieldset class="network-groupbox" style="margin-top:2px;">
           <legend>Diagnostic de connectivité (Test Ping)</legend>
           <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:11px;white-space:nowrap;">Passerelle :</span>
+            <span style="font-size:11px;white-space:nowrap;">Adresse IP :</span>
             <input type="text" class="network-input" id="netPingTarget_${idx}" 
                    value="${escapeHtml(pingTarget)}" 
                    placeholder="ex: 192.168.1.1" style="max-width:180px;">
