@@ -9998,6 +9998,7 @@ function renderNetworkCards(interfaces) {
 
     const dns1 = (iface.dns_servers && iface.dns_servers[0]) || '';
     const dns2 = (iface.dns_servers && iface.dns_servers[1]) || '';
+    const isDnsManual = iface.dns_mode === 'manual';
 
     // Déterminer la passerelle par défaut active globale comme fallback
     const globalDefaultGw = (interfaces.find(i => i.is_default_gateway && i.router) || interfaces.find(i => i.router) || {}).router || '192.168.1.1';
@@ -10069,18 +10070,31 @@ function renderNetworkCards(interfaces) {
         <!-- Groupbox Serveurs DNS -->
         <fieldset class="network-groupbox">
           <legend>Serveurs de noms de domaine (DNS)</legend>
-          <div class="network-fields-wrap" style="padding-left:0;">
+
+          <label class="network-radio-row">
+            <input type="radio" name="net_dns_mode_${idx}" value="auto" ${!isDnsManual ? 'checked' : ''} id="radDnsAuto_${idx}">
+            <span>Obtenir les adresses des serveurs DNS automatiquement</span>
+          </label>
+
+          <label class="network-radio-row">
+            <input type="radio" name="net_dns_mode_${idx}" value="manual" ${isDnsManual ? 'checked' : ''} id="radDnsManual_${idx}">
+            <span>Utiliser les adresses de serveur DNS suivantes :</span>
+          </label>
+
+          <div class="network-fields-wrap">
             <div class="network-field-row">
               <span class="network-field-label">Serveur DNS préféré :</span>
               <input type="text" class="network-input" id="netDns1_${idx}" 
-                     value="${escapeHtml(dns1 || currentGw || '')}" 
-                     placeholder="ex: 1.1.1.1 ou adresse du routeur">
+                     value="${escapeHtml(dns1)}" 
+                     placeholder="ex: 1.1.1.1"
+                     ${!isDnsManual ? 'disabled' : ''}>
             </div>
             <div class="network-field-row">
               <span class="network-field-label">Serveur DNS auxiliaire :</span>
               <input type="text" class="network-input" id="netDns2_${idx}" 
                      value="${escapeHtml(dns2)}" 
-                     placeholder="ex: 8.8.8.8">
+                     placeholder="ex: 8.8.8.8"
+                     ${!isDnsManual ? 'disabled' : ''}>
             </div>
           </div>
         </fieldset>
@@ -10116,11 +10130,46 @@ function renderNetworkCards(interfaces) {
     const inputMask = document.getElementById(`netMask_${idx}`);
     const inputGw = document.getElementById(`netGw_${idx}`);
 
+    // DNS : réglage indépendant de l'IPv4 (DHCP + DNS manuels possible)
+    const radDnsAuto = document.getElementById(`radDnsAuto_${idx}`);
+    const radDnsManual = document.getElementById(`radDnsManual_${idx}`);
+    const inputDns1 = document.getElementById(`netDns1_${idx}`);
+    const inputDns2 = document.getElementById(`netDns2_${idx}`);
+    const autoDnsList = (iface.dns_dhcp && iface.dns_dhcp.length) ? iface.dns_dhcp : (iface.router ? [iface.router] : []);
+
+    const toggleDnsFields = () => {
+      const dnsManual = radDnsManual.checked;
+      inputDns1.disabled = !dnsManual;
+      inputDns2.disabled = !dnsManual;
+      if (dnsManual) {
+        // Pré-remplit avec les DNS actuellement utilisés si les champs sont vides
+        if (!inputDns1.value.trim() && !inputDns2.value.trim()) {
+          inputDns1.value = autoDnsList[0] || '';
+          inputDns2.value = autoDnsList[1] || '';
+        }
+        inputDns1.focus();
+        inputDns1.select();
+      } else {
+        // Mode automatique : affiche les serveurs fournis par le DHCP
+        inputDns1.value = autoDnsList[0] || '';
+        inputDns2.value = autoDnsList[1] || '';
+      }
+    };
+    radDnsAuto.onchange = toggleDnsFields;
+    radDnsManual.onchange = toggleDnsFields;
+
     const toggleFields = () => {
       const manualMode = radManual.checked;
       inputIp.disabled = !manualMode;
       inputMask.disabled = !manualMode;
       inputGw.disabled = !manualMode;
+
+      // En IP statique, aucun DNS n'est fourni par le DHCP : on impose la saisie manuelle des DNS
+      radDnsAuto.disabled = manualMode;
+      if (manualMode && radDnsAuto.checked) {
+        radDnsManual.checked = true;
+        toggleDnsFields();
+      }
 
       if (manualMode) {
         // En passant en mode statique, pré-remplir immédiatement avec la configuration actuelle si vide
@@ -10146,6 +10195,7 @@ function renderNetworkCards(interfaces) {
 
     radDhcp.onchange = toggleFields;
     radManual.onchange = toggleFields;
+    radDnsAuto.disabled = radManual.checked;
 
     // Enregistrement de la configuration
     const btnSave = document.getElementById(`btnNetSave_${idx}`);
@@ -10176,9 +10226,25 @@ async function handleNetworkConfigSave(iface, idx) {
   const subnet = inputMask ? inputMask.value.trim() : '255.255.255.0';
   const router = inputGw ? inputGw.value.trim() : '';
 
+  const radDnsManual = document.getElementById(`radDnsManual_${idx}`);
+  const isDnsManual = !!(radDnsManual && radDnsManual.checked);
   const dnsServers = [];
-  if (inputDns1 && inputDns1.value.trim()) dnsServers.push(inputDns1.value.trim());
-  if (inputDns2 && inputDns2.value.trim()) dnsServers.push(inputDns2.value.trim());
+  if (isDnsManual) {
+    if (inputDns1 && inputDns1.value.trim()) dnsServers.push(inputDns1.value.trim());
+    if (inputDns2 && inputDns2.value.trim()) dnsServers.push(inputDns2.value.trim());
+    const ipRegexDns = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
+    if (dnsServers.length === 0) {
+      alert("Saisissez au moins un serveur DNS, ou choisissez « Obtenir les adresses des serveurs DNS automatiquement ».");
+      inputDns1.focus();
+      return;
+    }
+    const badDns = dnsServers.find(d => !ipRegexDns.test(d));
+    if (badDns) {
+      alert(`Serveur DNS invalide : ${badDns}`);
+      inputDns1.focus();
+      return;
+    }
+  }
 
   if (isManual) {
     const ipRegex = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
@@ -10199,9 +10265,10 @@ async function handleNetworkConfigSave(iface, idx) {
     }
   }
 
+  const dnsSummary = isDnsManual ? `DNS : ${dnsServers.join(', ')} (manuels)` : 'DNS : automatiques (DHCP)';
   const confirmMsg = isManual
-    ? `Appliquer la configuration IP statique sur « ${iface.service_name} » ?\n\nIP : ${ip}\nMasque : ${subnet}\nPasserelle : ${router || 'Aucune'}`
-    : `Basculer l'adaptateur « ${iface.service_name} » en mode DHCP automatique ?`;
+    ? `Appliquer la configuration IP statique sur « ${iface.service_name} » ?\n\nIP : ${ip}\nMasque : ${subnet}\nPasserelle : ${router || 'Aucune'}\n${dnsSummary}`
+    : `Appliquer sur « ${iface.service_name} » : adresse IP automatique (DHCP)\n${dnsSummary} ?`;
 
   if (!confirm(confirmMsg)) return;
 
@@ -10219,6 +10286,7 @@ async function handleNetworkConfigSave(iface, idx) {
         ip_address: ip,
         subnet_mask: subnet,
         router: router,
+        dns_mode: isDnsManual ? 'manual' : 'auto',
         dns_servers: dnsServers
       })
     });

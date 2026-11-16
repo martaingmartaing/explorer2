@@ -6170,6 +6170,7 @@ class NetworkConfigPayload(BaseModel):
     subnet_mask: Optional[str] = None
     router: Optional[str] = None
     dns_servers: Optional[List[str]] = None
+    dns_mode: Optional[str] = None  # 'auto' (serveurs du DHCP) ou 'manual' : indépendant de l'IPv4
 
 
 class PingPayload(BaseModel):
@@ -6338,6 +6339,7 @@ def get_network_interfaces():
         sub_mask = sub_m.group(1) if sub_m else ""
         router_ip = router_m.group(1) if router_m else ""
         dns_servers = []
+        dhcp_dns: List[str] = []
         is_active = False
         media_status = "Inconnu"
 
@@ -6358,8 +6360,8 @@ def get_network_interfaces():
                 ipc_dns = subprocess.run(["ipconfig", "getoption", device_id, "domain_name_server"], capture_output=True, text=True, timeout=2).stdout.strip()
                 if ipc_dns:
                     for d in ipc_dns.split():
-                        if d and re.match(r"^[0-9.]+$", d) and d not in dns_servers:
-                            dns_servers.append(d)
+                        if d and re.match(r"^[0-9.]+$", d) and d not in dhcp_dns:
+                            dhcp_dns.append(d)
             except Exception:
                 pass
 
@@ -6405,12 +6407,16 @@ def get_network_interfaces():
         if ip_addr and not sub_mask:
             sub_mask = "255.255.255.0"
 
-        # DNS
-        if not dns_servers and "There aren't any" not in dns_out and "disabled" not in dns_out.lower():
+        # DNS : les serveurs saisis à la main (networksetup) priment sur ceux fournis par le DHCP.
+        # Les deux réglages sont indépendants : on peut être en IP DHCP avec des DNS manuels.
+        manual_dns: List[str] = []
+        if "There aren't any" not in dns_out and "disabled" not in dns_out.lower():
             for dline in dns_out.splitlines():
                 dline = dline.strip()
-                if dline and not dline.startswith("**") and re.match(r"^[0-9.]+$", dline):
-                    dns_servers.append(dline)
+                if dline and not dline.startswith("**") and re.match(r"^[0-9.]+$", dline) and dline not in manual_dns:
+                    manual_dns.append(dline)
+        dns_mode = "manual" if manual_dns else "auto"
+        dns_servers = manual_dns or dhcp_dns
 
         # Si toujours aucun DNS mais qu'on a une passerelle
         if not dns_servers and router_ip:
@@ -6443,6 +6449,9 @@ def get_network_interfaces():
             "subnet_mask": sub_mask or ("255.255.255.0" if ip_addr else ""),
             "router": router_ip,
             "dns_servers": dns_servers,
+            "dns_mode": dns_mode,
+            "dns_manual": manual_dns,
+            "dns_dhcp": dhcp_dns,
             "is_active": is_active,
             # Lien établi mais adresse DHCP pas encore reçue
             "is_acquiring": bool(is_active and not ip_addr and cfg_type != "manual"),
@@ -6462,6 +6471,15 @@ def set_network_config(payload: NetworkConfigPayload):
     svc = payload.service_name.strip()
     if not svc:
         raise HTTPException(status_code=400, detail="Nom du service réseau manquant.")
+
+    # Validation préalable des DNS : rien n'est modifié si la saisie est invalide
+    if (payload.dns_mode or "").lower() == "manual":
+        pre = [d.strip() for d in (payload.dns_servers or []) if d.strip()]
+        if not pre:
+            raise HTTPException(status_code=400, detail="Saisissez au moins un serveur DNS ou choisissez l'obtention automatique.")
+        for d in pre:
+            if not re.match(r"^([0-9]{1,3}\.){3}[0-9]{1,3}$", d):
+                raise HTTPException(status_code=400, detail=f"Serveur DNS invalide : '{d}'")
 
     cfg = payload.config_type.lower()
     if cfg == "dhcp":
@@ -6488,8 +6506,21 @@ def set_network_config(payload: NetworkConfigPayload):
     else:
         raise HTTPException(status_code=400, detail=f"Type de configuration non supporté : '{cfg}'")
 
-    # Configuration des DNS
-    if payload.dns_servers is not None:
+    # Configuration des DNS (indépendante du mode IPv4 : DHCP + DNS manuels est possible)
+    dns_mode = (payload.dns_mode or "").lower()
+    ip_regex_dns = r"^([0-9]{1,3}\.){3}[0-9]{1,3}$"
+    if dns_mode == "auto":
+        # Retire les DNS manuels : macOS utilise alors ceux fournis par le DHCP
+        _run_networksetup_admin(["networksetup", "-setdnsservers", svc, "empty"])
+    elif dns_mode == "manual":
+        dns_cleaned = [d.strip() for d in (payload.dns_servers or []) if d.strip()]
+        if not dns_cleaned:
+            raise HTTPException(status_code=400, detail="Saisissez au moins un serveur DNS ou choisissez l'obtention automatique.")
+        for d in dns_cleaned:
+            if not re.match(ip_regex_dns, d):
+                raise HTTPException(status_code=400, detail=f"Serveur DNS invalide : '{d}'")
+        _run_networksetup_admin(["networksetup", "-setdnsservers", svc, *dns_cleaned])
+    elif payload.dns_servers is not None:
         dns_cleaned = [d.strip() for d in payload.dns_servers if d.strip()]
         if dns_cleaned:
             for d in dns_cleaned:
